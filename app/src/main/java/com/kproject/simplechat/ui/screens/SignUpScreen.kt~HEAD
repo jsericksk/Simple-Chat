@@ -1,0 +1,200 @@
+package com.kproject.simplechat.ui.screens
+
+import android.content.Context
+import android.net.Uri
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
+import com.kproject.simplechat.R
+import com.kproject.simplechat.data.DataStateResult
+import com.kproject.simplechat.ui.screens.components.LoginTextField
+import com.kproject.simplechat.ui.viewmodels.MainViewModel
+import java.util.*
+
+@ExperimentalCoilApi
+@Composable
+fun SignUpScreen(
+    navigateToHomeScreen: () -> Unit,
+    mainViewModel: MainViewModel = hiltViewModel()
+) {
+
+    val context = LocalContext.current
+
+    val profileImage = remember {  mutableStateOf<Uri?>(null)  }
+    val userName = rememberSaveable { mutableStateOf("") }
+    val email = rememberSaveable { mutableStateOf("") }
+    val password = rememberSaveable { mutableStateOf("") }
+    val confirmedPassword = rememberSaveable { mutableStateOf("") }
+
+    val chooseProfileImage = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            profileImage.value = it
+        }
+    }
+
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp)
+    ) {
+
+        Image(
+            painter = rememberImagePainter(
+                data = if (profileImage.value == null) R.drawable.ic_person else profileImage.value
+            ),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(100.dp)
+                .clip(CircleShape)
+                .border(2.dp, Color.Gray, CircleShape)
+                .clickable {
+                    chooseProfileImage.launch("image/*")
+                }
+                .fillMaxSize()
+        )
+
+        LoginTextField(
+            textFieldValue = userName,
+            hint = R.string.user_name,
+            leadingIcon =  R.drawable.ic_person
+        )
+
+        LoginTextField(
+            textFieldValue = email,
+            hint = R.string.email,
+            keyboardType = KeyboardType.Email,
+            leadingIcon =  R.drawable.ic_email
+        )
+
+        LoginTextField(
+            textFieldValue = password,
+            hint = R.string.password,
+            keyboardType = KeyboardType.Password,
+            leadingIcon =  R.drawable.ic_key,
+            isPasswordField = true
+        )
+
+        LoginTextField(
+            textFieldValue = confirmedPassword,
+            hint = R.string.confirm_password,
+            leadingIcon =  R.drawable.ic_key,
+            isPasswordField = true
+        )
+
+        Spacer(modifier = Modifier.padding(top = 18.dp))
+
+        Button(
+            onClick = {
+                mainViewModel.signUp(
+                    email = email.value,
+                    password = password.value,
+                    userName = userName.value,
+                    profileImage = profileImage.value!!
+                )
+            },
+            shape = CircleShape,
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Text(text = stringResource(id = R.string.sign_up), color = Color.White)
+        }
+    }
+
+    val result by mainViewModel.dataStateResult.observeAsState(initial = DataStateResult.Loading)
+
+    when (result) {
+        DataStateResult.Loading -> Text("Carregando...")
+        DataStateResult.Success() -> navigateToHomeScreen.invoke()
+        DataStateResult.Error() -> Text("Erro.")
+    }
+
+}
+
+
+fun createAccount(
+    context: Context,
+    auth: FirebaseAuth,
+    profileImageUri: Uri,
+    email: String,
+    password: String
+) {
+    auth.createUserWithEmailAndPassword(email, password)
+        .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Sign in success, update UI with the signed-in user's information
+                Log.d("SignUp", "createUserWithEmail: success")
+                val user = auth.currentUser
+                Toast.makeText(context, "Authentication successfully.",
+                    Toast.LENGTH_SHORT).show()
+                profileImageUri.let {
+                    saveImageInStorage(profileImageUri)
+                }
+                // updateUI(user)
+            } else {
+                // If sign in fails, display a message to the user.
+                Log.w("SignUp", "createUserWithEmail: failure", task.exception)
+                Toast.makeText(context, "Authentication failed.",
+                    Toast.LENGTH_SHORT).show()
+                // updateUI(null)
+            }
+        }
+
+}
+
+private fun saveImageInStorage(profileImageUri: Uri) {
+    val imageName = UUID.randomUUID().toString()
+    val ref = FirebaseStorage.getInstance().reference.child("images/$imageName")
+    val uploadTask = ref.putFile(profileImageUri)
+
+    val urlTask = uploadTask.continueWithTask { task ->
+        if (!task.isSuccessful) {
+            task.exception?.let {
+                throw it
+            }
+        }
+        ref.downloadUrl
+    }.addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+            val downloadUri = task.result
+            Log.d("SignUp", "Url da imagem: $downloadUri")
+        } else {
+            Log.d("SignUp", "Erro: ${task.exception}")
+        }
+    }
+}
+
