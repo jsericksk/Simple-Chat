@@ -1,5 +1,6 @@
 package com.kproject.simplechat.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -9,15 +10,19 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -25,6 +30,12 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.kproject.simplechat.R
+import com.kproject.simplechat.data.DataStateResult
+import com.kproject.simplechat.data.repository.TAG
+import com.kproject.simplechat.model.User
+import com.kproject.simplechat.ui.screens.components.SimpleProgressDialog
+import com.kproject.simplechat.ui.viewmodels.MainViewModel
+import com.kproject.simplechat.utils.Utils
 
 @ExperimentalCoilApi
 @ExperimentalPagerApi
@@ -53,7 +64,8 @@ fun HomeScreen(
 @ExperimentalPagerApi
 @Composable
 fun HomeTabs(
-    navigateToChatScreen: (userId: String, userName: String) -> Unit
+    navigateToChatScreen: (userId: String, userName: String) -> Unit,
+    mainViewModel: MainViewModel = hiltViewModel()
 ) {
     var tabIndex by remember { mutableStateOf(0) }
     val pagerState = rememberPagerState()
@@ -93,9 +105,11 @@ fun HomeTabs(
             state = pagerState,
         ) { page ->
             if (page == 0) {
-                LastMessagesTab(navigateToChatScreen)
+                UsersTab(navigateToChatScreen, mainViewModel)
+                // LastMessagesTab(navigateToChatScreen, mainViewModel)
             } else {
-                UsersTab(navigateToChatScreen)
+                LastMessagesTab(navigateToChatScreen, mainViewModel)
+                // UsersTab(navigateToChatScreen, mainViewModel)
             }
         }
     }
@@ -104,17 +118,13 @@ fun HomeTabs(
 @ExperimentalCoilApi
 @Composable
 fun LastMessagesTab(
-    navigateToChatScreen: (userId: String, userName: String) -> Unit
+    navigateToChatScreen: (userId: String, userName: String) -> Unit,
+    mainViewModel: MainViewModel
 ) {
-    val items = listOf<Int>(
-        1, 2, 4, 5, 6, 7, 8, 9, 10,
-        1, 2, 4, 5, 6, 7, 8, 9, 10
-    )
-
     LazyColumn(
         Modifier.fillMaxSize()
     ) {
-        itemsIndexed(items) { index, message ->
+        /**itemsIndexed(items) { index, message ->
             MessageItem(
                 profileImage = "",
                 userName = "Naruto",
@@ -122,31 +132,61 @@ fun LastMessagesTab(
                 date = "12/12/21",
                 navigateToChatScreen = navigateToChatScreen
             )
-        }
+        }*/
     }
 }
 
 @ExperimentalCoilApi
 @Composable
 fun UsersTab(
-    navigateToChatScreen: (userId: String, userName: String) -> Unit
+    navigateToChatScreen: (userId: String, userName: String) -> Unit,
+    mainViewModel: MainViewModel
 ) {
-    val items = listOf<Int>(
-        1, 2, 4, 5, 6, 7, 8, 9, 10,
-        1, 2, 4, 5, 6, 7, 8, 9, 10
-    )
+    val context = LocalContext.current
 
-    LazyColumn(
-        Modifier.fillMaxSize()
-    ) {
-        itemsIndexed(items) { index, user ->
-            UserItem(
-                profileImage = "",
-                userName = "Naruto",
-                navigateToChatScreen = navigateToChatScreen
-            )
+    val dataStateResult by mainViewModel.dataStateResult.observeAsState(initial = DataStateResult.Loading())
+    val registeredUsersList by mainViewModel.registeredUsersList.observeAsState()
+    val errorMessageResId by mainViewModel.errorMessageResId.observeAsState()
+
+    var isRequestFinished by rememberSaveable { mutableStateOf(false) }
+
+    /**
+     * Used to avoid making multiple calls on recompositions.
+     */
+    LaunchedEffect(Unit) {
+        if (!isRequestFinished) {
+            mainViewModel.getRegisteredUserList()
         }
     }
+
+    when (dataStateResult) {
+        is DataStateResult.Loading -> {
+            // Text("Carregando")
+            // SimpleProgressDialog(showDialog = showProgressDialog)
+        }
+        is DataStateResult.Success -> {
+            isRequestFinished = true
+            registeredUsersList?.let { userList ->
+                LazyColumn(
+                    Modifier.fillMaxSize()
+                ) {
+                    itemsIndexed(userList) { index, user ->
+                        UserItem(
+                            user = user,
+                            navigateToChatScreen = navigateToChatScreen
+                        )
+                    }
+                }
+            }
+        }
+        is DataStateResult.Error -> {
+            isRequestFinished = true
+            errorMessageResId?.let {
+                Utils.showToast(context, errorMessageResId!!)
+            }
+        }
+    }
+
 }
 
 @ExperimentalCoilApi
@@ -219,8 +259,7 @@ fun MessageItem(
 @ExperimentalCoilApi
 @Composable
 fun UserItem(
-    profileImage: String,
-    userName: String,
+    user: User,
     navigateToChatScreen: (userId: String, userName: String) -> Unit
 ) {
     Column(
@@ -232,11 +271,11 @@ fun UserItem(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { navigateToChatScreen.invoke("opa", userName) }
+                .clickable { navigateToChatScreen.invoke("opa", user.userId) }
             ) {
             Image(
                 painter = rememberImagePainter(
-                    data = R.drawable.naruto
+                    data = user.profileImage
                 ),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
@@ -251,7 +290,7 @@ fun UserItem(
 
             Text(
                 modifier = Modifier,
-                text = userName,
+                text = user.userName,
                 color = Color.DarkGray,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,

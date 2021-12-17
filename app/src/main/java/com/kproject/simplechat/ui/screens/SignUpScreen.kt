@@ -1,9 +1,6 @@
 package com.kproject.simplechat.ui.screens
 
-import android.content.Context
 import android.net.Uri
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -29,8 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.storage.FirebaseStorage
 import com.kproject.simplechat.R
 import com.kproject.simplechat.data.DataStateResult
 import com.kproject.simplechat.ui.screens.components.LoginTextField
@@ -39,7 +34,6 @@ import com.kproject.simplechat.ui.viewmodels.MainViewModel
 import com.kproject.simplechat.utils.FieldType
 import com.kproject.simplechat.utils.FieldValidator
 import com.kproject.simplechat.utils.Utils
-import java.util.*
 
 @ExperimentalCoilApi
 @Composable
@@ -48,11 +42,11 @@ fun SignUpScreen(
     mainViewModel: MainViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val showProgressDialog = remember { mutableStateOf(false) }
+    val showProgressDialog = rememberSaveable { mutableStateOf(false) }
 
     var isFieldWithError by rememberSaveable { mutableStateOf(false) }
 
-    val profileImage = remember {  mutableStateOf<Uri?>(null)  }
+    val profileImage = rememberSaveable {  mutableStateOf<Uri?>(null)  }
     val userName = rememberSaveable { mutableStateOf("") }
     val email = rememberSaveable { mutableStateOf("") }
     val password = rememberSaveable { mutableStateOf("") }
@@ -68,7 +62,8 @@ fun SignUpScreen(
 
     val dataStateResult by mainViewModel.dataStateResult.observeAsState()
     val errorMessageResId by mainViewModel.errorMessageResId.observeAsState()
-    val result by mainViewModel.result.observeAsState()
+
+    var isRequestFinished by rememberSaveable { mutableStateOf(false) }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -136,7 +131,8 @@ fun SignUpScreen(
         Button(
             onClick = {
                 showProgressDialog.value = true
-                if (FieldValidator.validate(
+                isRequestFinished = false
+                if (FieldValidator.validateSignUp(
                     email = email.value,
                     password = password.value,
                     confirmedPassword = confirmedPassword.value,
@@ -162,12 +158,18 @@ fun SignUpScreen(
         }
     }
 
-    when (dataStateResult) {
-        DataStateResult.Loading -> SimpleProgressDialog(showDialog = showProgressDialog)
-        DataStateResult.Success() -> navigateToHomeScreen.invoke()
-        DataStateResult.Error() -> {
-            errorMessageResId?.let {
-                Utils.showToast(context, errorMessageResId!!)
+    if (!isRequestFinished) {
+        when (dataStateResult) {
+            DataStateResult.Loading<Unit>() -> SimpleProgressDialog(showDialog = showProgressDialog)
+            DataStateResult.Success<Unit>() -> {
+                isRequestFinished = true
+                navigateToHomeScreen.invoke()
+            }
+            DataStateResult.Error<Unit>() -> {
+                isRequestFinished = true
+                errorMessageResId?.let {
+                    Utils.showToast(context, errorMessageResId!!)
+                }
             }
         }
     }

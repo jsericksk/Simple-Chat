@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.kproject.simplechat.ui.screens.*
 
@@ -18,8 +19,9 @@ import com.kproject.simplechat.ui.screens.*
 @ExperimentalAnimationApi
 @Composable
 fun NavigationGraph(
-    navController: NavHostController
+    isLogged: Boolean
 ) {
+    val navController = rememberAnimatedNavController()
 
     AnimatedNavHost(navController = navController, startDestination = Screen.LoginScreen.route) {
         composable(
@@ -37,11 +39,19 @@ fun NavigationGraph(
                 navigateToHomeScreen = { navController.navigate(Screen.HomeScreen.route) },
                 navigateToChatScreen = { navController.navigate(Screen.ChatScreen.withArgs("opa", "John")) },
             )*/
-            LoginScreen(
-                navigateToHomeScreen = { navController.navigate(Screen.HomeScreen.route) },
-                navigateToSignUpScreen = { navController.navigate(Screen.SignUpScreen.route) }
-            )
+
+            if (isLogged) {
+                HomeScreen { userId, userName ->
+                    navController.navigate(Screen.ChatScreen.withArgs(userId, userName))
+                }
+            } else {
+                LoginScreen(
+                    navigateToHomeScreen = { navController.navigate(Screen.HomeScreen.route) },
+                    navigateToSignUpScreen = { navController.navigate(Screen.SignUpScreen.route) }
+                )
+            }
         }
+
         /**
         composable(
             route = Screen.LoginScreen.route,

@@ -1,9 +1,7 @@
 package com.kproject.simplechat.data
 
-import java.lang.Exception
-
-sealed class DataStateResult {
-    object Loading : DataStateResult()
-    data class Success(val data: Any? = null) : DataStateResult()
-    data class Error(val errorMessageResId: Int = 0) : DataStateResult()
+sealed class DataStateResult<out T> {
+    data class Loading<T>(val loading: Unit? = null) : DataStateResult<T>()
+    data class Success<T>(val data: T? = null) : DataStateResult<T>()
+    data class Error<T>(val errorMessageResId: Int = 0) : DataStateResult<T>()
 }

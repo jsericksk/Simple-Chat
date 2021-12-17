@@ -10,7 +10,7 @@ import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.kproject.simplechat.navigation.NavigationGraph
-import com.kproject.simplechat.ui.theme.TicTacToeOnlineTheme
+import com.kproject.simplechat.ui.theme.SimpleChatTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @ExperimentalCoilApi
@@ -21,11 +21,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val isUserLogged = intent.extras?.getBoolean("isLogged")
         setContent {
-            TicTacToeOnlineTheme {
+            SimpleChatTheme {
                 Surface(color = MaterialTheme.colors.background) {
-                    val navController = rememberAnimatedNavController()
-                    NavigationGraph(navController)
+                    NavigationGraph(isUserLogged!!)
                 }
             }
         }

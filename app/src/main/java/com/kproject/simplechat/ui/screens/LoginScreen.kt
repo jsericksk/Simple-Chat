@@ -1,17 +1,17 @@
 package com.kproject.simplechat.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -20,18 +20,32 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.firebase.auth.FirebaseAuth
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.kproject.simplechat.R
+import com.kproject.simplechat.data.DataStateResult
 import com.kproject.simplechat.ui.screens.components.LoginTextField
+import com.kproject.simplechat.ui.screens.components.SimpleProgressDialog
+import com.kproject.simplechat.ui.viewmodels.MainViewModel
 import com.kproject.simplechat.utils.FieldType
+import com.kproject.simplechat.utils.FieldValidator
+import com.kproject.simplechat.utils.Utils
 
 @Composable
 fun LoginScreen(
     navigateToHomeScreen: () -> Unit,
-    navigateToSignUpScreen: () -> Unit
+    navigateToSignUpScreen: () -> Unit,
+    mainViewModel: MainViewModel = hiltViewModel()
 ) {
-    val email = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val showProgressDialog = rememberSaveable { mutableStateOf(false) }
+
+    val email = rememberSaveable { mutableStateOf("") }
+    val password = rememberSaveable { mutableStateOf("") }
+
+    val dataStateResult by mainViewModel.dataStateResult.observeAsState()
+    val errorMessageResId by mainViewModel.errorMessageResId.observeAsState()
+
+    var isRequestFinished by rememberSaveable { mutableStateOf(false) }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -60,7 +74,20 @@ fun LoginScreen(
 
         Button(
             onClick = {
-                navigateToHomeScreen.invoke()
+                showProgressDialog.value = true
+                isRequestFinished = false
+                if (FieldValidator.validateSignIn(
+                        email = email.value,
+                        password = password.value
+                    ) { errorMessageResId ->
+                        Utils.showToast(context, errorMessageResId)
+                    }
+                ) {
+                    mainViewModel.signIn(
+                        email = email.value,
+                        password = password.value
+                    )
+                }
             },
             shape = CircleShape,
             modifier = Modifier
@@ -88,24 +115,27 @@ fun LoginScreen(
                 annotatedString.getStringAnnotations(tag = "Sign Up", start = offset, end = offset)
                     .firstOrNull()?.let {
                         navigateToSignUpScreen.invoke()
-                }
+                    }
             })
 
     }
 
-}
-
-fun loginIn(email: String, password: String, navigateToHome: () -> Unit) {
-    FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                // Sign in success, update UI with the signed-in user's information
-                Log.d("Login", "signInWithEmail:success")
-                val user = FirebaseAuth.getInstance().currentUser
-                navigateToHome.invoke()
-            } else {
-                // If sign in fails, display a message to the user.
-                Log.w("Login", "signInWithEmail:failure", task.exception)
+    if (!isRequestFinished) {
+        when (dataStateResult) {
+            is DataStateResult.Loading -> {
+                SimpleProgressDialog(showDialog = showProgressDialog)
+            }
+            is DataStateResult.Success -> {
+                isRequestFinished = true
+                navigateToHomeScreen.invoke()
+            }
+            is DataStateResult.Error -> {
+                isRequestFinished = true
+                errorMessageResId?.let {
+                    Utils.showToast(context, errorMessageResId!!)
+                }
             }
         }
+    }
+
 }

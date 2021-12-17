@@ -17,10 +17,16 @@ class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (isUserLogged()) {
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(
+                Intent(this, MainActivity::class.java)
+                    .putExtra("isLogged", true)
+            )
             Log.d("SplashScreenActivity", "User is logged.")
         } else {
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(
+                Intent(this, MainActivity::class.java)
+                    .putExtra("isLogged", false)
+            )
             Log.d("SplashScreenActivity", "User is not logged.")
         }
         finish()

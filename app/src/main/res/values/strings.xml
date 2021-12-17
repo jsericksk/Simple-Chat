@@ -20,13 +20,22 @@
     <string name="error_passwords_do_not_match">The passwords do not match.</string>
     <string name="error_profile_image_not_selected">Select a profile picture.</string>
 
+    <string name="error_user_not_found">User with this email doesn\'t exist.</string>
+    <string name="error_password_is_wrong">Your password is wrong.</string>
+    <string name="error_email_already_in_use">The email has already been registered. Please login with your password.</string>
+    <string name="error_sign_in">There was an error trying to login.</string>
+    <string name="error_sign_up">There was an error trying to register.</string>
+
+
     <!-- Home Screen -->
     <string name="chat">Conversas</string>
     <string name="users">Usuários</string>
 
+    <string name="error_logout">There was an error trying to log out.</string>
+    <string name="error_get_user_list">Tthere was an error trying to get the user list.</string>
 
+
+    <!-- Chat Screen -->
     <string name="message">Message</string>
-
-
 
 </resources>

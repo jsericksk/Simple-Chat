@@ -6,7 +6,26 @@ import com.kproject.simplechat.R
 
 object FieldValidator {
 
-    fun validate(
+    fun validateSignIn(
+        email: String,
+        password: String,
+        errorMessageResId: (Int) -> Unit = {}
+    ): Boolean {
+        var isValid = true
+        if (email.isEmpty() || password.isEmpty()) {
+            errorMessageResId.invoke(R.string.error_fill_all_fields)
+            isValid = false
+        } else if (!isValidEmail(email)) {
+            errorMessageResId.invoke(R.string.error_email_badly_formatted)
+            isValid = false
+        } else if (password.length < 5) {
+            errorMessageResId.invoke(R.string.error_password_too_small)
+            isValid = false
+        }
+        return isValid
+    }
+
+    fun validateSignUp(
         email: String,
         password: String,
         confirmedPassword: String = "",

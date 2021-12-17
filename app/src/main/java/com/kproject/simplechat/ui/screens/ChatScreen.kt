@@ -35,8 +35,6 @@ fun ChatScreen(
     userName: String,
     navigateBack: () -> Unit
 ) {
-    val userId = "opa"
-
     val messageList = remember { mutableStateListOf<Message>() }
 
     Scaffold(
@@ -164,15 +162,15 @@ fun MessageText(
 }
 
 
-fun createMessageList(): List<Message> {
+fun createFakeMessageList(): List<Message> {
     val list = mutableListOf<Message>()
     for (i in 1..20) {
         val n = (0..1).random()
         list.add(
             Message(
-                senderId = if (n == 0) "opa" else "kdddjjfjf",
-                receiverId = "ejdjddndn",
-                message = "Opa, meu consagrado. Esta é a $i mensagem."
+                senderId = if (n == 0) "senderId" else "receiverId",
+                receiverId = "receiverId",
+                message = "Hello my friend. $i message."
             )
         )
     }
