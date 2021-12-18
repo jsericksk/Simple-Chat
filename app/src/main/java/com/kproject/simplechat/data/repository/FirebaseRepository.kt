@@ -2,6 +2,7 @@ package com.kproject.simplechat.data.repository
 
 import android.net.Uri
 import com.kproject.simplechat.data.DataStateResult
+import com.kproject.simplechat.model.Message
 import com.kproject.simplechat.model.User
 
 interface FirebaseRepository {
@@ -20,5 +21,7 @@ interface FirebaseRepository {
 
     suspend fun getRegisteredUserList(): DataStateResult<List<User>>
 
-    suspend fun getMessages(roomId: String): DataStateResult<Unit>
+    suspend fun sendMessage(message: String, senderId: String, receiverId: String): DataStateResult<Unit>
+
+    suspend fun getMessages(fromUserId: String): DataStateResult<List<Message>>
 }

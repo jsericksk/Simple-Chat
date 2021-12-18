@@ -4,13 +4,18 @@ import android.net.Uri
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.kproject.simplechat.R
 import com.kproject.simplechat.data.DataStateResult
+import com.kproject.simplechat.model.Message
 import com.kproject.simplechat.model.User
+import com.kproject.simplechat.utils.Utils
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.tasks.await
 import java.util.*
 import javax.inject.Inject
@@ -122,8 +127,59 @@ class FirebaseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMessages(roomId: String): DataStateResult<Unit> {
-        TODO("Not yet implemented")
+    override suspend fun sendMessage(
+        message: String,
+        senderId: String,
+        receiverId: String
+    ): DataStateResult<Unit> {
+        return try {
+            val userId = firebaseAuth.currentUser?.uid
+            userId?.let {
+                val message = Message(
+                    message = message,
+                    senderId = senderId,
+                    receiverId = receiverId,
+                    timestamp = System.currentTimeMillis()
+                )
+                val chatRoomId = Utils.createChatRoomId(senderId, receiverId)
+
+                firebaseFirestore
+                    .collection("chats")
+                    .document(chatRoomId)
+                    .set(message)
+                    .await()
+            }
+            DataStateResult.Success()
+        } catch (e: Exception) {
+            Log.d(TAG, "Error: sendMessage(): ${e.message}")
+            DataStateResult.Error()
+        }
+    }
+
+    override suspend fun getMessages(fromUserId: String): DataStateResult<List<Message>> {
+        return try {
+            var messageList: List<Message>? = null
+            val myUserId = firebaseAuth.currentUser?.uid!!
+            val chatRoomId = Utils.createChatRoomId(fromUserId, myUserId)
+            val docReference = firebaseFirestore.collection("chats").document(chatRoomId)
+            docReference.addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    messageList = snapshot.toObject()
+                    Log.d(TAG, "Current data: ${snapshot.data}")
+                } else {
+                    Log.d(TAG, "Current data: null")
+                }
+            }
+            DataStateResult.Success(messageList)
+        } catch (e: Exception) {
+            Log.d(TAG, "Error: getMessages(): ${e.message}")
+            DataStateResult.Error()
+        }
     }
 
 }

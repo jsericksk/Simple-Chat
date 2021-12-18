@@ -13,4 +13,11 @@ object Utils {
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
 
+    fun createChatRoomId(senderId: String, receiverId: String): String {
+        return if (senderId.compareTo(receiverId) <= -1) {
+            receiverId + senderId
+        } else {
+            senderId + receiverId
+        }
+    }
 }

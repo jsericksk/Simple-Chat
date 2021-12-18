@@ -32,7 +32,7 @@
     <string name="users">Usuários</string>
 
     <string name="error_logout">There was an error trying to log out.</string>
-    <string name="error_get_user_list">Tthere was an error trying to get the user list.</string>
+    <string name="error_get_user_list">There was an error trying to get the user list.</string>
 
 
     <!-- Chat Screen -->

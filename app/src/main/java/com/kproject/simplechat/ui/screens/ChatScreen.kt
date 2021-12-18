@@ -9,10 +9,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,19 +21,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.kproject.simplechat.R
+import com.kproject.simplechat.data.DataStateResult
 import com.kproject.simplechat.model.Message
 import com.kproject.simplechat.ui.screens.components.TopBar
 import com.kproject.simplechat.ui.theme.TextFieldFocusedIndicatorColor
 import com.kproject.simplechat.ui.theme.TextFieldUnfocusedIndicatorColor
+import com.kproject.simplechat.ui.viewmodels.MainViewModel
+import com.kproject.simplechat.utils.Utils
 
 @Composable
 fun ChatScreen(
     userId: String,
     userName: String,
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    mainViewModel: MainViewModel = hiltViewModel()
 ) {
-    val messageList = remember { mutableStateListOf<Message>() }
+    val dataStateResult by mainViewModel.dataStateResult.observeAsState(initial = DataStateResult.Loading())
+    val messageList = mainViewModel.messageList.observeAsState()
+    mainViewModel.getMessages(fromUserId = userId)
 
     Scaffold(
         topBar = {
@@ -55,12 +61,16 @@ fun ChatScreen(
                     .fillMaxSize()
                     .weight(1f)
             ) {
-                itemsIndexed(messageList) { index, message ->
-                    MessageText(
-                        message = message.message,
-                        messageReceived = message.senderId == userId
-                    )
+                messageList.value?.let { list ->
+                    itemsIndexed(list) { index, message ->
+                        MessageText(
+                            message = message.message,
+                            date = message.timestamp,
+                            messageReceived = message.senderId == userId
+                        )
+                    }
                 }
+
             }
 
             val message = remember { mutableStateOf("") }
@@ -108,12 +118,17 @@ fun ChatScreen(
                         .clip(CircleShape)
                         .background(color = MaterialTheme.colors.onSecondary)
                         .clickable {
-                            messageList.add(
+                            /**messageList.add(
                                 Message(
                                     senderId = if (message.value.endsWith(" ")) userId else "sskdjdjjw",
                                     receiverId = "swkdjd",
                                     message = message.value
                                 )
+                            )*/
+                            mainViewModel.sendMessage(
+                                message = message.value,
+                                senderId = FirebaseAuth.getInstance().currentUser?.uid!!,
+                                receiverId = userId
                             )
                             message.value = ""
                         }
@@ -122,15 +137,26 @@ fun ChatScreen(
 
             }
         }
+    }
 
+    when (dataStateResult) {
+        is DataStateResult.Loading -> {
+            // Text("Carregando")
+            // SimpleProgressDialog(showDialog = showProgressDialog)
+        }
+        is DataStateResult.Success -> {
 
+        }
+        is DataStateResult.Error -> {
 
+        }
     }
 }
 
 @Composable
 fun MessageText(
     message: String,
+    date: Long,
     messageReceived: Boolean
 ) {
     val backgroundColor = if (messageReceived) Color.DarkGray else MaterialTheme.colors.onSecondary
@@ -148,7 +174,7 @@ fun MessageText(
         )
 
         Text(
-            text = "2021",
+            text = date.toString(),
             color = Color.DarkGray,
             maxLines = 1,
             fontSize = 13.sp,
@@ -170,7 +196,8 @@ fun createFakeMessageList(): List<Message> {
             Message(
                 senderId = if (n == 0) "senderId" else "receiverId",
                 receiverId = "receiverId",
-                message = "Hello my friend. $i message."
+                message = "Hello my friend. $i message.",
+                timestamp = System.currentTimeMillis()
             )
         )
     }

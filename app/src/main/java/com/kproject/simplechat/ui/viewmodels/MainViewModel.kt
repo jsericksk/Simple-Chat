@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.kproject.simplechat.data.DataStateResult
 import com.kproject.simplechat.data.repository.FirebaseRepository
 import com.kproject.simplechat.data.repository.TAG
+import com.kproject.simplechat.model.Message
 import com.kproject.simplechat.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -26,6 +27,9 @@ class MainViewModel @Inject constructor(
 
     private val _registeredUsersList = MutableLiveData<List<User>>()
     val registeredUsersList: MutableLiveData<List<User>> = _registeredUsersList
+
+    private val _messageList = MutableLiveData<List<Message>?>()
+    val messageList: MutableLiveData<List<Message>?> = _messageList
 
     fun signIn(email: String, password: String) {
         viewModelScope.launch {
@@ -91,9 +95,37 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getMessages(userId: String) {
-
+    fun sendMessage(message: String, senderId: String, receiverId: String) {
+        viewModelScope.launch {
+            _dataStateResult.postValue(DataStateResult.Loading())
+            when (firebaseRepository.sendMessage(message, senderId, receiverId)) {
+                is DataStateResult.Success -> {
+                    _dataStateResult.postValue(DataStateResult.Success())
+                }
+                is DataStateResult.Error ->  {
+                    // _errorMessageResId.postValue(data.errorMessageResId)
+                    _dataStateResult.postValue(DataStateResult.Error())
+                }
+                else -> {}
+            }
+        }
     }
 
+    fun getMessages(fromUserId: String) {
+        viewModelScope.launch {
+            _dataStateResult.postValue(DataStateResult.Loading())
+            when (val data = firebaseRepository.getMessages(fromUserId)) {
+                is DataStateResult.Success -> {
+                    _messageList.postValue(data.data)
+                    _dataStateResult.postValue(DataStateResult.Success())
+                }
+                is DataStateResult.Error ->  {
+                    //_errorMessageResId.postValue(data.errorMessageResId)
+                    _dataStateResult.postValue(DataStateResult.Error())
+                }
+                else -> {}
+            }
+        }
+    }
 
 }
