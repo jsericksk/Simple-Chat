@@ -36,6 +36,7 @@ import com.kproject.simplechat.utils.Utils
 fun ChatScreen(
     userId: String,
     userName: String,
+    userProfileImage: String,
     navigateBack: () -> Unit,
     mainViewModel: MainViewModel = hiltViewModel()
 ) {
@@ -118,17 +119,18 @@ fun ChatScreen(
                         .clip(CircleShape)
                         .background(color = MaterialTheme.colors.onSecondary)
                         .clickable {
-                            /**messageList.add(
-                                Message(
-                                    senderId = if (message.value.endsWith(" ")) userId else "sskdjdjjw",
-                                    receiverId = "swkdjd",
-                                    message = message.value
-                                )
-                            )*/
                             mainViewModel.sendMessage(
                                 message = message.value,
                                 senderId = FirebaseAuth.getInstance().currentUser?.uid!!,
                                 receiverId = userId
+                            )
+
+                            mainViewModel.saveLastMessage(
+                                lastMessage = message.value,
+                                senderId = FirebaseAuth.getInstance().currentUser?.uid!!,
+                                receiverId = userId,
+                                userName = userName,
+                                userProfileImage = userProfileImage
                             )
                             message.value = ""
                         }

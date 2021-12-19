@@ -55,7 +55,7 @@ fun MainScreen(
             Spacer(modifier = Modifier.padding(top = 8.dp))
 
             Button(onClick = navigateToChatScreen) {
-                Text(text = "Chat Screen")
+                Text(text = "LastMessage Screen")
             }
         }
     }

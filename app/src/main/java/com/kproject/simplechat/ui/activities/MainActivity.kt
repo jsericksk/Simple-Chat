@@ -21,11 +21,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val isUserLogged = intent.extras?.getBoolean("isLogged")
         setContent {
             SimpleChatTheme {
                 Surface(color = MaterialTheme.colors.background) {
-                    NavigationGraph(isUserLogged!!)
+                    NavigationGraph()
                 }
             }
         }

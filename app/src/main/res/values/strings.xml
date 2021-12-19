@@ -28,14 +28,14 @@
 
 
     <!-- Home Screen -->
-    <string name="chat">Conversas</string>
-    <string name="users">Usuários</string>
+    <string name="chat">Chats</string>
+    <string name="users">Users</string>
 
     <string name="error_logout">There was an error trying to log out.</string>
     <string name="error_get_user_list">There was an error trying to get the user list.</string>
 
 
-    <!-- Chat Screen -->
+    <!-- LastMessage Screen -->
     <string name="message">Message</string>
 
 </resources>
