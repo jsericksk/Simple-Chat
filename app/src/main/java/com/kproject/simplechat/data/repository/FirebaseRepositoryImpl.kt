@@ -5,6 +5,7 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -14,6 +15,9 @@ import com.kproject.simplechat.model.LastMessage
 import com.kproject.simplechat.model.Message
 import com.kproject.simplechat.model.User
 import com.kproject.simplechat.utils.Utils
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import java.util.*
 import javax.inject.Inject
@@ -181,30 +185,42 @@ class FirebaseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMessages(fromUserId: String): DataStateResult<List<Message>> {
-        return try {
-            val messageList = mutableListOf<Message>()
-            val myUserId = firebaseAuth.currentUser?.uid!!
-            val chatRoomId = Utils.createChatRoomId(fromUserId, myUserId)
-            val docReference = firebaseFirestore
-                .collection("chat_messages")
-                .document(chatRoomId).collection("messages")
-                .orderBy("timestamp", Query.Direction.ASCENDING)
-            docReference.addSnapshotListener { querySnapshot, e ->
-                querySnapshot?.let {
-                    for (document in it.documents) {
-                        val message = document.toObject(Message::class.java)
-                        //val message Utils.createChatRoomId()
-                        messageList.add(message!!)
+    @ExperimentalCoroutinesApi
+    override suspend fun getMessages(fromUserId: String) =
+            callbackFlow<DataStateResult<List<Message>>> {
+                var snapshotListener: ListenerRegistration? = null
+                try {
+                    val messageList = mutableListOf<Message>()
+                    val myUserId = firebaseAuth.currentUser?.uid!!
+                    val chatRoomId = Utils.createChatRoomId(fromUserId, myUserId)
+                    val docReference = firebaseFirestore
+                        .collection("chat_messages")
+                        .document(chatRoomId).collection("messages")
+                        .orderBy("timestamp", Query.Direction.ASCENDING)
+                    snapshotListener = docReference.addSnapshotListener { querySnapshot, e ->
+                        querySnapshot?.let {
+                            // Avoid submitting a duplicate list
+                            if (messageList.isNotEmpty()) {
+                                messageList.clear()
+                            }
+
+                            for (document in it.documents) {
+                                val message = document.toObject(Message::class.java)
+                                messageList.add(message!!)
+                            }
+
+                            if (messageList.isNotEmpty()) {
+                                trySend(DataStateResult.Success(data = messageList))
+                            }
+                            Log.d(TAG, "Success: getMessages()")
+                        }
                     }
+                } catch (e: Exception) {
+                    Log.d(TAG, "Error: getMessages(): ${e.message}")
+                    trySend(DataStateResult.Error())
                 }
+                awaitClose { snapshotListener?.remove() }
             }
-            DataStateResult.Success(messageList)
-        } catch (e: Exception) {
-            Log.d(TAG, "Error: getMessages(): ${e.message}")
-            DataStateResult.Error()
-        }
-    }
 
     override suspend fun saveLastMessage(
         lastMessage: String,

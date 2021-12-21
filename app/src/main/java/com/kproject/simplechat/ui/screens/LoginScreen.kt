@@ -25,7 +25,7 @@ import com.kproject.simplechat.R
 import com.kproject.simplechat.data.DataStateResult
 import com.kproject.simplechat.ui.screens.components.LoginTextField
 import com.kproject.simplechat.ui.screens.components.SimpleProgressDialog
-import com.kproject.simplechat.ui.viewmodels.MainViewModel
+import com.kproject.simplechat.ui.viewmodels.LoginViewModel
 import com.kproject.simplechat.utils.FieldType
 import com.kproject.simplechat.utils.FieldValidator
 import com.kproject.simplechat.utils.Utils
@@ -34,7 +34,7 @@ import com.kproject.simplechat.utils.Utils
 fun LoginScreen(
     navigateToHomeScreen: () -> Unit,
     navigateToSignUpScreen: () -> Unit,
-    mainViewModel: MainViewModel = hiltViewModel()
+    loginViewModel: LoginViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val showProgressDialog = rememberSaveable { mutableStateOf(false) }
@@ -42,8 +42,8 @@ fun LoginScreen(
     val email = rememberSaveable { mutableStateOf("") }
     val password = rememberSaveable { mutableStateOf("") }
 
-    val dataStateResult by mainViewModel.dataStateResult.observeAsState()
-    val errorMessageResId by mainViewModel.errorMessageResId.observeAsState()
+    val dataStateResult by loginViewModel.dataStateResult.observeAsState()
+    val errorMessageResId by loginViewModel.errorMessageResId.observeAsState()
 
     var isRequestFinished by rememberSaveable { mutableStateOf(false) }
 
@@ -83,7 +83,7 @@ fun LoginScreen(
                         Utils.showToast(context, errorMessageResId)
                     }
                 ) {
-                    mainViewModel.signIn(
+                    loginViewModel.signIn(
                         email = email.value,
                         password = password.value
                     )

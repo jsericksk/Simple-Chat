@@ -5,6 +5,7 @@ import com.kproject.simplechat.data.DataStateResult
 import com.kproject.simplechat.model.LastMessage
 import com.kproject.simplechat.model.Message
 import com.kproject.simplechat.model.User
+import kotlinx.coroutines.flow.Flow
 
 interface FirebaseRepository {
     suspend fun signIn(email: String, password: String): DataStateResult<Unit>
@@ -24,7 +25,7 @@ interface FirebaseRepository {
 
     suspend fun sendMessage(message: String, senderId: String, receiverId: String): DataStateResult<Unit>
 
-    suspend fun getMessages(fromUserId: String): DataStateResult<List<Message>>
+    suspend fun getMessages(fromUserId: String): Flow<DataStateResult<List<Message>>>
 
     suspend fun saveLastMessage(
         lastMessage: String,

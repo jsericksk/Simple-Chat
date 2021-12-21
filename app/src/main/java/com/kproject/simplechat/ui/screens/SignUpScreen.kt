@@ -30,7 +30,7 @@ import com.kproject.simplechat.R
 import com.kproject.simplechat.data.DataStateResult
 import com.kproject.simplechat.ui.screens.components.LoginTextField
 import com.kproject.simplechat.ui.screens.components.SimpleProgressDialog
-import com.kproject.simplechat.ui.viewmodels.MainViewModel
+import com.kproject.simplechat.ui.viewmodels.LoginViewModel
 import com.kproject.simplechat.utils.FieldType
 import com.kproject.simplechat.utils.FieldValidator
 import com.kproject.simplechat.utils.Utils
@@ -39,7 +39,7 @@ import com.kproject.simplechat.utils.Utils
 @Composable
 fun SignUpScreen(
     navigateToHomeScreen: () -> Unit,
-    mainViewModel: MainViewModel = hiltViewModel()
+    loginViewModel: LoginViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val showProgressDialog = rememberSaveable { mutableStateOf(false) }
@@ -60,8 +60,8 @@ fun SignUpScreen(
         }
     }
 
-    val dataStateResult by mainViewModel.dataStateResult.observeAsState()
-    val errorMessageResId by mainViewModel.errorMessageResId.observeAsState()
+    val dataStateResult by loginViewModel.dataStateResult.observeAsState()
+    val errorMessageResId by loginViewModel.errorMessageResId.observeAsState()
 
     var isRequestFinished by rememberSaveable { mutableStateOf(false) }
 
@@ -141,7 +141,7 @@ fun SignUpScreen(
                 ) { errorMessageResId ->
                     Utils.showToast(context, errorMessageResId)
                 }) {
-                    mainViewModel.signUp(
+                    loginViewModel.signUp(
                         email = email.value,
                         password = password.value,
                         userName = userName.value,
@@ -160,12 +160,14 @@ fun SignUpScreen(
 
     if (!isRequestFinished) {
         when (dataStateResult) {
-            DataStateResult.Loading<Unit>() -> SimpleProgressDialog(showDialog = showProgressDialog)
-            DataStateResult.Success<Unit>() -> {
+            is DataStateResult.Loading -> {
+                SimpleProgressDialog(showDialog = showProgressDialog)
+            }
+            is DataStateResult.Success -> {
                 isRequestFinished = true
                 navigateToHomeScreen.invoke()
             }
-            DataStateResult.Error<Unit>() -> {
+            is DataStateResult.Error -> {
                 isRequestFinished = true
                 errorMessageResId?.let {
                     Utils.showToast(context, errorMessageResId!!)
@@ -173,6 +175,5 @@ fun SignUpScreen(
             }
         }
     }
-
 }
 

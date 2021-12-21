@@ -31,11 +31,12 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
+import com.google.firebase.auth.FirebaseAuth
 import com.kproject.simplechat.R
 import com.kproject.simplechat.data.DataStateResult
 import com.kproject.simplechat.model.LastMessage
 import com.kproject.simplechat.model.User
-import com.kproject.simplechat.ui.viewmodels.MainViewModel
+import com.kproject.simplechat.ui.viewmodels.HomeViewModel
 import com.kproject.simplechat.utils.Utils
 
 @ExperimentalCoilApi
@@ -44,9 +45,9 @@ import com.kproject.simplechat.utils.Utils
 fun HomeScreen(
     navigateToChatScreen: (userId: String, userName: String, userProfileImage: String) -> Unit,
     navigateToLoginScreen: () -> Unit,
-    mainViewModel: MainViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
-    val logout by mainViewModel.logout.observeAsState(false)
+    val logout by homeViewModel.logout.observeAsState(false)
 
     val showLogoutConfirmationDialog = rememberSaveable { mutableStateOf(false) }
 
@@ -60,7 +61,7 @@ fun HomeScreen(
                     actions = {
                         IconButton(
                             onClick = {
-                                mainViewModel.logout()
+                                homeViewModel.logout()
                             }
                         ) {
                             Icon(
@@ -75,7 +76,7 @@ fun HomeScreen(
             },
             modifier = Modifier.weight(1f)
         ) {
-            HomeTabs(navigateToChatScreen)
+            HomeTabs(navigateToChatScreen, homeViewModel)
         }
     }
 
@@ -89,7 +90,7 @@ fun HomeScreen(
 @Composable
 fun HomeTabs(
     navigateToChatScreen: (userId: String, userName: String, userProfileImage: String) -> Unit,
-    mainViewModel: MainViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel
 ) {
     var tabIndex by remember { mutableStateOf(0) }
     val pagerState = rememberPagerState()
@@ -129,9 +130,9 @@ fun HomeTabs(
             state = pagerState,
         ) { page ->
             if (page == 0) {
-                LatestMessagesTab(navigateToChatScreen, mainViewModel)
+                LatestMessagesTab(navigateToChatScreen, homeViewModel)
             } else {
-                UsersTab(navigateToChatScreen, mainViewModel)
+                UsersTab(navigateToChatScreen, homeViewModel)
             }
         }
     }
@@ -141,14 +142,10 @@ fun HomeTabs(
 @Composable
 fun LatestMessagesTab(
     navigateToChatScreen: (userId: String, userName: String, userProfileImage: String) -> Unit,
-    mainViewModel: MainViewModel
+    homeViewModel: HomeViewModel
 ) {
-    /**
     val context = LocalContext.current
-
-    val dataStateResult by mainViewModel.dataStateResult.observeAsState(initial = DataStateResult.Loading())
-    val registeredUsersList by mainViewModel.registeredUsersList.observeAsState()
-    val errorMessageResId by mainViewModel.errorMessageResId.observeAsState()
+    val latestMessageListState by homeViewModel.latestMessageListState.observeAsState()
 
     var isRequestFinished by rememberSaveable { mutableStateOf(false) }
 
@@ -157,23 +154,23 @@ fun LatestMessagesTab(
      */
     LaunchedEffect(Unit) {
         if (!isRequestFinished) {
-            mainViewModel.getRegisteredUserList()
+            homeViewModel.getLatestMessages()
         }
     }
 
-    when (dataStateResult) {
+    when (latestMessageListState) {
         is DataStateResult.Loading -> {
-            // SimpleProgressDialog(showDialog = showProgressDialog)
+
         }
         is DataStateResult.Success -> {
             isRequestFinished = true
-            registeredUsersList?.let { userList ->
+            latestMessageListState?.let { messageList ->
                 LazyColumn(
                     Modifier.fillMaxSize()
                 ) {
-                    itemsIndexed(userList) { index, user ->
-                        UserItem(
-                            user = user,
+                    itemsIndexed(messageList.data!!) { index, lastMessage ->
+                        LastMessageItem(
+                            lastMessage = lastMessage,
                             navigateToChatScreen = navigateToChatScreen
                         )
                     }
@@ -182,24 +179,18 @@ fun LatestMessagesTab(
         }
         is DataStateResult.Error -> {
             isRequestFinished = true
-            errorMessageResId?.let {
-                Utils.showToast(context, errorMessageResId!!)
-            }
         }
-    }*/
+    }
 }
 
 @ExperimentalCoilApi
 @Composable
 fun UsersTab(
     navigateToChatScreen: (userId: String, userName: String, userProfileImage: String) -> Unit,
-    mainViewModel: MainViewModel
+    homeViewModel: HomeViewModel
 ) {
     val context = LocalContext.current
-
-    val dataStateResult by mainViewModel.dataStateResult.observeAsState(initial = DataStateResult.Loading())
-    val registeredUsersList by mainViewModel.registeredUsersList.observeAsState()
-    val errorMessageResId by mainViewModel.errorMessageResId.observeAsState()
+    val registeredUsersListState by homeViewModel.registeredUsersListState.observeAsState()
 
     var isRequestFinished by rememberSaveable { mutableStateOf(false) }
 
@@ -208,21 +199,21 @@ fun UsersTab(
      */
     LaunchedEffect(Unit) {
         if (!isRequestFinished) {
-            mainViewModel.getRegisteredUserList()
+            homeViewModel.getRegisteredUserList()
         }
     }
 
-    when (dataStateResult) {
+    when (registeredUsersListState) {
         is DataStateResult.Loading -> {
             // SimpleProgressDialog(showDialog = showProgressDialog)
         }
         is DataStateResult.Success -> {
             isRequestFinished = true
-            registeredUsersList?.let { userList ->
+            registeredUsersListState?.let { userListState ->
                 LazyColumn(
                     Modifier.fillMaxSize()
                 ) {
-                    itemsIndexed(userList) { index, user ->
+                    itemsIndexed(userListState.data!!) { index, user ->
                         UserItem(
                             user = user,
                             navigateToChatScreen = navigateToChatScreen
@@ -233,9 +224,7 @@ fun UsersTab(
         }
         is DataStateResult.Error -> {
             isRequestFinished = true
-            errorMessageResId?.let {
-                Utils.showToast(context, errorMessageResId!!)
-            }
+
         }
     }
 }
@@ -256,17 +245,19 @@ fun LastMessageItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
-                    // Corrigir
+                    val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+                    val userId = if (currentUserId == lastMessage.senderId)
+                        lastMessage.receiverId else lastMessage.senderId
                     navigateToChatScreen.invoke(
-                        lastMessage.lastMessage,
+                        currentUserId!!,
                         lastMessage.userName,
-                        Uri.encode(lastMessage.lastMessage)
+                        Uri.encode(lastMessage.userProfileImage)
                     )
                 }
         ) {
             Image(
                 painter = rememberImagePainter(
-                    data = R.drawable.naruto
+                    data = lastMessage.userProfileImage
                 ),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
@@ -294,7 +285,8 @@ fun LastMessageItem(
 
                 Text(
                     text = lastMessage.lastMessage,
-                    color = Color.DarkGray,
+                    color = if (lastMessage.senderId == FirebaseAuth.getInstance().currentUser?.uid)
+                        Color.DarkGray else Color.Blue,
                     maxLines = 1,
                     fontSize = 16.sp
                 )

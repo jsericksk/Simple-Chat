@@ -1,5 +1,6 @@
 package com.kproject.simplechat.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,6 +12,7 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,11 +27,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.kproject.simplechat.R
 import com.kproject.simplechat.data.DataStateResult
+import com.kproject.simplechat.data.repository.TAG
 import com.kproject.simplechat.model.Message
+import com.kproject.simplechat.ui.screens.components.SimpleProgressDialog
 import com.kproject.simplechat.ui.screens.components.TopBar
 import com.kproject.simplechat.ui.theme.TextFieldFocusedIndicatorColor
 import com.kproject.simplechat.ui.theme.TextFieldUnfocusedIndicatorColor
-import com.kproject.simplechat.ui.viewmodels.MainViewModel
+import com.kproject.simplechat.ui.viewmodels.ChatViewModel
 import com.kproject.simplechat.utils.Utils
 
 @Composable
@@ -38,11 +42,24 @@ fun ChatScreen(
     userName: String,
     userProfileImage: String,
     navigateBack: () -> Unit,
-    mainViewModel: MainViewModel = hiltViewModel()
+    chatViewModel: ChatViewModel = hiltViewModel()
 ) {
-    val dataStateResult by mainViewModel.dataStateResult.observeAsState(initial = DataStateResult.Loading())
-    val messageList = mainViewModel.messageList.observeAsState()
-    mainViewModel.getMessages(fromUserId = userId)
+    val dataStateResult by chatViewModel.dataStateResult.observeAsState(initial = DataStateResult.Loading())
+    val messageList = chatViewModel.messageList.observeAsState()
+    // val messageList = chatViewModel.messages
+
+    var isRequestFinished by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        if (!isRequestFinished) {
+            Log.d(TAG, "is Request not Finished")
+            chatViewModel.getMessages(fromUserId = userId)
+        }
+    }
+
+    messageList.value?.let {
+        Log.d(TAG, "Message list changed.\nList size: ${it.size}")
+    }
 
     Scaffold(
         topBar = {
@@ -62,8 +79,9 @@ fun ChatScreen(
                     .fillMaxSize()
                     .weight(1f)
             ) {
-                messageList.value?.let { list ->
-                    itemsIndexed(list) { index, message ->
+                 messageList.value?.let {
+                     isRequestFinished = true
+                    itemsIndexed(it) { index, message ->
                         MessageText(
                             message = message.message,
                             date = message.timestamp,
@@ -71,7 +89,6 @@ fun ChatScreen(
                         )
                     }
                 }
-
             }
 
             val message = remember { mutableStateOf("") }
@@ -119,13 +136,13 @@ fun ChatScreen(
                         .clip(CircleShape)
                         .background(color = MaterialTheme.colors.onSecondary)
                         .clickable {
-                            mainViewModel.sendMessage(
+                            chatViewModel.sendMessage(
                                 message = message.value,
                                 senderId = FirebaseAuth.getInstance().currentUser?.uid!!,
                                 receiverId = userId
                             )
 
-                            mainViewModel.saveLastMessage(
+                            chatViewModel.saveLastMessage(
                                 lastMessage = message.value,
                                 senderId = FirebaseAuth.getInstance().currentUser?.uid!!,
                                 receiverId = userId,
@@ -136,21 +153,7 @@ fun ChatScreen(
                         }
                         .fillMaxSize()
                 )
-
             }
-        }
-    }
-
-    when (dataStateResult) {
-        is DataStateResult.Loading -> {
-            // Text("Carregando")
-            // SimpleProgressDialog(showDialog = showProgressDialog)
-        }
-        is DataStateResult.Success -> {
-
-        }
-        is DataStateResult.Error -> {
-
         }
     }
 }
