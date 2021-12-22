@@ -54,9 +54,7 @@ class ChatViewModel @Inject constructor(
             firebaseRepository.getMessages(fromUserId).collect { result ->
                 when (result) {
                     is DataStateResult.Success -> {
-                        Log.d(TAG, "Success. Saved \nLast message: ${result.data?.last()}")
                         val newList = result.data?.toMutableList()!!
-                        Log.d(TAG, "New list size: ${newList.size}")
                         _messageList.postValue(newList)
                         _dataStateResult.postValue(DataStateResult.Success())
                     }

@@ -245,11 +245,12 @@ fun LastMessageItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
-                    val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+                    val currentUserId = Utils.getCurrentUserId()
                     val userId = if (currentUserId == lastMessage.senderId)
                         lastMessage.receiverId else lastMessage.senderId
+
                     navigateToChatScreen.invoke(
-                        currentUserId!!,
+                        userId,
                         lastMessage.userName,
                         Uri.encode(lastMessage.userProfileImage)
                     )
@@ -293,7 +294,7 @@ fun LastMessageItem(
             }
 
             Text(
-                text = lastMessage.timestamp.toString(),
+                text = Utils.getFormattedDate(lastMessage.timestamp),
                 color = Color.Gray,
                 fontSize = 16.sp
             )

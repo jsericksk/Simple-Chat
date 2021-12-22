@@ -10,6 +10,7 @@ import com.kproject.simplechat.data.repository.TAG
 import com.kproject.simplechat.model.LastMessage
 import com.kproject.simplechat.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -41,14 +42,16 @@ class HomeViewModel @Inject constructor(
         Log.d(TAG, "ViewModel getLatestMessages()")
         viewModelScope.launch {
             _latestMessageListState.postValue(DataStateResult.Loading())
-            when (val data = firebaseRepository.getLatestMessages()) {
-                is DataStateResult.Success -> {
-                    _latestMessageListState.postValue(data)
+            firebaseRepository.getLatestMessages().collect { result ->
+                when (result) {
+                    is DataStateResult.Success -> {
+                        _latestMessageListState.postValue(result)
+                    }
+                    is DataStateResult.Error -> {
+                        _latestMessageListState.postValue(DataStateResult.Error())
+                    }
+                    else -> {}
                 }
-                is DataStateResult.Error ->  {
-                    _latestMessageListState.postValue(DataStateResult.Error())
-                }
-                else -> {}
             }
         }
     }
@@ -57,14 +60,16 @@ class HomeViewModel @Inject constructor(
         Log.d(TAG, "ViewModel getRegisteredUserList()")
         viewModelScope.launch {
             _registeredUsersListState.postValue(DataStateResult.Loading())
-            when (val data = firebaseRepository.getRegisteredUserList()) {
-                is DataStateResult.Success -> {
-                    _registeredUsersListState.postValue(data)
+            firebaseRepository.getRegisteredUserList().collect { result ->
+                when (result) {
+                    is DataStateResult.Success -> {
+                        _registeredUsersListState.postValue(result)
+                    }
+                    is DataStateResult.Error -> {
+                        _registeredUsersListState.postValue(DataStateResult.Error())
+                    }
+                    else -> {}
                 }
-                is DataStateResult.Error ->  {
-                    _registeredUsersListState.postValue(DataStateResult.Error())
-                }
-                else -> {}
             }
         }
     }

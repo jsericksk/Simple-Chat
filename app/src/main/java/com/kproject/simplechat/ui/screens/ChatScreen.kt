@@ -35,6 +35,7 @@ import com.kproject.simplechat.ui.theme.TextFieldFocusedIndicatorColor
 import com.kproject.simplechat.ui.theme.TextFieldUnfocusedIndicatorColor
 import com.kproject.simplechat.ui.viewmodels.ChatViewModel
 import com.kproject.simplechat.utils.Utils
+import java.util.*
 
 @Composable
 fun ChatScreen(
@@ -55,10 +56,6 @@ fun ChatScreen(
             Log.d(TAG, "is Request not Finished")
             chatViewModel.getMessages(fromUserId = userId)
         }
-    }
-
-    messageList.value?.let {
-        Log.d(TAG, "Message list changed.\nList size: ${it.size}")
     }
 
     Scaffold(
@@ -144,7 +141,7 @@ fun ChatScreen(
 
                             chatViewModel.saveLastMessage(
                                 lastMessage = message.value,
-                                senderId = FirebaseAuth.getInstance().currentUser?.uid!!,
+                                senderId = Utils.getCurrentUserId(),
                                 receiverId = userId,
                                 userName = userName,
                                 userProfileImage = userProfileImage
@@ -161,7 +158,7 @@ fun ChatScreen(
 @Composable
 fun MessageText(
     message: String,
-    date: Long,
+    date: Date?,
     messageReceived: Boolean
 ) {
     val backgroundColor = if (messageReceived) Color.DarkGray else MaterialTheme.colors.onSecondary
@@ -179,7 +176,7 @@ fun MessageText(
         )
 
         Text(
-            text = date.toString(),
+            text = Utils.getFormattedDate(date),
             color = Color.DarkGray,
             maxLines = 1,
             fontSize = 13.sp,
@@ -201,8 +198,7 @@ fun createFakeMessageList(): List<Message> {
             Message(
                 senderId = if (n == 0) "senderId" else "receiverId",
                 receiverId = "receiverId",
-                message = "Hello my friend. $i message.",
-                timestamp = System.currentTimeMillis()
+                message = "Hello my friend. $i message."
             )
         )
     }

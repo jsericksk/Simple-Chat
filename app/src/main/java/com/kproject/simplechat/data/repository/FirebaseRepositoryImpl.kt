@@ -2,6 +2,7 @@ package com.kproject.simplechat.data.repository
 
 import android.net.Uri
 import android.util.Log
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.FirebaseFirestore
@@ -14,6 +15,7 @@ import com.kproject.simplechat.data.DataStateResult
 import com.kproject.simplechat.model.LastMessage
 import com.kproject.simplechat.model.Message
 import com.kproject.simplechat.model.User
+import com.kproject.simplechat.utils.Constants
 import com.kproject.simplechat.utils.Utils
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
@@ -99,7 +101,7 @@ class FirebaseRepositoryImpl @Inject constructor(
             )
 
             firebaseFirestore
-                .collection("users")
+                .collection(Constants.COLLECTION_USERS)
                 .document(userId)
                 .set(user)
                 .await()
@@ -115,75 +117,75 @@ class FirebaseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getLatestMessages(): DataStateResult<List<LastMessage>> {
-        return try {
-            val myUserId = firebaseAuth.currentUser?.uid!!
-            val latestMessageList = mutableListOf<LastMessage>()
-            firebaseFirestore.collection("latest_messages").get()
-                .addOnSuccessListener { documentSnapshot ->
-                    for (doc in documentSnapshot) {
-                        val lastMessage = doc.toObject(LastMessage::class.java)
-                        if (lastMessage.chatId.contains(myUserId)) {
-                            latestMessageList.add(lastMessage)
+
+    @ExperimentalCoroutinesApi
+    override suspend fun getLatestMessages() =
+            callbackFlow<DataStateResult<List<LastMessage>>> {
+                var snapshotListener: ListenerRegistration? = null
+                try {
+                    val latestMessageList = mutableListOf<LastMessage>()
+                    val docReference = firebaseFirestore
+                        .collection(Constants.COLLECTION_LAST_MESSAGES)
+                        .document(Utils.getCurrentUserId()).collection(Constants.COLLECTION_MESSAGES)
+                        .orderBy("timestamp", Query.Direction.DESCENDING)
+                    snapshotListener = docReference.addSnapshotListener { querySnapshot, e ->
+                        querySnapshot?.let {
+                            if (latestMessageList.isNotEmpty()) {
+                                latestMessageList.clear()
+                            }
+
+                            for (document in it.documents) {
+                                val lastMessage = document.toObject(LastMessage::class.java)
+                                latestMessageList.add(lastMessage!!)
+                            }
+
+                            if (latestMessageList.isNotEmpty()) {
+                                trySend(DataStateResult.Success(data = latestMessageList))
+                            }
+                            Log.d(TAG, "Success: getLatestMessages()")
                         }
                     }
-                }.await()
-            DataStateResult.Success(latestMessageList)
-        } catch (e: Exception) {
-            Log.d(TAG, "Error:getRegisteredUserList(): ${e.message}")
-            DataStateResult.Error(R.string.error_get_user_list)
-        }
-    }
-
-
-    override suspend fun getRegisteredUserList(): DataStateResult<List<User>> {
-        return try {
-            val userList = mutableListOf<User>()
-            firebaseFirestore.collection("users").get()
-                .addOnSuccessListener { documentSnapshot ->
-                    for (doc in documentSnapshot) {
-                        val user = doc.toObject(User::class.java)
-                        if (user.userId != firebaseAuth.currentUser?.uid) {
-                            userList.add(user)
-                        }
-                    }
-                }.await()
-            DataStateResult.Success(userList)
-        } catch (e: Exception) {
-            Log.d(TAG, "Error:getRegisteredUserList(): ${e.message}")
-            DataStateResult.Error(R.string.error_get_user_list)
-        }
-    }
-
-    override suspend fun sendMessage(
-        message: String,
-        senderId: String,
-        receiverId: String
-    ): DataStateResult<Unit> {
-        return try {
-            val userId = firebaseAuth.currentUser?.uid
-            userId?.let {
-                val message = Message(
-                    message = message,
-                    senderId = senderId,
-                    receiverId = receiverId,
-                    timestamp = System.currentTimeMillis()
-                )
-                val chatRoomId = Utils.createChatRoomId(senderId, receiverId)
-
-                firebaseFirestore
-                    .collection("chat_messages")
-                    .document(chatRoomId)
-                    .collection("messages")
-                    .add(message)
-                    .await()
+                } catch (e: Exception) {
+                    Log.d(TAG, "Error: getLatestMessages(): ${e.message}")
+                    trySend(DataStateResult.Error())
+                }
+                awaitClose { snapshotListener?.remove() }
             }
-            DataStateResult.Success()
-        } catch (e: Exception) {
-            Log.d(TAG, "Error: sendMessage(): ${e.message}")
-            DataStateResult.Error()
-        }
-    }
+
+    @ExperimentalCoroutinesApi
+    override suspend fun getRegisteredUserList() =
+            callbackFlow<DataStateResult<List<User>>> {
+                var snapshotListener: ListenerRegistration? = null
+                try {
+                    val userList = mutableListOf<User>()
+
+                    val docReference = firebaseFirestore.collection(Constants.COLLECTION_USERS)
+                    snapshotListener = docReference.addSnapshotListener { querySnapshot, e ->
+                        querySnapshot?.let {
+                            // Avoid submitting a duplicate list
+                            if (userList.isNotEmpty()) {
+                                userList.clear()
+                            }
+
+                            for (document in it.documents) {
+                                val user = document.toObject(User::class.java)
+                                if (user?.userId != Utils.getCurrentUserId()) {
+                                    userList.add(user!!)
+                                }
+                            }
+
+                            if (userList.isNotEmpty()) {
+                                trySend(DataStateResult.Success(data = userList))
+                            }
+                            Log.d(TAG, "Success: getRegisteredUserList()")
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.d(TAG, "Error: getRegisteredUserList(): ${e.message}")
+                    trySend(DataStateResult.Error())
+                }
+                awaitClose { snapshotListener?.remove() }
+            }
 
     @ExperimentalCoroutinesApi
     override suspend fun getMessages(fromUserId: String) =
@@ -194,8 +196,8 @@ class FirebaseRepositoryImpl @Inject constructor(
                     val myUserId = firebaseAuth.currentUser?.uid!!
                     val chatRoomId = Utils.createChatRoomId(fromUserId, myUserId)
                     val docReference = firebaseFirestore
-                        .collection("chat_messages")
-                        .document(chatRoomId).collection("messages")
+                        .collection(Constants.COLLECTION_CHAT_MESSAGES)
+                        .document(chatRoomId).collection(Constants.COLLECTION_MESSAGES)
                         .orderBy("timestamp", Query.Direction.ASCENDING)
                     snapshotListener = docReference.addSnapshotListener { querySnapshot, e ->
                         querySnapshot?.let {
@@ -222,6 +224,36 @@ class FirebaseRepositoryImpl @Inject constructor(
                 awaitClose { snapshotListener?.remove() }
             }
 
+
+    override suspend fun sendMessage(
+        message: String,
+        senderId: String,
+        receiverId: String
+    ): DataStateResult<Unit> {
+        return try {
+            val userId = firebaseAuth.currentUser?.uid
+            userId?.let {
+                val message = Message(
+                    message = message,
+                    senderId = senderId,
+                    receiverId = receiverId
+                )
+                val chatRoomId = Utils.createChatRoomId(senderId, receiverId)
+
+                firebaseFirestore
+                    .collection(Constants.COLLECTION_CHAT_MESSAGES)
+                    .document(chatRoomId)
+                    .collection(Constants.COLLECTION_MESSAGES)
+                    .add(message)
+                    .await()
+            }
+            DataStateResult.Success()
+        } catch (e: Exception) {
+            Log.d(TAG, "Error: sendMessage(): ${e.message}")
+            DataStateResult.Error()
+        }
+    }
+
     override suspend fun saveLastMessage(
         lastMessage: String,
         senderId: String,
@@ -230,22 +262,45 @@ class FirebaseRepositoryImpl @Inject constructor(
         userProfileImage: String
     ): DataStateResult<Unit> {
         return try {
-            val chatRoomId = Utils.createChatRoomId(senderId, receiverId)
-            val userId = firebaseAuth.currentUser?.uid
-            userId?.let {
-                val chat = LastMessage(
-                    chatId = chatRoomId,
+            val currentUser = getLoggedUser()
+            currentUser?.let { currentLoggedUser ->
+                val lastMessageOfCurrentUser = LastMessage(
+                    chatId = receiverId,
                     lastMessage = lastMessage,
                     senderId = senderId,
+                    receiverId = receiverId,
                     userName = userName,
-                    userProfileImage = userProfileImage,
-                    timestamp = System.currentTimeMillis()
+                    userProfileImage = userProfileImage
                 )
 
+                // receiverId represents the id of the second user in the conversation
+                val lastMessageOfSecondUser = LastMessage(
+                    chatId = currentLoggedUser.userId,
+                    lastMessage = lastMessage,
+                    senderId = senderId,
+                    receiverId = receiverId,
+                    userName = currentLoggedUser.userName,
+                    userProfileImage = currentLoggedUser.profileImage
+                )
+
+                /**
+                 * Save both the last message in each document which is
+                 * represented by the user id.
+                 */
                 firebaseFirestore
-                    .collection("latest_messages")
-                    .document(chatRoomId)
-                    .set(chat)
+                    .collection(Constants.COLLECTION_LAST_MESSAGES)
+                    .document(currentLoggedUser.userId)
+                    .collection(Constants.COLLECTION_MESSAGES)
+                    .document(receiverId)
+                    .set(lastMessageOfCurrentUser)
+                    .await()
+
+                firebaseFirestore
+                    .collection(Constants.COLLECTION_LAST_MESSAGES)
+                    .document(receiverId)
+                    .collection(Constants.COLLECTION_MESSAGES)
+                    .document(currentLoggedUser.userId)
+                    .set(lastMessageOfSecondUser)
                     .await()
             }
             DataStateResult.Success()
@@ -255,4 +310,18 @@ class FirebaseRepositoryImpl @Inject constructor(
         }
     }
 
+    private suspend fun getLoggedUser(): User? {
+        return try {
+            var user: User? = null
+            val documentSnapshot = firebaseFirestore.collection(Constants.COLLECTION_USERS)
+                .document(Utils.getCurrentUserId()).get().await()
+            documentSnapshot?.let {
+                user = it.toObject(User::class.java)
+            }
+            user
+        } catch (e: Exception) {
+            Log.d(TAG, "Error: getLoggedUser(): ${e.message}")
+            return null
+        }
+    }
 }
