@@ -8,6 +8,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.kproject.simplechat.R
+import com.kproject.simplechat.ui.theme.TextDefaultColor
 
 
 @Composable
@@ -38,12 +39,14 @@ fun SimpleDialog(
                 Text(
                     text = stringResource(id = titleResId),
                     fontSize = 18.sp,
+                    color = MaterialTheme.colors.TextDefaultColor,
                     fontWeight = FontWeight.Bold
                 )
             },
             text = {
                 Text(
                     text = stringResource(id = messageResId),
+                    color = MaterialTheme.colors.TextDefaultColor,
                     fontSize = 16.sp
                 )
             },

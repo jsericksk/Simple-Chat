@@ -1,7 +1,6 @@
 package com.kproject.simplechat.ui.screens
 
 import android.net.Uri
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -28,6 +27,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.asLiveData
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -44,7 +44,10 @@ import com.kproject.simplechat.ui.screens.components.LoadingProgressIndicator
 import com.kproject.simplechat.ui.screens.components.SimpleDialog
 import com.kproject.simplechat.ui.theme.TextDefaultColor
 import com.kproject.simplechat.ui.viewmodels.HomeViewModel
+import com.kproject.simplechat.utils.DataStoreUtils
+import com.kproject.simplechat.utils.PrefsConstants
 import com.kproject.simplechat.utils.Utils
+import kotlinx.coroutines.launch
 
 @ExperimentalCoilApi
 @ExperimentalPagerApi
@@ -67,12 +70,23 @@ fun HomeScreen(
                     actions = {
                         IconButton(
                             onClick = {
-                                // showLogoutConfirmationDialog.value = true
-                                showAppThemeOptionDialog.value = true
+                                showLogoutConfirmationDialog.value = true
                             }
                         ) {
                             Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_logout),
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        }
+
+                        IconButton(
+                            onClick = {
+                                showAppThemeOptionDialog.value = true
+                            }
+                        ) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(id = R.drawable.ic_dark_mode),
                                 contentDescription = null,
                                 tint = Color.White
                             )
@@ -393,19 +407,38 @@ fun UserItem(
 fun AppThemeOption(
     showDialog: MutableState<Boolean>
 ) {
-    val selectedTheme by remember { mutableStateOf(0) }
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
+    var selectedTheme by remember { mutableStateOf(0) }
 
     if (showDialog.value) {
         AlertDialog(
             onDismissRequest = { showDialog.value = false },
             title = {
-                   ThemeOptions()
+                Text(
+                    text = stringResource(id = R.string.app_theme),
+                    color = MaterialTheme.colors.TextDefaultColor,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                ThemeOptions {
+                    selectedTheme = it
+                }
             },
             confirmButton = {
                 TextButton(
                     onClick = {
                         showDialog.value = false
-
+                        coroutineScope.launch {
+                            DataStoreUtils.savePreference(
+                                context = context,
+                                key = PrefsConstants.APP_THEME,
+                                value = selectedTheme
+                            )
+                        }
                     }
                 ) {
                     Text(
@@ -432,45 +465,66 @@ fun AppThemeOption(
 }
 
 @Composable
-fun ThemeOptions() {
+fun ThemeOptions(
+    selectedTheme: (Int) -> Unit
+) {
+    val context = LocalContext.current
+
+    val appThemeState by DataStoreUtils.readPreference(
+        context = context,
+        key = PrefsConstants.APP_THEME,
+        defaultValue = PrefsConstants.THEME_SYSTEM_DEFAULT
+    ).asLiveData().observeAsState(
+        // Gets an initial value without Flow so there is no small delay
+        initial = DataStoreUtils.readPreferenceWithoutFlow(
+            context = context,
+            key = PrefsConstants.APP_THEME,
+            defaultValue = PrefsConstants.THEME_SYSTEM_DEFAULT
+        )
+    )
+
     val radioButtonOptions = listOf(
         stringResource(id = R.string.theme_system),
         stringResource(id = R.string.theme_light),
         stringResource(id = R.string.theme_dark)
     )
-    
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioButtonOptions[0]) }
-    
+
+    var currentSelectedOption by rememberSaveable { mutableStateOf(appThemeState) }
+
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Column {
-            radioButtonOptions.forEach { text ->
+            radioButtonOptions.forEachIndexed { index, text ->
                 Row(
                     Modifier
                         .fillMaxWidth()
                         .selectable(
-                            selected = (text == selectedOption),
-                            onClick = { onOptionSelected(text) }
-                        )
-                        .padding(horizontal = 16.dp)
+                            selected = currentSelectedOption == index,
+                            onClick = {
+                                selectedTheme.invoke(index)
+                                currentSelectedOption = index
+                            }
+                        ),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val context = LocalContext.current
-
                     RadioButton(
-                        selected = (text == selectedOption),
+                        selected = currentSelectedOption == index,
                         modifier = Modifier.padding(all = Dp(value = 8F)),
                         onClick = {
-                            onOptionSelected(text)
-                        }
+                            selectedTheme.invoke(index)
+                            currentSelectedOption = index
+                        },
+                        colors = RadioButtonDefaults.colors(
+                            selectedColor = MaterialTheme.colors.onSecondary
+                        )
                     )
-                    
+
                     Text(
                         text = text,
+                        color = MaterialTheme.colors.TextDefaultColor,
+                        fontSize = 17.sp,
                         modifier = Modifier.padding(start = 16.dp)
                     )
                 }

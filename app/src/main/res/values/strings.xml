@@ -33,6 +33,7 @@
     <string name="chat">Chats</string>
     <string name="users">Users</string>
 
+    <string name="app_theme">App Theme</string>
     <string name="theme_system">System default</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>

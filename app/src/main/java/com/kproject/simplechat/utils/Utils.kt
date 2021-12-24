@@ -1,6 +1,7 @@
 package com.kproject.simplechat.utils
 
 import android.content.Context
+import android.content.res.Configuration
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
@@ -41,5 +42,13 @@ object Utils {
         val dateFormat =
                 if (currentLocalDay == currentTimestampDay) "HH:mm" else "HH:mm (dd/MM/yyyy)"
         return SimpleDateFormat(dateFormat, Locale.getDefault()).format(currentDate)
+    }
+
+    fun getCurrentSystemTheme(context: Context): Int {
+        return when (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_NO -> PrefsConstants.THEME_LIGHT
+            Configuration.UI_MODE_NIGHT_YES -> PrefsConstants.THEME_DARK
+            else -> PrefsConstants.THEME_LIGHT
+        }
     }
 }
