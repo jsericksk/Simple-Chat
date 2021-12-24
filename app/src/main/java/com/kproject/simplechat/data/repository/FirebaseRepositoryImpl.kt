@@ -139,9 +139,7 @@ class FirebaseRepositoryImpl @Inject constructor(
                                 latestMessageList.add(lastMessage!!)
                             }
 
-                            if (latestMessageList.isNotEmpty()) {
-                                trySend(DataStateResult.Success(data = latestMessageList))
-                            }
+                            trySend(DataStateResult.Success(data = latestMessageList))
                             Log.d(TAG, "Success: getLatestMessages()")
                         }
                     }
@@ -173,10 +171,8 @@ class FirebaseRepositoryImpl @Inject constructor(
                                     userList.add(user!!)
                                 }
                             }
+                            trySend(DataStateResult.Success(data = userList))
 
-                            if (userList.isNotEmpty()) {
-                                trySend(DataStateResult.Success(data = userList))
-                            }
                             Log.d(TAG, "Success: getRegisteredUserList()")
                         }
                     }

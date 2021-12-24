@@ -1,5 +1,6 @@
 package com.kproject.simplechat.ui.screens.components
 
+import androidx.annotation.StringRes
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -25,8 +26,8 @@ fun SimpleProgressDialog(
 @Composable
 fun SimpleDialog(
     showDialog: MutableState<Boolean>,
-    title: String,
-    message: String,
+    @StringRes titleResId: Int,
+    @StringRes messageResId: Int,
     onClickButtonOk: () -> Unit,
     onClickButtonCancel: () -> Unit
 ) {
@@ -35,14 +36,14 @@ fun SimpleDialog(
             onDismissRequest = { showDialog.value = false },
             title = {
                 Text(
-                    text = title,
+                    text = stringResource(id = titleResId),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
             },
             text = {
                 Text(
-                    text = message,
+                    text = stringResource(id = messageResId),
                     fontSize = 16.sp
                 )
             },

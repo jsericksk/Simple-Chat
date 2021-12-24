@@ -1,12 +1,14 @@
 package com.kproject.simplechat.ui.screens
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -22,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -36,6 +39,10 @@ import com.kproject.simplechat.R
 import com.kproject.simplechat.data.DataStateResult
 import com.kproject.simplechat.model.LastMessage
 import com.kproject.simplechat.model.User
+import com.kproject.simplechat.ui.screens.components.EmptyListInfo
+import com.kproject.simplechat.ui.screens.components.LoadingProgressIndicator
+import com.kproject.simplechat.ui.screens.components.SimpleDialog
+import com.kproject.simplechat.ui.theme.TextDefaultColor
 import com.kproject.simplechat.ui.viewmodels.HomeViewModel
 import com.kproject.simplechat.utils.Utils
 
@@ -47,9 +54,8 @@ fun HomeScreen(
     navigateToLoginScreen: () -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
-    val logout by homeViewModel.logout.observeAsState(false)
-
     val showLogoutConfirmationDialog = rememberSaveable { mutableStateOf(false) }
+    val showAppThemeOptionDialog = rememberSaveable { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -61,7 +67,8 @@ fun HomeScreen(
                     actions = {
                         IconButton(
                             onClick = {
-                                homeViewModel.logout()
+                                // showLogoutConfirmationDialog.value = true
+                                showAppThemeOptionDialog.value = true
                             }
                         ) {
                             Icon(
@@ -79,10 +86,20 @@ fun HomeScreen(
             HomeTabs(navigateToChatScreen, homeViewModel)
         }
     }
-
-    if (logout) {
-        navigateToLoginScreen.invoke()
-    }
+    
+    AppThemeOption(showDialog = showAppThemeOptionDialog)
+    
+    SimpleDialog(
+        showDialog = showLogoutConfirmationDialog,
+        titleResId = R.string.dialog_title_confirm_logout,
+        messageResId = R.string.dialog_message_confirm_logout,
+        onClickButtonOk = {
+            homeViewModel.logout()
+            showLogoutConfirmationDialog.value = false
+            navigateToLoginScreen.invoke()
+        },
+        onClickButtonCancel = { showLogoutConfirmationDialog.value = false }
+    )
 }
 
 @ExperimentalCoilApi
@@ -160,18 +177,29 @@ fun LatestMessagesTab(
 
     when (latestMessageListState) {
         is DataStateResult.Loading -> {
-
+            LoadingProgressIndicator()
         }
         is DataStateResult.Success -> {
             isRequestFinished = true
-            latestMessageListState?.let { messageList ->
-                LazyColumn(
-                    Modifier.fillMaxSize()
-                ) {
-                    itemsIndexed(messageList.data!!) { index, lastMessage ->
-                        LastMessageItem(
-                            lastMessage = lastMessage,
-                            navigateToChatScreen = navigateToChatScreen
+            latestMessageListState?.let { result ->
+                val latestMessageList = result.data!!
+                Column {
+                    if (latestMessageList.isNotEmpty()) {
+                        LazyColumn(
+                            Modifier.fillMaxSize()
+                        ) {
+                            itemsIndexed(latestMessageList) { index, lastMessage ->
+                                LastMessageItem(
+                                    lastMessage = lastMessage,
+                                    navigateToChatScreen = navigateToChatScreen
+                                )
+                            }
+                        }
+                    } else {
+                        EmptyListInfo(
+                            iconResId = R.drawable.ic_chat,
+                            messageResId = R.string.info_empty_last_message_list,
+                            errorMessageResId = R.string.info_message_empty_last_message_list
                         )
                     }
                 }
@@ -205,20 +233,29 @@ fun UsersTab(
 
     when (registeredUsersListState) {
         is DataStateResult.Loading -> {
-            // SimpleProgressDialog(showDialog = showProgressDialog)
+            LoadingProgressIndicator()
         }
         is DataStateResult.Success -> {
             isRequestFinished = true
-            registeredUsersListState?.let { userListState ->
-                LazyColumn(
-                    Modifier.fillMaxSize()
-                ) {
-                    itemsIndexed(userListState.data!!) { index, user ->
-                        UserItem(
-                            user = user,
-                            navigateToChatScreen = navigateToChatScreen
-                        )
+            registeredUsersListState?.let { result ->
+                val registeredUsersList = result.data!!
+                if (registeredUsersList.isNotEmpty()) {
+                    LazyColumn(
+                        Modifier.fillMaxSize()
+                    ) {
+                        itemsIndexed(registeredUsersList) { index, user ->
+                            UserItem(
+                                user = user,
+                                navigateToChatScreen = navigateToChatScreen
+                            )
+                        }
                     }
+                } else {
+                    EmptyListInfo(
+                        iconResId = R.drawable.ic_person,
+                        messageResId = R.string.info_empty_registered_user_list,
+                        errorMessageResId = R.string.info_message_empty_registered_user_list
+                    )
                 }
             }
         }
@@ -278,7 +315,7 @@ fun LastMessageItem(
                 Text(
                     modifier = Modifier,
                     text = lastMessage.userName,
-                    color = Color.DarkGray,
+                    color = MaterialTheme.colors.TextDefaultColor,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     fontSize = 18.sp
@@ -287,7 +324,7 @@ fun LastMessageItem(
                 Text(
                     text = lastMessage.lastMessage,
                     color = if (lastMessage.senderId == FirebaseAuth.getInstance().currentUser?.uid)
-                        Color.DarkGray else Color.Blue,
+                        MaterialTheme.colors.TextDefaultColor else MaterialTheme.colors.primary,
                     maxLines = 1,
                     fontSize = 16.sp
                 )
@@ -295,8 +332,8 @@ fun LastMessageItem(
 
             Text(
                 text = Utils.getFormattedDate(lastMessage.timestamp),
-                color = Color.Gray,
-                fontSize = 16.sp
+                color = MaterialTheme.colors.TextDefaultColor,
+                fontSize = 12.sp
             )
         }
     }
@@ -352,4 +389,93 @@ fun UserItem(
     }
 }
 
+@Composable
+fun AppThemeOption(
+    showDialog: MutableState<Boolean>
+) {
+    val selectedTheme by remember { mutableStateOf(0) }
+
+    if (showDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showDialog.value = false },
+            title = {
+                   ThemeOptions()
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDialog.value = false
+
+                    }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.button_ok),
+                        color = MaterialTheme.colors.onSecondary
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showDialog.value = false
+                    }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.button_cancel).uppercase(),
+                        color = MaterialTheme.colors.onSecondary
+                    )
+                }
+            }
+        )
+    }
+    
+}
+
+@Composable
+fun ThemeOptions() {
+    val radioButtonOptions = listOf(
+        stringResource(id = R.string.theme_system),
+        stringResource(id = R.string.theme_light),
+        stringResource(id = R.string.theme_dark)
+    )
+    
+    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioButtonOptions[0]) }
+    
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Column {
+            radioButtonOptions.forEach { text ->
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .selectable(
+                            selected = (text == selectedOption),
+                            onClick = { onOptionSelected(text) }
+                        )
+                        .padding(horizontal = 16.dp)
+                ) {
+                    val context = LocalContext.current
+
+                    RadioButton(
+                        selected = (text == selectedOption),
+                        modifier = Modifier.padding(all = Dp(value = 8F)),
+                        onClick = {
+                            onOptionSelected(text)
+                        }
+                    )
+                    
+                    Text(
+                        text = text,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                }
+            }
+        }
+    }
+}
 

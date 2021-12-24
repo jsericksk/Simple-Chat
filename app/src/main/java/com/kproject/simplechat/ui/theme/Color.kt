@@ -22,8 +22,8 @@ val Secondary = Color(0xFF1565C0)
 val BackgroundLightTheme = Color(0xFFE4E2E2)
 val SecondaryLightTheme = Color(0xFF131313)
 
-val TextDefaultColorLightTheme = Color(0xFF0F0F0F)
-val TextDefaultColorDarkTheme = Color(0xFFCECECE)
+val TextDefaultColorLightTheme = Color(0xFF222222)
+val TextDefaultColorDarkTheme = Color(0xFFC5C5C5)
 
 val Colors.TextDefaultColor: Color
     @Composable get() = if (isLight) TextDefaultColorLightTheme else TextDefaultColorDarkTheme

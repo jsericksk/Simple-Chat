@@ -26,10 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.kproject.simplechat.R
-import com.kproject.simplechat.data.DataStateResult
 import com.kproject.simplechat.data.repository.TAG
-import com.kproject.simplechat.model.Message
-import com.kproject.simplechat.ui.screens.components.SimpleProgressDialog
 import com.kproject.simplechat.ui.screens.components.TopBar
 import com.kproject.simplechat.ui.theme.TextFieldFocusedIndicatorColor
 import com.kproject.simplechat.ui.theme.TextFieldUnfocusedIndicatorColor
@@ -45,9 +42,7 @@ fun ChatScreen(
     navigateBack: () -> Unit,
     chatViewModel: ChatViewModel = hiltViewModel()
 ) {
-    val dataStateResult by chatViewModel.dataStateResult.observeAsState(initial = DataStateResult.Loading())
     val messageList = chatViewModel.messageList.observeAsState()
-    // val messageList = chatViewModel.messages
 
     var isRequestFinished by rememberSaveable { mutableStateOf(false) }
 
@@ -133,20 +128,22 @@ fun ChatScreen(
                         .clip(CircleShape)
                         .background(color = MaterialTheme.colors.onSecondary)
                         .clickable {
-                            chatViewModel.sendMessage(
-                                message = message.value,
-                                senderId = FirebaseAuth.getInstance().currentUser?.uid!!,
-                                receiverId = userId
-                            )
+                            if (message.value.isNotEmpty()) {
+                                chatViewModel.sendMessage(
+                                    message = message.value,
+                                    senderId = FirebaseAuth.getInstance().currentUser?.uid!!,
+                                    receiverId = userId
+                                )
 
-                            chatViewModel.saveLastMessage(
-                                lastMessage = message.value,
-                                senderId = Utils.getCurrentUserId(),
-                                receiverId = userId,
-                                userName = userName,
-                                userProfileImage = userProfileImage
-                            )
-                            message.value = ""
+                                chatViewModel.saveLastMessage(
+                                    lastMessage = message.value,
+                                    senderId = Utils.getCurrentUserId(),
+                                    receiverId = userId,
+                                    userName = userName,
+                                    userProfileImage = userProfileImage
+                                )
+                                message.value = ""
+                            }
                         }
                         .fillMaxSize()
                 )
@@ -188,27 +185,3 @@ fun MessageText(
         Spacer(modifier = Modifier.padding(top = 4.dp))
     }
 }
-
-
-fun createFakeMessageList(): List<Message> {
-    val list = mutableListOf<Message>()
-    for (i in 1..20) {
-        val n = (0..1).random()
-        list.add(
-            Message(
-                senderId = if (n == 0) "senderId" else "receiverId",
-                receiverId = "receiverId",
-                message = "Hello my friend. $i message."
-            )
-        )
-    }
-    return list
-}
-
-
-
-
-
-
-
-

@@ -80,6 +80,7 @@ fun NavigationGraph() {
                         clearBackStack(Screen.HomeScreen.route)
                     }
                 },
+                navigateBack = { navController.popBackStack() }
             )
         }
 

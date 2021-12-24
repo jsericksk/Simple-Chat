@@ -36,10 +36,8 @@ fun LoginTextField(
     @StringRes hint: Int,
     keyboardType: KeyboardType = KeyboardType.Text,
     @DrawableRes leadingIcon: Int,
-    fieldType: FieldType = FieldType.NONE,
-    fieldContainsError: (Boolean) -> Unit = {}
+    fieldType: FieldType = FieldType.NONE
 ) {
-    val isError = rememberSaveable { mutableStateOf(false) }
     val passwordVisible = rememberSaveable { mutableStateOf(false) }
     if (fieldType != FieldType.PASSWORD) {
         passwordVisible.value = true
@@ -84,7 +82,6 @@ fun LoginTextField(
                 keyboardType = if (passwordVisible.value) keyboardType else KeyboardType.Password
             ),
             shape = CircleShape,
-            isError = isError.value,
             singleLine = true,
             colors = TextFieldDefaults.textFieldColors(
                 cursorColor = Color.DarkGray,
@@ -99,16 +96,6 @@ fun LoginTextField(
                 .fillMaxWidth()
                 .padding(top = 4.dp, bottom = 4.dp)
         )
-
-        isError.value.let {
-            if (it)
-                Text(
-                    text = "Erro de campo",
-                    color = Color.Red,
-                    fontSize = 14.sp,
-                    modifier = Modifier.align(Alignment.Start)
-                )
-        }
     }
 
 }

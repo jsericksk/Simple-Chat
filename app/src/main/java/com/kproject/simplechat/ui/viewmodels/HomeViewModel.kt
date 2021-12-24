@@ -24,13 +24,9 @@ class HomeViewModel @Inject constructor(
     private val _registeredUsersListState = MutableLiveData<DataStateResult<List<User>>>()
     val registeredUsersListState: MutableLiveData<DataStateResult<List<User>>> = _registeredUsersListState
 
-    private val _logout = MutableLiveData<Boolean>()
-    val logout: MutableLiveData<Boolean> = _logout
-
     fun logout() {
         viewModelScope.launch {
             firebaseRepository.logout()
-            _logout.postValue(true)
         }
     }
 

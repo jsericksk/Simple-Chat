@@ -2,11 +2,13 @@
     <string name="app_name">Simple Chat</string>
 
     <string name="button_ok">OK</string>
-    <string name="button_cancel">Cancelar</string>
+    <string name="button_cancel">Cancel</string>
 
     <!-- Login and SignUp Screen -->
-    <string name="sign_in">Login</string>
+    <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
+    <string name="create_your_account">Create your account</string>
     <string name="dont_have_an_account">Don\'t have an account?</string>
 
     <string name="user_name">User Name</string>
@@ -22,18 +24,31 @@
 
     <string name="error_user_not_found">User with this email doesn\'t exist.</string>
     <string name="error_password_is_wrong">Your password is wrong.</string>
-    <string name="error_email_already_in_use">The email has already been registered. Please login with your password.</string>
+    <string name="error_email_already_in_use">The email has already been registered. Please
+        login with your password.</string>
     <string name="error_sign_in">There was an error trying to login.</string>
     <string name="error_sign_up">There was an error trying to register.</string>
-
 
     <!-- Home Screen -->
     <string name="chat">Chats</string>
     <string name="users">Users</string>
 
+    <string name="theme_system">System default</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+
+    <string name="dialog_title_confirm_logout">Confirm Logout</string>
+    <string name="dialog_message_confirm_logout">Are you sure you want to logout?</string>
+
     <string name="error_logout">There was an error trying to log out.</string>
     <string name="error_get_user_list">There was an error trying to get the user list.</string>
 
+    <string name="info_empty_last_message_list">No chat found</string>
+    <string name="info_message_empty_last_message_list">Start a chat with someone so that the
+        latest messages appear here.</string>
+    <string name="info_empty_registered_user_list">No registered users</string>
+    <string name="info_message_empty_registered_user_list">No other users were found. New users
+        will appear here.</string>
 
     <!-- LastMessage Screen -->
     <string name="message">Message</string>
