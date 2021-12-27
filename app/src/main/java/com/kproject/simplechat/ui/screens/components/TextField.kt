@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kproject.simplechat.R
+import com.kproject.simplechat.ui.theme.TextDefaultColor
 import com.kproject.simplechat.ui.theme.TextFieldFocusedIndicatorColor
 import com.kproject.simplechat.ui.theme.TextFieldUnfocusedIndicatorColor
 import com.kproject.simplechat.utils.FieldType
@@ -51,13 +52,9 @@ fun LoginTextField(
             value = textFieldValue.value,
             onValueChange = { value ->
                 textFieldValue.value = value
-                //isError.value = !FieldValidator.validate(value, fieldType)
-                //fieldContainsError.invoke(isError.value)
             },
-            textStyle = TextStyle(color = Color.DarkGray, fontSize = 18.sp),
-            label = {
-                Text(text = stringResource(id = hint))
-            },
+            textStyle = TextStyle(color = MaterialTheme.colors.TextDefaultColor, fontSize = 18.sp),
+            label = { Text(text = stringResource(id = hint)) },
             leadingIcon = {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = leadingIcon),
@@ -89,13 +86,12 @@ fun LoginTextField(
                 trailingIconColor = Color.White,
                 focusedIndicatorColor = MaterialTheme.colors.TextFieldFocusedIndicatorColor,
                 unfocusedIndicatorColor = MaterialTheme.colors.TextFieldUnfocusedIndicatorColor,
-                focusedLabelColor = MaterialTheme.colors.TextFieldUnfocusedIndicatorColor,
-                unfocusedLabelColor = MaterialTheme.colors.TextFieldFocusedIndicatorColor,
+                focusedLabelColor = MaterialTheme.colors.TextFieldFocusedIndicatorColor,
+                unfocusedLabelColor = MaterialTheme.colors.TextFieldUnfocusedIndicatorColor,
             ),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 4.dp, bottom = 4.dp)
         )
     }
-
 }

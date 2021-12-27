@@ -6,9 +6,14 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import coil.annotation.ExperimentalCoilApi
 
+@ExperimentalCoilApi
 @Composable
-fun TopBar(title: String, navigateBack: () -> Unit) {
+fun ChatTopBar(
+    userName: String,
+    navigateBack: () -> Unit
+) {
     /**
      * Prevents a bug from occurring if the user taps back many times in a short period of time,
      * to avoid navController.popBackStack() being called before the screen is rendered and
@@ -17,14 +22,17 @@ fun TopBar(title: String, navigateBack: () -> Unit) {
     var clicks by remember { mutableStateOf(0) }
 
     TopAppBar(
-        title = { Text(text = title) },
+        title = {
+            Text(text = userName)
+        },
         navigationIcon = {
-            IconButton(onClick = {
-                clicks++
-                if (clicks == 1) {
-                    navigateBack.invoke()
+            IconButton(
+                onClick = {
+                    clicks++
+                    if (clicks == 1) {
+                        navigateBack.invoke()
+                    }
                 }
-            }
             ) {
                 Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
             }

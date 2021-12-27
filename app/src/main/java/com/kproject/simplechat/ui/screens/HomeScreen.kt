@@ -123,8 +123,8 @@ fun HomeTabs(
     navigateToChatScreen: (userId: String, userName: String, userProfileImage: String) -> Unit,
     homeViewModel: HomeViewModel
 ) {
-    var tabIndex by remember { mutableStateOf(0) }
     val pagerState = rememberPagerState()
+    val coroutineScope = rememberCoroutineScope()
 
     val pages = listOf(
         stringResource(id = R.string.chat),
@@ -148,9 +148,11 @@ fun HomeTabs(
             pages.forEachIndexed { index, title ->
                 Tab(
                     text = { Text(title) },
-                    selected = tabIndex == index,
+                    selected = pagerState.currentPage == index,
                     onClick = {
-                        tabIndex = index
+                        coroutineScope.launch {
+                            pagerState.scrollToPage(index)
+                        }
                     }
                 )
             }
@@ -158,7 +160,7 @@ fun HomeTabs(
 
         HorizontalPager(
             count = pages.size,
-            state = pagerState,
+            state = pagerState
         ) { page ->
             if (page == 0) {
                 LatestMessagesTab(navigateToChatScreen, homeViewModel)
@@ -394,7 +396,7 @@ fun UserItem(
             Text(
                 modifier = Modifier,
                 text = user.userName,
-                color = Color.DarkGray,
+                color = MaterialTheme.colors.TextDefaultColor,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
                 fontSize = 18.sp
@@ -532,4 +534,3 @@ fun ThemeOptions(
         }
     }
 }
-

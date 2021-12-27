@@ -3,9 +3,7 @@ package com.kproject.simplechat.ui.screens
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -17,7 +15,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -32,7 +32,6 @@ import com.kproject.simplechat.R
 import com.kproject.simplechat.data.DataStateResult
 import com.kproject.simplechat.ui.screens.components.LoginTextField
 import com.kproject.simplechat.ui.screens.components.SimpleProgressDialog
-import com.kproject.simplechat.ui.screens.components.TopBar
 import com.kproject.simplechat.ui.viewmodels.LoginViewModel
 import com.kproject.simplechat.utils.FieldType
 import com.kproject.simplechat.utils.FieldValidator
@@ -46,6 +45,7 @@ fun SignUpScreen(
     loginViewModel: LoginViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
     val showProgressDialog = rememberSaveable { mutableStateOf(false) }
 
     val profileImage = rememberSaveable { mutableStateOf<Uri?>(null) }
@@ -101,6 +101,7 @@ fun SignUpScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(20.dp)
+                .verticalScroll(scrollState)
         ) {
             Text(
                 text = stringResource(id = R.string.create_your_account),

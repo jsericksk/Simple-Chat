@@ -29,7 +29,7 @@
     <string name="error_sign_in">There was an error trying to login.</string>
     <string name="error_sign_up">There was an error trying to register.</string>
 
-    <!-- Home Screen -->
+    <!-- Home Screen and Chat Screen -->
     <string name="chat">Chats</string>
     <string name="users">Users</string>
 
@@ -51,7 +51,9 @@
     <string name="info_message_empty_registered_user_list">No other users were found. New users
         will appear here.</string>
 
-    <!-- LastMessage Screen -->
+    <string name="info_empty_message_list">No chat found</string>
+    <string name="info_message_empty_message_list">Be the first to start the conversation!</string>
     <string name="message">Message</string>
+
 
 </resources>

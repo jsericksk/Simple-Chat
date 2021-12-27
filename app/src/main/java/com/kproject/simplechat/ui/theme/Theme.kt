@@ -15,17 +15,18 @@ import com.kproject.simplechat.utils.PrefsConstants
 import com.kproject.simplechat.utils.Utils
 
 private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
+    primary = PrimaryDark,
+    primaryVariant = PrimaryVariantDark,
     secondary = Teal200,
-    background = BackgroundDarkTheme
+    background = BackgroundDark,
+    onSecondary = Secondary
 )
 
 private val LightColorPalette = lightColors(
     primary = PrimaryLight,
     primaryVariant = PrimaryVariantLight,
     secondary = Teal200,
-    background = BackgroundLightTheme,
+    background = BackgroundLight,
     onPrimary = Color.White,
     onSecondary = Secondary,
     onBackground = Color.Black,
@@ -51,7 +52,14 @@ fun SimpleChatTheme(
         context = context,
         key = PrefsConstants.APP_THEME,
         defaultValue = PrefsConstants.THEME_SYSTEM_DEFAULT
-    ).asLiveData().observeAsState(initial = PrefsConstants.THEME_SYSTEM_DEFAULT)
+    ).asLiveData().observeAsState(
+        // Gets an initial value without Flow so there is no small delay
+        initial = DataStoreUtils.readPreferenceWithoutFlow(
+            context = context,
+            key = PrefsConstants.APP_THEME,
+            defaultValue = PrefsConstants.THEME_SYSTEM_DEFAULT
+        )
+    )
 
     var colors = LightColorPalette
     if (appThemeState == PrefsConstants.THEME_SYSTEM_DEFAULT) {

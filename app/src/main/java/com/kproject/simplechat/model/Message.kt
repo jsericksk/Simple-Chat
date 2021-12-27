@@ -7,5 +7,6 @@ data class Message(
     var message: String = "",
     var senderId: String = "",
     var receiverId: String = "",
-    @ServerTimestamp var timestamp: Date? = null
+    @ServerTimestamp
+    var timestamp: Date? = null
 )

@@ -1,5 +1,6 @@
 package com.kproject.simplechat.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kproject.simplechat.R
 import com.kproject.simplechat.data.DataStateResult
+import com.kproject.simplechat.data.repository.TAG
 import com.kproject.simplechat.ui.screens.components.LoginTextField
 import com.kproject.simplechat.ui.screens.components.SimpleProgressDialog
 import com.kproject.simplechat.ui.theme.TextDefaultColor

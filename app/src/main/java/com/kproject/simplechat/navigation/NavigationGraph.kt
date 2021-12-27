@@ -1,17 +1,20 @@
 package com.kproject.simplechat.navigation
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
-import androidx.navigation.*
-import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.firebase.auth.FirebaseAuth
+import com.kproject.simplechat.data.repository.TAG
 import com.kproject.simplechat.ui.screens.ChatScreen
 import com.kproject.simplechat.ui.screens.HomeScreen
 import com.kproject.simplechat.ui.screens.LoginScreen
@@ -24,26 +27,23 @@ import com.kproject.simplechat.ui.screens.SignUpScreen
 fun NavigationGraph() {
     val navController = rememberAnimatedNavController()
 
-    AnimatedNavHost(navController = navController, startDestination = Screen.LoginScreen.route) {
-        composable(
-            route = Screen.LoginScreen.route,
-            popExitTransition = { _, target ->
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    animationSpec = tween(700)
-                )
-            }
-        ) {
+    AnimatedNavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
+        composable(route = Screen.HomeScreen.route) {
             /**
              * Check if the user is logged in.
              */
             if (FirebaseAuth.getInstance().currentUser?.uid != null) {
-                HomeScreen(navigateToChatScreen = { userId, userName, userProfileImage ->
-                    navController.navigate(Screen.ChatScreen.withArgs(userId, userName, userProfileImage))
-                },
+                HomeScreen(
+                    navigateToChatScreen = { userId, userName, userProfileImage ->
+                        navController.navigate(
+                            Screen.ChatScreen.withArgs(
+                                userId, userName, userProfileImage
+                            )
+                        )
+                    },
                     navigateToLoginScreen = {
-                        navController.navigate(Screen.LoginScreen.route) {
-                            clearBackStack(Screen.LoginScreen.route)
+                        navController.navigate(route = Screen.LoginScreen.route) {
+                            clearBackStack(Screen.HomeScreen.route)
                         }
                     }
                 )
@@ -51,12 +51,23 @@ fun NavigationGraph() {
                 LoginScreen(
                     navigateToHomeScreen = {
                         navController.navigate(Screen.HomeScreen.route) {
-                            clearBackStack(Screen.HomeScreen.route)
+                            clearBackStack(Screen.LoginScreen.route)
                         }
                     },
                     navigateToSignUpScreen = { navController.navigate(Screen.SignUpScreen.route) }
                 )
             }
+        }
+
+        composable(route = Screen.LoginScreen.route) {
+            LoginScreen(
+                navigateToHomeScreen = {
+                    navController.navigate(Screen.HomeScreen.route) {
+                        clearBackStack(Screen.LoginScreen.route)
+                    }
+                },
+                navigateToSignUpScreen = { navController.navigate(Screen.SignUpScreen.route) }
+            )
         }
 
         composable(
@@ -81,32 +92,6 @@ fun NavigationGraph() {
                     }
                 },
                 navigateBack = { navController.popBackStack() }
-            )
-        }
-
-        composable(
-            route = Screen.HomeScreen.route,
-            enterTransition = { initial, _ ->
-                slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Right,
-                    animationSpec = tween(700)
-                )
-            },
-            exitTransition = { _, target ->
-                slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    animationSpec = tween(700)
-                )
-            }
-        ) {
-            HomeScreen(navigateToChatScreen = { userId, userName, userProfileImage ->
-                navController.navigate(Screen.ChatScreen.withArgs(userId, userName, userProfileImage))
-            },
-                navigateToLoginScreen = {
-                    navController.navigate(Screen.LoginScreen.route) {
-                        clearBackStack(Screen.LoginScreen.route)
-                    }
-                }
             )
         }
 
@@ -143,7 +128,6 @@ fun NavigationGraph() {
                 navigateBack = { navController.popBackStack() }
             )
         }
-
     }
 }
 

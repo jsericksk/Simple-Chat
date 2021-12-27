@@ -2,7 +2,6 @@ package com.kproject.simplechat.data.repository
 
 import android.net.Uri
 import android.util.Log
-import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.FirebaseFirestore
@@ -29,7 +28,7 @@ const val TAG = "FirebaseRepositoryImpl"
 class FirebaseRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val firebaseFirestore: FirebaseFirestore
-) : FirebaseRepository {
+): FirebaseRepository {
 
     override suspend fun signIn(email: String, password: String): DataStateResult<Unit> {
         var result: DataStateResult<Unit> = DataStateResult.Loading()
@@ -207,9 +206,7 @@ class FirebaseRepositoryImpl @Inject constructor(
                                 messageList.add(message!!)
                             }
 
-                            if (messageList.isNotEmpty()) {
-                                trySend(DataStateResult.Success(data = messageList))
-                            }
+                            trySend(DataStateResult.Success(data = messageList))
                             Log.d(TAG, "Success: getMessages()")
                         }
                     }
@@ -260,6 +257,7 @@ class FirebaseRepositoryImpl @Inject constructor(
         return try {
             val currentUser = getLoggedUser()
             currentUser?.let { currentLoggedUser ->
+                // receiverId represents the id of the second user in the conversation
                 val lastMessageOfCurrentUser = LastMessage(
                     chatId = receiverId,
                     lastMessage = lastMessage,
@@ -269,7 +267,6 @@ class FirebaseRepositoryImpl @Inject constructor(
                     userProfileImage = userProfileImage
                 )
 
-                // receiverId represents the id of the second user in the conversation
                 val lastMessageOfSecondUser = LastMessage(
                     chatId = currentLoggedUser.userId,
                     lastMessage = lastMessage,
