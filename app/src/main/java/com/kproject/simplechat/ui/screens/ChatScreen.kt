@@ -49,12 +49,8 @@ fun ChatScreen(
     navigateBack: () -> Unit,
     chatViewModel: ChatViewModel = hiltViewModel()
 ) {
-    val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
-
     val dataStateResult by chatViewModel.dataStateResult.observeAsState()
     val messageList = chatViewModel.messageList.observeAsState()
-    var currentMessageListSize by rememberSaveable { mutableStateOf(0) }
 
     val isRequestFinished = rememberSaveable { mutableStateOf(false) }
 
@@ -144,10 +140,7 @@ fun ChatScreen(
                         .clip(CircleShape)
                         .background(color = MaterialTheme.colors.onSecondary)
                         .clickable {
-                            if (message.value
-                                    .trim()
-                                    .isNotEmpty()
-                            ) {
+                            if (message.value.trim().isNotEmpty()) {
                                 chatViewModel.sendMessage(
                                     message = message.value,
                                     senderId = FirebaseAuth.getInstance().currentUser?.uid!!,
@@ -194,8 +187,7 @@ fun MessageList(
 
     LazyColumn(
         state = listState,
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         isRequestFinished.value = true
         itemsIndexed(messageList) { index, message ->

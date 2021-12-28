@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.sp
 import com.kproject.simplechat.R
 import com.kproject.simplechat.ui.theme.TextDefaultColor
 
-
 @Composable
 fun SimpleProgressDialog(
     showDialog: MutableState<Boolean>

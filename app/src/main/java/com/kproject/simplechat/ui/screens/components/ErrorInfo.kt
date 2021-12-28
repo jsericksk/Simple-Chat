@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -19,8 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kproject.simplechat.ui.theme.IconColor
 import com.kproject.simplechat.ui.theme.TextDefaultColor
-import com.kproject.simplechat.utils.DataStoreUtils
-import com.kproject.simplechat.utils.PrefsConstants
 
 @Composable
 fun ErrorInfo(
@@ -33,12 +30,6 @@ fun ErrorInfo(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val context = LocalContext.current
-        val appTheme = DataStoreUtils.readPreferenceWithoutFlow(
-            context = context,
-            key = PrefsConstants.APP_THEME,
-            defaultValue = PrefsConstants.THEME_SYSTEM_DEFAULT
-        )
         val iconColor = MaterialTheme.colors.IconColor
 
         Icon(

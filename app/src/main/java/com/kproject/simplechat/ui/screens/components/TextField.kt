@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -29,7 +28,6 @@ import com.kproject.simplechat.ui.theme.TextDefaultColor
 import com.kproject.simplechat.ui.theme.TextFieldFocusedIndicatorColor
 import com.kproject.simplechat.ui.theme.TextFieldUnfocusedIndicatorColor
 import com.kproject.simplechat.utils.FieldType
-import com.kproject.simplechat.utils.FieldValidator
 
 @Composable
 fun LoginTextField(
@@ -44,8 +42,7 @@ fun LoginTextField(
         passwordVisible.value = true
     }
     val visibilityIcon =
-            if (passwordVisible.value) R.drawable.ic_visibility_off
-            else R.drawable.ic_visibility
+            if (passwordVisible.value) R.drawable.ic_visibility_off else R.drawable.ic_visibility
 
     Column {
         OutlinedTextField(

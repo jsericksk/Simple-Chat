@@ -30,12 +30,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Mudanças a serem feitas: tornar esse método realtime
-     * Criar um id para cada conversa
-     */
     fun getLatestMessages() {
-        Log.d(TAG, "ViewModel getLatestMessages()")
         viewModelScope.launch {
             _latestMessageListState.postValue(DataStateResult.Loading())
             firebaseRepository.getLatestMessages().collect { result ->
@@ -53,7 +48,6 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getRegisteredUserList() {
-        Log.d(TAG, "ViewModel getRegisteredUserList()")
         viewModelScope.launch {
             _registeredUsersListState.postValue(DataStateResult.Loading())
             firebaseRepository.getRegisteredUserList().collect { result ->

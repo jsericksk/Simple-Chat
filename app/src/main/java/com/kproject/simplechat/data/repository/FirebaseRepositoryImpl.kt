@@ -77,14 +77,15 @@ class FirebaseRepositoryImpl @Inject constructor(
     }
 
     private suspend fun saveProfileImageInFirebaseStorage(profileImage: Uri): String {
-        return try {
+        var profileImageUrl = ""
+        try {
             val imageName = UUID.randomUUID().toString()
-            Firebase.storage.reference.child("profile_images/$imageName")
+            profileImageUrl = Firebase.storage.reference.child("profile_images/$imageName")
                 .putFile(profileImage).await().storage.downloadUrl.await().toString()
         } catch (e: Exception) {
-            Log.d(TAG, "Error:saveProfileImageInFirebaseStorage(): ${e.message}")
-            ""
+            Log.d(TAG, "Error: saveProfileImageInFirebaseStorage(): ${e.message}")
         }
+        return profileImageUrl
     }
 
     private suspend fun saveUserInFirebaseFirestore(
@@ -115,7 +116,6 @@ class FirebaseRepositoryImpl @Inject constructor(
             DataStateResult.Error(R.string.error_logout)
         }
     }
-
 
     @ExperimentalCoroutinesApi
     override suspend fun getLatestMessages() =
@@ -226,7 +226,7 @@ class FirebaseRepositoryImpl @Inject constructor(
         return try {
             val userId = firebaseAuth.currentUser?.uid
             userId?.let {
-                val message = Message(
+                val messageObj = Message(
                     message = message,
                     senderId = senderId,
                     receiverId = receiverId
@@ -237,7 +237,7 @@ class FirebaseRepositoryImpl @Inject constructor(
                     .collection(Constants.COLLECTION_CHAT_MESSAGES)
                     .document(chatRoomId)
                     .collection(Constants.COLLECTION_MESSAGES)
-                    .add(message)
+                    .add(messageObj)
                     .await()
             }
             DataStateResult.Success()

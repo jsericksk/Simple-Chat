@@ -7,7 +7,6 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import coil.annotation.ExperimentalCoilApi
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.kproject.simplechat.navigation.NavigationGraph
 import com.kproject.simplechat.ui.theme.SimpleChatTheme

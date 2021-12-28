@@ -1,6 +1,5 @@
 package com.kproject.simplechat.navigation
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
@@ -14,7 +13,6 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.firebase.auth.FirebaseAuth
-import com.kproject.simplechat.data.repository.TAG
 import com.kproject.simplechat.ui.screens.ChatScreen
 import com.kproject.simplechat.ui.screens.HomeScreen
 import com.kproject.simplechat.ui.screens.LoginScreen

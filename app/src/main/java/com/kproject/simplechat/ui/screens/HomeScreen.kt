@@ -101,7 +101,7 @@ fun HomeScreen(
         }
     }
     
-    AppThemeOption(showDialog = showAppThemeOptionDialog)
+    AppThemeOptions(showDialog = showAppThemeOptionDialog)
     
     SimpleDialog(
         showDialog = showLogoutConfirmationDialog,
@@ -177,7 +177,6 @@ fun LatestMessagesTab(
     navigateToChatScreen: (userId: String, userName: String, userProfileImage: String) -> Unit,
     homeViewModel: HomeViewModel
 ) {
-    val context = LocalContext.current
     val latestMessageListState by homeViewModel.latestMessageListState.observeAsState()
 
     var isRequestFinished by rememberSaveable { mutableStateOf(false) }
@@ -233,7 +232,6 @@ fun UsersTab(
     navigateToChatScreen: (userId: String, userName: String, userProfileImage: String) -> Unit,
     homeViewModel: HomeViewModel
 ) {
-    val context = LocalContext.current
     val registeredUsersListState by homeViewModel.registeredUsersListState.observeAsState()
 
     var isRequestFinished by rememberSaveable { mutableStateOf(false) }
@@ -406,7 +404,7 @@ fun UserItem(
 }
 
 @Composable
-fun AppThemeOption(
+fun AppThemeOptions(
     showDialog: MutableState<Boolean>
 ) {
     val context = LocalContext.current
@@ -467,9 +465,7 @@ fun AppThemeOption(
 }
 
 @Composable
-fun ThemeOptions(
-    selectedTheme: (Int) -> Unit
-) {
+fun ThemeOptions(selectedTheme: (Int) -> Unit) {
     val context = LocalContext.current
 
     val appThemeState by DataStoreUtils.readPreference(
