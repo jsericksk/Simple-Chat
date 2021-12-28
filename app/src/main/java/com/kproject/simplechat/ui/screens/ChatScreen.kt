@@ -32,6 +32,7 @@ import com.kproject.simplechat.model.Message
 import com.kproject.simplechat.ui.screens.components.ChatTopBar
 import com.kproject.simplechat.ui.screens.components.EmptyListInfo
 import com.kproject.simplechat.ui.screens.components.LoadingProgressIndicator
+import com.kproject.simplechat.ui.theme.ChatTextFieldBackgroundColor
 import com.kproject.simplechat.ui.theme.TextDefaultColor
 import com.kproject.simplechat.ui.theme.TextFieldFocusedIndicatorColor
 import com.kproject.simplechat.ui.theme.TextFieldUnfocusedIndicatorColor
@@ -103,7 +104,7 @@ fun ChatScreen(
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                OutlinedTextField(
+                TextField(
                     value = message.value,
                     onValueChange = { value ->
                         message.value = value
@@ -112,15 +113,22 @@ fun ChatScreen(
                         color = MaterialTheme.colors.TextDefaultColor,
                         fontSize = 18.sp
                     ),
-                    label = { Text(text = stringResource(id = R.string.message)) },
+                    placeholder = {
+                        Text(
+                            text = stringResource(id = R.string.message),
+                            color = MaterialTheme.colors.TextFieldFocusedIndicatorColor
+                        )
+                    },
                     maxLines = 4,
-                    shape = CircleShape.copy(CornerSize(8.dp)),
+                    shape = CircleShape,
                     colors = TextFieldDefaults.textFieldColors(
-                        cursorColor = Color.DarkGray,
+                        cursorColor = MaterialTheme.colors.TextDefaultColor,
+                        backgroundColor = MaterialTheme.colors.ChatTextFieldBackgroundColor,
                         leadingIconColor = Color.White,
                         trailingIconColor = Color.White,
-                        focusedIndicatorColor = MaterialTheme.colors.TextFieldFocusedIndicatorColor,
-                        unfocusedIndicatorColor = MaterialTheme.colors.TextFieldUnfocusedIndicatorColor,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
                         focusedLabelColor = MaterialTheme.colors.TextFieldUnfocusedIndicatorColor,
                         unfocusedLabelColor = MaterialTheme.colors.TextFieldFocusedIndicatorColor,
                     ),
@@ -140,7 +148,10 @@ fun ChatScreen(
                         .clip(CircleShape)
                         .background(color = MaterialTheme.colors.onSecondary)
                         .clickable {
-                            if (message.value.trim().isNotEmpty()) {
+                            if (message.value
+                                    .trim()
+                                    .isNotEmpty()
+                            ) {
                                 chatViewModel.sendMessage(
                                     message = message.value,
                                     senderId = FirebaseAuth.getInstance().currentUser?.uid!!,
