@@ -57,8 +57,18 @@ fun HomeScreen(
     navigateToLoginScreen: () -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val showLogoutConfirmationDialog = rememberSaveable { mutableStateOf(false) }
     val showAppThemeOptionDialog = rememberSaveable { mutableStateOf(false) }
+    var isRequestFinished by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        // Try to subscribe only once
+        if (!isRequestFinished) {
+            homeViewModel.subscribeToTopic()
+        }
+        isRequestFinished = true
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -434,7 +444,6 @@ fun AppThemeOptions(
                         showDialog.value = false
                         coroutineScope.launch {
                             DataStoreUtils.savePreference(
-                                context = context,
                                 key = PrefsConstants.APP_THEME,
                                 value = selectedTheme
                             )
@@ -461,21 +470,16 @@ fun AppThemeOptions(
             }
         )
     }
-    
 }
 
 @Composable
 fun ThemeOptions(selectedTheme: (Int) -> Unit) {
-    val context = LocalContext.current
-
     val appThemeState by DataStoreUtils.readPreference(
-        context = context,
         key = PrefsConstants.APP_THEME,
         defaultValue = PrefsConstants.THEME_SYSTEM_DEFAULT
     ).asLiveData().observeAsState(
         // Gets an initial value without Flow so there is no small delay
         initial = DataStoreUtils.readPreferenceWithoutFlow(
-            context = context,
             key = PrefsConstants.APP_THEME,
             defaultValue = PrefsConstants.THEME_SYSTEM_DEFAULT
         )

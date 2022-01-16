@@ -4,11 +4,14 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import com.kproject.simplechat.data.DataStateResult
 import com.kproject.simplechat.data.repository.FirebaseRepository
-import com.kproject.simplechat.data.repository.TAG
 import com.kproject.simplechat.model.LastMessage
 import com.kproject.simplechat.model.User
+import com.kproject.simplechat.utils.DataStoreUtils
+import com.kproject.simplechat.utils.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -19,10 +22,12 @@ class HomeViewModel @Inject constructor(
     private val firebaseRepository: FirebaseRepository
 ) : ViewModel() {
     private val _latestMessageListState = MutableLiveData<DataStateResult<List<LastMessage>>>()
-    val latestMessageListState: MutableLiveData<DataStateResult<List<LastMessage>>> = _latestMessageListState
+    val latestMessageListState: MutableLiveData<DataStateResult<List<LastMessage>>> =
+            _latestMessageListState
 
     private val _registeredUsersListState = MutableLiveData<DataStateResult<List<User>>>()
-    val registeredUsersListState: MutableLiveData<DataStateResult<List<User>>> = _registeredUsersListState
+    val registeredUsersListState: MutableLiveData<DataStateResult<List<User>>> =
+            _registeredUsersListState
 
     fun logout() {
         viewModelScope.launch {
@@ -61,6 +66,33 @@ class HomeViewModel @Inject constructor(
                     else -> {}
                 }
             }
+        }
+    }
+
+    /**
+     * Subscribes to the topic that is created based on the current user id,
+     * to receive notifications of new messages.
+     */
+    fun subscribeToTopic() {
+        val isSubscribed = DataStoreUtils.readPreferenceWithoutFlow(
+            key = "isSubscribed",
+            defaultValue = false
+        )
+
+        if (!isSubscribed) {
+            Firebase.messaging.subscribeToTopic("/topics/${Utils.getCurrentUserId()}")
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        viewModelScope.launch {
+                            DataStoreUtils.savePreference(
+                                key = "isSubscribed",
+                                value = true
+                            )
+                        }
+                    } else {
+                        Log.d("HomeViewModel", "Error trying to subscribe to the topic: ${task.exception?.message}")
+                    }
+                }
         }
     }
 }

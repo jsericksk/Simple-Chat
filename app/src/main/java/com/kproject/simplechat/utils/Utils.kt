@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.res.Configuration
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.kproject.simplechat.BuildConfig
+import java.io.FileInputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
