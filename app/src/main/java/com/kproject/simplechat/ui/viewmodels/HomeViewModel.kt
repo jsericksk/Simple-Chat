@@ -32,6 +32,10 @@ class HomeViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             firebaseRepository.logout()
+            DataStoreUtils.savePreference(
+                key = "isSubscribed",
+                value = false
+            )
         }
     }
 
@@ -90,7 +94,10 @@ class HomeViewModel @Inject constructor(
                             )
                         }
                     } else {
-                        Log.d("HomeViewModel", "Error trying to subscribe to the topic: ${task.exception?.message}")
+                        Log.d(
+                            "HomeViewModel",
+                            "Error trying to subscribe to the topic: ${task.exception?.message}"
+                        )
                     }
                 }
         }

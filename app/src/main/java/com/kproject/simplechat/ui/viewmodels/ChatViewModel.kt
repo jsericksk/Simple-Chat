@@ -96,8 +96,8 @@ class ChatViewModel @Inject constructor(
                 if (response.isSuccessful) {
                     Log.d("ChatViewModel", "Response: ${response.body()}")
                 } else {
-                    val message = response.errorBody()!!.charStream().readText()
-                    Log.e("ChatViewModel", "Error $message")
+                    val errorMessage = response.errorBody()!!.charStream().readText()
+                    Log.e("ChatViewModel", "Error $errorMessage")
                 }
             } catch (e: Exception) {
                 Log.e("ChatViewModel", e.toString())

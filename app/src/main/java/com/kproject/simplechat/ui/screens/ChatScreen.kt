@@ -170,7 +170,11 @@ fun ChatScreen(
 
                                 val topic = "/topics/$userId"
                                 PushNotification(
-                                    MessageNotificationData(title = userName, message = message.value),
+                                    MessageNotificationData(
+                                        title = userName,
+                                        message = message.value,
+                                        fromUserId = Utils.getCurrentUserId()
+                                    ),
                                     topic
                                 ).also { notification ->
                                     chatViewModel.postNotification(notification)

@@ -55,5 +55,7 @@
     <string name="info_message_empty_message_list">Be the first to start the conversation!</string>
     <string name="message">Message</string>
 
+    <string name="chat_notification_name">Chat notifications</string>
+    <string name="chat_notification_description">Chat message notifications</string>
 
 </resources>
