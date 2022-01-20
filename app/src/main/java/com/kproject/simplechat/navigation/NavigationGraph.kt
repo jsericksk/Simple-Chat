@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -22,9 +23,7 @@ import com.kproject.simplechat.ui.screens.SignUpScreen
 @ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
-fun NavigationGraph() {
-    val navController = rememberAnimatedNavController()
-
+fun NavigationGraph(navController: NavHostController) {
     AnimatedNavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
         composable(route = Screen.HomeScreen.route) {
             /**

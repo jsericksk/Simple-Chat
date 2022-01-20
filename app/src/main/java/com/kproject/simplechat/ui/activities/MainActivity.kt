@@ -7,8 +7,11 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import coil.annotation.ExperimentalCoilApi
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.kproject.simplechat.model.ReceivedMessage
 import com.kproject.simplechat.navigation.NavigationGraph
+import com.kproject.simplechat.navigation.Screen
 import com.kproject.simplechat.ui.theme.SimpleChatTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -17,15 +20,35 @@ import dagger.hilt.android.AndroidEntryPoint
 @ExperimentalPagerApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    var receivedMessage: ReceivedMessage? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        receivedMessage = intent.extras?.getSerializable("receivedMessage") as ReceivedMessage?
+
         setContent {
             SimpleChatTheme {
                 Surface(color = MaterialTheme.colors.background) {
-                    NavigationGraph()
+                    val navController = rememberAnimatedNavController()
+                    NavigationGraph(navController)
+
+                    receivedMessage?.let { message ->
+                        navController.navigate(
+                            Screen.ChatScreen.withArgs(
+                                message.fromUserId,
+                                message.userName,
+                                message.userProfileImage
+                            )
+                        )
+                        intent.removeExtra("receivedMessage")
+                    }
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
     }
 }

@@ -173,7 +173,9 @@ fun ChatScreen(
                                     MessageNotificationData(
                                         title = userName,
                                         message = message.value,
-                                        fromUserId = Utils.getCurrentUserId()
+                                        fromUserId = Utils.getCurrentUserId(),
+                                        fromUserName = "User",
+                                        userProfileImage = "test"
                                     ),
                                     topic
                                 ).also { notification ->
