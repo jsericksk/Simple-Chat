@@ -10,6 +10,8 @@ import com.kproject.simplechat.data.network.RetrofitInstance
 import com.kproject.simplechat.data.network.models.PushNotification
 import com.kproject.simplechat.data.repository.FirebaseRepository
 import com.kproject.simplechat.model.Message
+import com.kproject.simplechat.utils.DataStoreUtils
+import com.kproject.simplechat.utils.PrefsConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -103,5 +105,17 @@ class ChatViewModel @Inject constructor(
                 Log.e("ChatViewModel", e.toString())
             }
         }
+    }
+
+    fun getCurrentUserNameAndProfileImage(): Array<String> {
+        val userName = DataStoreUtils.readPreferenceWithoutFlow(
+            key = PrefsConstants.MY_USER_NAME,
+            defaultValue = ""
+        )
+        val userProfileImage = DataStoreUtils.readPreferenceWithoutFlow(
+            key = PrefsConstants.MY_USER_PROFILE_IMAGE,
+            defaultValue = ""
+        )
+        return arrayOf(userName, userProfileImage)
     }
 }

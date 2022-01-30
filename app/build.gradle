@@ -69,6 +69,9 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.4.0'
     implementation 'androidx.datastore:datastore-preferences:1.0.0'
 
+    // To use ProcessLifecycleOwner
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:29.0.1')
     implementation 'com.google.firebase:firebase-auth-ktx'

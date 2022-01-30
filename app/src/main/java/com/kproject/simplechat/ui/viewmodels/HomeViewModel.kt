@@ -22,20 +22,32 @@ class HomeViewModel @Inject constructor(
     private val firebaseRepository: FirebaseRepository
 ) : ViewModel() {
     private val _latestMessageListState = MutableLiveData<DataStateResult<List<LastMessage>>>()
-    val latestMessageListState: MutableLiveData<DataStateResult<List<LastMessage>>> =
-            _latestMessageListState
+    val latestMessageListState = _latestMessageListState
 
     private val _registeredUsersListState = MutableLiveData<DataStateResult<List<User>>>()
     val registeredUsersListState: MutableLiveData<DataStateResult<List<User>>> =
             _registeredUsersListState
 
+    private val _logoutState = MutableLiveData<DataStateResult<Unit>>()
+    val logoutState = _logoutState
+
+    private val _loadingLogout = MutableLiveData<Boolean>()
+    val loadingLogout = _loadingLogout
+
     fun logout() {
+        _loadingLogout.postValue(true)
+        logoutState.postValue(DataStateResult.Loading())
         viewModelScope.launch {
-            firebaseRepository.logout()
-            DataStoreUtils.savePreference(
-                key = "isSubscribed",
-                value = false
-            )
+            when (firebaseRepository.logout()) {
+                is DataStateResult.Success -> {
+                    _logoutState.postValue(DataStateResult.Success())
+                }
+                is DataStateResult.Error -> {
+                    _logoutState.postValue(DataStateResult.Error())
+                    _loadingLogout.postValue(false)
+                }
+                else -> {}
+            }
         }
     }
 

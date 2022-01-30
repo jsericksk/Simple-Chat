@@ -169,15 +169,17 @@ fun ChatScreen(
                                 )
 
                                 val topic = "/topics/$userId"
+                                val currentUserNameAndProfileImage =
+                                        chatViewModel.getCurrentUserNameAndProfileImage()
                                 PushNotification(
-                                    MessageNotificationData(
-                                        title = userName,
+                                    data = MessageNotificationData(
+                                        title = currentUserNameAndProfileImage[0],
                                         message = message.value,
                                         fromUserId = Utils.getCurrentUserId(),
-                                        fromUserName = "User",
-                                        userProfileImage = "test"
+                                        fromUserName = currentUserNameAndProfileImage[0],
+                                        userProfileImage = currentUserNameAndProfileImage[1]
                                     ),
-                                    topic
+                                    to = topic
                                 ).also { notification ->
                                     chatViewModel.postNotification(notification)
                                 }

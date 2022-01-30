@@ -1,5 +1,6 @@
 package com.kproject.simplechat.ui.activities
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -32,23 +33,26 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberAnimatedNavController()
                     NavigationGraph(navController)
 
+                    /**
+                     * Opens the chat screen in the specific conversation if the
+                     * intent contains data.
+                     */
                     receivedMessage?.let { message ->
                         navController.navigate(
                             Screen.ChatScreen.withArgs(
                                 message.fromUserId,
                                 message.userName,
-                                message.userProfileImage
+                                Uri.encode(message.userProfileImage)
                             )
                         )
+                        /**
+                         * Removes Intent data so that the chat screen is not reopened if a
+                         * configuration change (such as screen rotation).
+                         */
                         intent.removeExtra("receivedMessage")
                     }
                 }
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
     }
 }
