@@ -8,25 +8,26 @@ Project created with the purpose of learning more about Firebase and practicing 
 
 ## Functionalities
 
-• User registration with email and password.  
-• One-to-one chat with registered users.  
-• Listing of all registered users.  
-• Light and dark theme with choice option.  
+- User registration with email and password.  
+- One-to-one chat with registered users.  
+- Listing of all registered users.  
+- Light and dark theme with choice option. 
+- Push notification. 
 
 ## Architecture
 
-• Project: [MVVM](https://developer.android.com/jetpack/guide), using **Flow** and **LiveData**, in addition to dependency injection (DI) with [Dagger-Hilt](https://developer.android.com/training/dependency-injection/hilt-android). The project also uses **coroutine** with Firebase.
+- Project: [MVVM](https://developer.android.com/jetpack/guide), using **Flow** and **LiveData**, in addition to dependency injection (DI) with [Dagger-Hilt](https://developer.android.com/training/dependency-injection/hilt-android). The project also uses **coroutine** with Firebase.
 
-• Firebase Firestore:  
+- Firebase Firestore:  
 ***users/**: All registered users.  
 ***chat_messages/*roomId*/messages/**: Messages from users, having as **roomId** an ID generated from the two **userId** of the conversation.  
 ***last_messages/*userId*/messages/*conversationUserId/***: Last messages from each user.  
 
 ## Firebase
 
-• [Auth](https://firebase.google.com/docs/auth): Used for user authentication with email and password.  
-• [Firestore](https://firebase.google.com/docs/firestore): Realtime database for saving user and conversation information.  
-• [Storage](https://firebase.google.com/docs/storage): to store users' profile pictures.  
+- [Auth](https://firebase.google.com/docs/auth): Used for user authentication with email and password.  
+- [Firestore](https://firebase.google.com/docs/firestore): Realtime database for saving user and conversation information.  
+- [Storage](https://firebase.google.com/docs/storage): to store users' profile pictures.  
 
 ## Clone
 
