@@ -32,6 +32,11 @@ Project created with the purpose of learning more about Firebase and practicing 
 
 After cloning the repository, follow the steps of [Firebase project setup](https://firebase.google.com/docs/android/setup) and add your **google-services.json** file to the project.
 
+You need to add the FCM server key to use push notifications. To do this, go to **your Firebase project settings > **Cloud Messaging** > Copy the *Server key***.  
+Now access your project's **local.properties** file in Android Studio and add:  
+```FCM_SERVER_KEY=You server key```.  
+After that notifications should work normally. The *FCM_SERVER_KEY* constant based on the local.properties file property is created in the **build.gradle (app)** file.
+
 ## Libraries used
 
 [Navigation Compose](https://developer.android.com/jetpack/compose/navigation): used to support the Navigation Component in Jetpack Compose.  
@@ -43,7 +48,7 @@ After cloning the repository, follow the steps of [Firebase project setup](https
 
 ## Possible future features
 
-- [ ] Push notification when sending message.  
+- [x] Push notification when sending message.  
 - [ ] Profile editing/viewing.
 
 ## License 
