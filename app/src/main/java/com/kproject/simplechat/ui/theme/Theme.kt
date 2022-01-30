@@ -49,13 +49,11 @@ fun SimpleChatTheme(
 ) {
     val context = LocalContext.current
     val appThemeState by DataStoreUtils.readPreference(
-        context = context,
         key = PrefsConstants.APP_THEME,
         defaultValue = PrefsConstants.THEME_SYSTEM_DEFAULT
     ).asLiveData().observeAsState(
         // Gets an initial value without Flow so there is no small delay
         initial = DataStoreUtils.readPreferenceWithoutFlow(
-            context = context,
             key = PrefsConstants.APP_THEME,
             defaultValue = PrefsConstants.THEME_SYSTEM_DEFAULT
         )

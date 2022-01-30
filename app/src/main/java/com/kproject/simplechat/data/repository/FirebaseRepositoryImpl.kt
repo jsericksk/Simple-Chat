@@ -8,6 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import com.google.firebase.storage.ktx.storage
 import com.kproject.simplechat.R
 import com.kproject.simplechat.data.DataStateResult
@@ -15,10 +16,15 @@ import com.kproject.simplechat.model.LastMessage
 import com.kproject.simplechat.model.Message
 import com.kproject.simplechat.model.User
 import com.kproject.simplechat.utils.Constants
+import com.kproject.simplechat.utils.DataStoreUtils
+import com.kproject.simplechat.utils.PrefsConstants
 import com.kproject.simplechat.utils.Utils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.*
 import javax.inject.Inject
@@ -109,12 +115,39 @@ class FirebaseRepositoryImpl @Inject constructor(
     }
 
     override suspend fun logout(): DataStateResult<Unit> {
-        return try {
-            firebaseAuth.signOut()
-            DataStateResult.Success()
+        var result: DataStateResult<Unit> = DataStateResult.Loading()
+        try {
+            /**
+             * It is necessary to unsubscribe from the topic to not receive notifications
+             * from a previously logged in user.
+             */
+            Firebase.messaging.unsubscribeFromTopic("/topics/${Utils.getCurrentUserId()}")
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            DataStoreUtils.savePreference(
+                                key = "isSubscribed",
+                                value = false
+                            )
+                        }
+                        firebaseAuth.signOut()
+                        result = DataStateResult.Success()
+                    } else {
+                        Log.d(
+                            TAG,
+                            "Error when trying to unsubscribe from the topic: ${task.exception?.message}"
+                        )
+                        result = DataStateResult.Error()
+                    }
+                }.await()
         } catch (e: Exception) {
-            DataStateResult.Error(R.string.error_logout)
+            Log.d(
+                TAG,
+                "Error when trying to unsubscribe from the topic: ${e.message}"
+            )
+            result = DataStateResult.Error()
         }
+        return result
     }
 
     @ExperimentalCoroutinesApi
@@ -139,7 +172,6 @@ class FirebaseRepositoryImpl @Inject constructor(
                             }
 
                             trySend(DataStateResult.Success(data = latestMessageList))
-                            Log.d(TAG, "Success: getLatestMessages()")
                         }
                     }
                 } catch (e: Exception) {
@@ -155,6 +187,7 @@ class FirebaseRepositoryImpl @Inject constructor(
                 var snapshotListener: ListenerRegistration? = null
                 try {
                     val userList = mutableListOf<User>()
+                    var currentUser: User? = null
 
                     val docReference = firebaseFirestore.collection(Constants.COLLECTION_USERS)
                     snapshotListener = docReference.addSnapshotListener { querySnapshot, e ->
@@ -168,11 +201,17 @@ class FirebaseRepositoryImpl @Inject constructor(
                                 val user = document.toObject(User::class.java)
                                 if (user?.userId != Utils.getCurrentUserId()) {
                                     userList.add(user!!)
+                                } else {
+                                    currentUser = user
                                 }
                             }
                             trySend(DataStateResult.Success(data = userList))
-
-                            Log.d(TAG, "Success: getRegisteredUserList()")
+                            /**
+                             * Saves important information of the currently logged in user.
+                             */
+                            CoroutineScope(Dispatchers.IO).launch {
+                                saveCurrentUserInformationLocally(currentUser)
+                            }
                         }
                     }
                 } catch (e: Exception) {
@@ -207,7 +246,6 @@ class FirebaseRepositoryImpl @Inject constructor(
                             }
 
                             trySend(DataStateResult.Success(data = messageList))
-                            Log.d(TAG, "Success: getMessages()")
                         }
                     }
                 } catch (e: Exception) {
@@ -216,7 +254,6 @@ class FirebaseRepositoryImpl @Inject constructor(
                 }
                 awaitClose { snapshotListener?.remove() }
             }
-
 
     override suspend fun sendMessage(
         message: String,
@@ -315,6 +352,19 @@ class FirebaseRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             Log.d(TAG, "Error: getLoggedUser(): ${e.message}")
             return null
+        }
+    }
+
+    private suspend fun saveCurrentUserInformationLocally(currentUser: User?) {
+        currentUser?.let { user ->
+            DataStoreUtils.savePreference(
+                key = PrefsConstants.MY_USER_NAME,
+                value = user.userName
+            )
+            DataStoreUtils.savePreference(
+                key = PrefsConstants.MY_USER_PROFILE_IMAGE,
+                value = user.profileImage
+            )
         }
     }
 }

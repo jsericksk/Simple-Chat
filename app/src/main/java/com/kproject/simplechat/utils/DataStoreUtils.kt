@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
+import com.kproject.simplechat.application.MyApplication
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -13,70 +14,70 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 
 object DataStoreUtils {
 
-    suspend fun savePreference(context: Context, key: String, value: String) {
+    suspend fun savePreference(key: String, value: String) {
         val keyPreferences = stringPreferencesKey(key)
-        context.dataStore.edit {
+        MyApplication.context.dataStore.edit {
             it[keyPreferences] = value
         }
     }
 
-    suspend fun savePreference(context: Context, key: String, value: Boolean) {
+    suspend fun savePreference(key: String, value: Boolean) {
         val keyPreferences = booleanPreferencesKey(key)
-        context.dataStore.edit {
+        MyApplication.context.dataStore.edit {
             it[keyPreferences] = value
         }
     }
 
-    suspend fun savePreference(context: Context, key: String, value: Int) {
+    suspend fun savePreference(key: String, value: Int) {
         val keyPreferences = intPreferencesKey(key)
-        context.dataStore.edit {
+        MyApplication.context.dataStore.edit {
             it[keyPreferences] = value
         }
     }
 
-    fun readPreference(context: Context, key: String, defaultValue: String): Flow<String> {
+    fun readPreference(key: String, defaultValue: String): Flow<String> {
         val keyPreferences = stringPreferencesKey(key)
-        return context.dataStore.data.map {
+        return MyApplication.context.dataStore.data.map {
             it[keyPreferences] ?: defaultValue
         }
     }
 
-    fun readPreference(context: Context, key: String, defaultValue: Boolean): Flow<Boolean> {
+    fun readPreference(key: String, defaultValue: Boolean): Flow<Boolean> {
         val keyPreferences = booleanPreferencesKey(key)
-        return context.dataStore.data.map {
+        return MyApplication.context.dataStore.data.map {
             it[keyPreferences] ?: defaultValue
         }
     }
 
-    fun readPreference(context: Context, key: String, defaultValue: Int): Flow<Int> {
+    fun readPreference(key: String, defaultValue: Int): Flow<Int> {
         val keyPreferences = intPreferencesKey(key)
-        return context.dataStore.data.map {
+        return MyApplication.context.dataStore.data.map {
             it[keyPreferences] ?: defaultValue
         }
     }
 
-    fun readPreferenceWithoutFlow(context: Context, key: String, defaultValue: String): String {
+    fun readPreferenceWithoutFlow(key: String, defaultValue: String): String {
         val keyPreferences = stringPreferencesKey(key)
         return runBlocking {
-            context.dataStore.data.map {
+            MyApplication.context.dataStore.data.map {
                 it[keyPreferences] ?: defaultValue
             }.first()
         }
     }
 
-    fun readPreferenceWithoutFlow(context: Context, key: String, defaultValue: Boolean): Boolean {
+    fun readPreferenceWithoutFlow(key: String, defaultValue: Boolean): Boolean {
         val keyPreferences = booleanPreferencesKey(key)
         return runBlocking {
-            context.dataStore.data.map {
+            MyApplication.context.dataStore.data.map {
                 it[keyPreferences] ?: defaultValue
             }.first()
         }
     }
 
-    fun readPreferenceWithoutFlow(context: Context, key: String, defaultValue: Int): Int {
+    fun readPreferenceWithoutFlow(key: String, defaultValue: Int): Int {
         val keyPreferences = intPreferencesKey(key)
         return runBlocking {
-            context.dataStore.data.map {
+            MyApplication.context.dataStore.data.map {
                 it[keyPreferences] ?: defaultValue
             }.first()
         }

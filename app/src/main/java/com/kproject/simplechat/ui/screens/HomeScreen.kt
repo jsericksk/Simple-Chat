@@ -42,6 +42,7 @@ import com.kproject.simplechat.model.User
 import com.kproject.simplechat.ui.screens.components.EmptyListInfo
 import com.kproject.simplechat.ui.screens.components.LoadingProgressIndicator
 import com.kproject.simplechat.ui.screens.components.SimpleDialog
+import com.kproject.simplechat.ui.screens.components.SimpleProgressDialog
 import com.kproject.simplechat.ui.theme.TextDefaultColor
 import com.kproject.simplechat.ui.viewmodels.HomeViewModel
 import com.kproject.simplechat.utils.DataStoreUtils
@@ -57,8 +58,22 @@ fun HomeScreen(
     navigateToLoginScreen: () -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val showLogoutConfirmationDialog = rememberSaveable { mutableStateOf(false) }
+    val showLogoutLoadingDialog = rememberSaveable { mutableStateOf(false) }
     val showAppThemeOptionDialog = rememberSaveable { mutableStateOf(false) }
+    var isRequestFinished by rememberSaveable { mutableStateOf(false) }
+
+    val logoutState by homeViewModel.logoutState.observeAsState()
+    val loadingLogout by homeViewModel.loadingLogout.observeAsState(false)
+
+    LaunchedEffect(Unit) {
+        // Try to subscribe only once
+        if (!isRequestFinished) {
+            homeViewModel.subscribeToTopic()
+        }
+        isRequestFinished = true
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -100,7 +115,7 @@ fun HomeScreen(
             HomeTabs(navigateToChatScreen, homeViewModel)
         }
     }
-    
+
     AppThemeOptions(showDialog = showAppThemeOptionDialog)
     
     SimpleDialog(
@@ -108,12 +123,28 @@ fun HomeScreen(
         titleResId = R.string.dialog_title_confirm_logout,
         messageResId = R.string.dialog_message_confirm_logout,
         onClickButtonOk = {
-            homeViewModel.logout()
             showLogoutConfirmationDialog.value = false
-            navigateToLoginScreen.invoke()
+            showLogoutLoadingDialog.value = true
+            homeViewModel.logout()
         },
         onClickButtonCancel = { showLogoutConfirmationDialog.value = false }
     )
+
+    if (loadingLogout) {
+        when (logoutState) {
+            is DataStateResult.Loading -> {
+                SimpleProgressDialog(showDialog = showLogoutLoadingDialog)
+            }
+            is DataStateResult.Success -> {
+                showLogoutLoadingDialog.value = false
+                navigateToLoginScreen.invoke()
+            }
+            is DataStateResult.Error -> {
+                showLogoutLoadingDialog.value = false
+                Utils.showToast(context = context, stringResId = R.string.error_logout)
+            }
+        }
+    }
 }
 
 @ExperimentalCoilApi
@@ -275,7 +306,6 @@ fun UsersTab(
         }
         is DataStateResult.Error -> {
             isRequestFinished = true
-
         }
     }
 }
@@ -434,7 +464,6 @@ fun AppThemeOptions(
                         showDialog.value = false
                         coroutineScope.launch {
                             DataStoreUtils.savePreference(
-                                context = context,
                                 key = PrefsConstants.APP_THEME,
                                 value = selectedTheme
                             )
@@ -461,21 +490,16 @@ fun AppThemeOptions(
             }
         )
     }
-    
 }
 
 @Composable
 fun ThemeOptions(selectedTheme: (Int) -> Unit) {
-    val context = LocalContext.current
-
     val appThemeState by DataStoreUtils.readPreference(
-        context = context,
         key = PrefsConstants.APP_THEME,
         defaultValue = PrefsConstants.THEME_SYSTEM_DEFAULT
     ).asLiveData().observeAsState(
         // Gets an initial value without Flow so there is no small delay
         initial = DataStoreUtils.readPreferenceWithoutFlow(
-            context = context,
             key = PrefsConstants.APP_THEME,
             defaultValue = PrefsConstants.THEME_SYSTEM_DEFAULT
         )

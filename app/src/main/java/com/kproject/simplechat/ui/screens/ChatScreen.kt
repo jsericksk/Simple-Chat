@@ -28,6 +28,8 @@ import coil.annotation.ExperimentalCoilApi
 import com.google.firebase.auth.FirebaseAuth
 import com.kproject.simplechat.R
 import com.kproject.simplechat.data.DataStateResult
+import com.kproject.simplechat.data.network.models.MessageNotificationData
+import com.kproject.simplechat.data.network.models.PushNotification
 import com.kproject.simplechat.model.Message
 import com.kproject.simplechat.ui.screens.components.ChatTopBar
 import com.kproject.simplechat.ui.screens.components.EmptyListInfo
@@ -166,6 +168,21 @@ fun ChatScreen(
                                     userProfileImage = userProfileImage
                                 )
 
+                                val topic = "/topics/$userId"
+                                val currentUserNameAndProfileImage =
+                                        chatViewModel.getCurrentUserNameAndProfileImage()
+                                PushNotification(
+                                    data = MessageNotificationData(
+                                        title = currentUserNameAndProfileImage[0],
+                                        message = message.value,
+                                        fromUserId = Utils.getCurrentUserId(),
+                                        fromUserName = currentUserNameAndProfileImage[0],
+                                        userProfileImage = currentUserNameAndProfileImage[1]
+                                    ),
+                                    to = topic
+                                ).also { notification ->
+                                    chatViewModel.postNotification(notification)
+                                }
                                 message.value = ""
                             }
                         }
