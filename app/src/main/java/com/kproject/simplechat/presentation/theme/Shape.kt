@@ -1,4 +1,4 @@
-package com.kproject.simplechat.ui.theme
+package com.kproject.simplechat.presentation.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

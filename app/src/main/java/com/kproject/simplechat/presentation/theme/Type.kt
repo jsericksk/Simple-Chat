@@ -1,4 +1,4 @@
-package com.kproject.simplechat.ui.theme
+package com.kproject.simplechat.presentation.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

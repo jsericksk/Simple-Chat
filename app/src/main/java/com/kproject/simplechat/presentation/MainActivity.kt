@@ -1,4 +1,4 @@
-package com.kproject.simplechat
+package com.kproject.simplechat.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.kproject.simplechat.ui.theme.SimpleChatTheme
+import com.kproject.simplechat.presentation.theme.SimpleChatTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
