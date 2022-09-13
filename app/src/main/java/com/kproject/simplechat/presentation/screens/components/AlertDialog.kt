@@ -1,5 +1,6 @@
 package com.kproject.simplechat.presentation.screens.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -83,8 +84,9 @@ private fun CustomAlertDialog(
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     )
-                    Spacer(Modifier.height(12.dp))
+                    Spacer(Modifier.height(16.dp))
                     content.invoke()
+                    Spacer(Modifier.height(16.dp))
                 }
             },
             confirmButton = {
@@ -121,7 +123,8 @@ private fun CustomAlertDialog(
     }
 }
 
-@Preview(showSystemUi = true, showBackground = true)
+@Preview(showSystemUi = true, name = "LightTheme")
+@Preview(showSystemUi = true, name = "DarkTheme", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun Preview() {
     SimpleChatTheme {
