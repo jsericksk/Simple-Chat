@@ -6,14 +6,14 @@ import androidx.compose.ui.graphics.Color
 
 // Dark Colors
 val PrimaryDark = Color(0xFF002F6C)
-val SecondaryDark = Color(0xFF003375)
-val OnSecondaryDark = Color(0xFF00439B)
+val SecondaryDark = Color(0xFF003B88)
+val OnSecondaryDark = Color(0xFF003375)
 val BackgroundDark = Color(0xFF1F1F1F)
 
 // Light Colors
 val PrimaryLight = Color(0xFF013A83)
 val SecondaryLight = Color(0xFF003D8D)
-val OnSecondaryLight = Color(0xFF0046A0)
+val OnSecondaryLight = Color(0xFF003880)
 val BackgroundLight = Color(0xFFF1EDED)
 
 val Colors.TextDefaultColor: Color

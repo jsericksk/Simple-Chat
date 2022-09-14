@@ -10,12 +10,14 @@ import androidx.compose.ui.input.key.Key.Companion.Back
 private val DarkColorPalette = darkColors(
     primary = PrimaryDark,
     secondary = SecondaryDark,
+    onSecondary = OnSecondaryDark,
     background = BackgroundDark
 )
 
 private val LightColorPalette = lightColors(
     primary = PrimaryLight,
     secondary = SecondaryLight,
+    onSecondary = OnSecondaryLight,
     background = BackgroundLight
 )
 
