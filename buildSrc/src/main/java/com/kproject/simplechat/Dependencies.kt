@@ -38,7 +38,7 @@ object Dependencies {
     const val accompanistNavigationAnimation = "com.google.accompanist:accompanist-navigation-animation:${Versions.ACCOMPANIST}"
     const val accompanistPager = "com.google.accompanist:accompanist-pager:${Versions.ACCOMPANIST}"
 
-    const val coil = "io.coil-kt:coil-compose:${Versions.COIL}"
+    const val landscapist = "com.github.skydoves:landscapist-coil:${Versions.LANDSCAPIST}"
 
     // Retrofit
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.RETROFIT}"

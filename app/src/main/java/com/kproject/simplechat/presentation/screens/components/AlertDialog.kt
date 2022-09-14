@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kproject.simplechat.R
-import com.kproject.simplechat.presentation.theme.SimpleChatTheme
+import com.kproject.simplechat.presentation.theme.PreviewTheme
 import com.kproject.simplechat.presentation.theme.TextDefaultColor
 
 @Composable
@@ -127,7 +127,7 @@ private fun CustomAlertDialog(
 @Preview(showSystemUi = true, name = "DarkTheme", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun Preview() {
-    SimpleChatTheme {
+    PreviewTheme {
         AlertDialog(
             showDialog = true,
             onDismiss = { },

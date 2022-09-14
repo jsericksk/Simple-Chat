@@ -31,7 +31,7 @@ object Versions {
     const val NAVIGATION_COMPOSE = "2.5.2"
     const val ACCOMPANIST = "0.25.1"
 
-    const val COIL = "2.1.0"
+    const val LANDSCAPIST = "2.0.0"
 
     const val RETROFIT = "2.9.0"
 }

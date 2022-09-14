@@ -92,8 +92,8 @@ dependencies {
     implementation(Dependencies.accompanistNavigationAnimation)
     implementation(Dependencies.accompanistPager)
 
-    // Coil
-    implementation(Dependencies.coil)
+    // Landscapist
+    implementation(Dependencies.landscapist)
 
     // Retrofit
     implementation(Dependencies.retrofit)

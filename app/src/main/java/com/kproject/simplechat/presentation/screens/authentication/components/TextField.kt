@@ -5,7 +5,6 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -14,7 +13,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -23,11 +21,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kproject.simplechat.R
-import com.kproject.simplechat.presentation.theme.IconColor
-import com.kproject.simplechat.presentation.theme.SimpleChatTheme
+import com.kproject.simplechat.presentation.theme.PreviewTheme
 import com.kproject.simplechat.presentation.theme.TextDefaultColor
 
 @Composable
@@ -96,7 +92,7 @@ fun TextField(
 @Preview(name = "DarkTheme", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun Preview() {
-    SimpleChatTheme {
+    PreviewTheme {
         Column {
             TextField(
                 value = "",
