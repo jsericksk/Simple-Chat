@@ -13,7 +13,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
@@ -33,7 +32,6 @@ fun TextField(
     onValueChange: (String) -> Unit,
     hint: String,
     @DrawableRes leadingIcon: Int,
-    shape: Shape = CircleShape,
     keyboardType: KeyboardType = KeyboardType.Text,
     fieldType: FieldType = FieldType.None
 ) {
@@ -44,8 +42,8 @@ fun TextField(
     Column {
         OutlinedTextField(
             value = value,
-            onValueChange = { value ->
-                onValueChange.invoke(value)
+            onValueChange = { newValue ->
+                onValueChange.invoke(newValue)
             },
             textStyle = TextStyle(color = MaterialTheme.colors.TextDefaultColor, fontSize = 18.sp),
             label = {
@@ -71,15 +69,13 @@ fun TextField(
             keyboardOptions = KeyboardOptions(
                 keyboardType = if (passwordVisible) keyboardType else KeyboardType.Password
             ),
-            shape = shape,
+            shape = CircleShape,
             singleLine = true,
-            colors = TextFieldDefaults.textFieldColors(
+            colors = TextFieldDefaults.outlinedTextFieldColors(
                 backgroundColor = MaterialTheme.colors.background,
                 cursorColor = MaterialTheme.colors.primary,
                 leadingIconColor = MaterialTheme.colors.secondary,
                 trailingIconColor = MaterialTheme.colors.onSecondary,
-                focusedIndicatorColor = MaterialTheme.colors.secondary,
-                unfocusedIndicatorColor = MaterialTheme.colors.onSecondary,
                 focusedLabelColor = MaterialTheme.colors.secondary,
                 unfocusedLabelColor = MaterialTheme.colors.onSecondary,
             ),
