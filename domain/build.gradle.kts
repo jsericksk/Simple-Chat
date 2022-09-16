@@ -12,4 +12,6 @@ java {
 
 dependencies {
     testImplementation(Dependencies.testJunit)
+    
+    implementation(project(":commom"))
 }
