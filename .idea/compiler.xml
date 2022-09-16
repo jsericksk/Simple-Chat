@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="11" />
+    <bytecodeTargetLevel target="1.8">
+      <module name="Simple_Chat.app" target="11" />
+      <module name="Simple_Chat.data" target="11" />
+      <module name="SimpleChat.buildSrc" target="11" />
+      <module name="SimpleChat.buildSrc.main" target="11" />
+      <module name="SimpleChat.buildSrc.test" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>

@@ -69,13 +69,6 @@ dependencies {
     implementation(Dependencies.activityCompose)
     implementation(Dependencies.datastorePreferences)
 
-    // Firebase
-    implementation(platform(Dependencies.Firebase.firebaseBom))
-    implementation(Dependencies.Firebase.auth)
-    implementation(Dependencies.Firebase.firestore)
-    implementation(Dependencies.Firebase.storage)
-    implementation(Dependencies.Firebase.messaging)
-
     // Dagger-Hilt
     implementation(Dependencies.daggerHilt)
     implementation(Dependencies.hiltNavigationCompose)
@@ -94,10 +87,6 @@ dependencies {
 
     // Landscapist
     implementation(Dependencies.landscapist)
-
-    // Retrofit
-    implementation(Dependencies.retrofit)
-    implementation(Dependencies.retrofitConverterGson)
 
     testImplementation(Dependencies.testJunit)
     androidTestImplementation(Dependencies.androidTestJunit)
