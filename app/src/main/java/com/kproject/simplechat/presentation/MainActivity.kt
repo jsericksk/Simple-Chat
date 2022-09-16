@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
-import com.kproject.simplechat.presentation.screens.authentication.login.LoginScreen
+import com.kproject.simplechat.presentation.navigation.NavigationGraph
 import com.kproject.simplechat.presentation.theme.SimpleChatTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,9 +19,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    LoginScreen(
-                        onNavigateToSignUpScreen = {}
-                    )
+                    NavigationGraph()
                 }
             }
         }

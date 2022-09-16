@@ -1,14 +1,10 @@
 package com.kproject.simplechat.presentation.screens.authentication.login
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.Button
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -27,15 +23,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kproject.simplechat.R
+import com.kproject.simplechat.presentation.screens.authentication.components.Button
 import com.kproject.simplechat.presentation.screens.authentication.components.FieldType
 import com.kproject.simplechat.presentation.screens.authentication.components.TextField
 import com.kproject.simplechat.presentation.theme.PreviewTheme
-import com.kproject.simplechat.presentation.screens.authentication.components.Button
 import com.kproject.simplechat.presentation.theme.TextDefaultColor
 
 @Composable
 fun LoginScreen(
-    onNavigateToSignUpScreen: () -> Unit
+    onNavigateToHomeScreen: () -> Unit,
+    onNavigateToSignUpScreen: () -> Unit,
 ) {
     val loginViewModel: LoginViewModel = viewModel()
     val loginUiState = loginViewModel.loginUiState
@@ -73,7 +70,7 @@ private fun MainContent(
         Box(
             modifier = Modifier
                 .background(
-                    color = MaterialTheme.colors.primary,
+                    color = MaterialTheme.colors.secondary,
                     shape = RoundedCornerShape(bottomStart = 34.dp, bottomEnd = 34.dp)
                 )
                 .fillMaxWidth()
