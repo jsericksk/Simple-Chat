@@ -1,6 +1,6 @@
 package com.kproject.simplechat.commom.exception
 
-sealed class AuthenticationException : Exception() {
+sealed class AuthenticationException : BaseException() {
 
     object UserNotFoundException : AuthenticationException()
 

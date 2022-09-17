@@ -11,7 +11,7 @@ java {
 }
 
 dependencies {
+    implementation(project(Dependencies.Module.commom))
+
     testImplementation(Dependencies.testJunit)
-    
-    implementation(project(":commom"))
 }

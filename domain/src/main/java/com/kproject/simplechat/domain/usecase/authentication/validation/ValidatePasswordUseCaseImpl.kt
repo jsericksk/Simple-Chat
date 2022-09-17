@@ -4,7 +4,7 @@ import com.kproject.simplechat.commom.exception.AuthenticationException
 
 class ValidatePasswordUseCaseImpl : ValidatePasswordUseCase {
 
-    override fun invoke(password: String): Boolean {
+    override fun invoke(password: String){
         if (password.isBlank()) {
             throw AuthenticationException.EmptyPasswordException
         }
@@ -12,7 +12,5 @@ class ValidatePasswordUseCaseImpl : ValidatePasswordUseCase {
         if (password.contains(" ")) {
             throw AuthenticationException.InvalidPasswordException
         }
-
-        return true
     }
 }

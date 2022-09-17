@@ -3,11 +3,11 @@ import com.kproject.simplechat.Dependencies
 import com.kproject.simplechat.Android
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("dagger.hilt.android.plugin")
-    id("com.google.gms.google-services")
+    id(com.kproject.simplechat.Dependencies.Plugin.androidApplication)
+    id(com.kproject.simplechat.Dependencies.Plugin.kotlin)
+    id(com.kproject.simplechat.Dependencies.Plugin.kapt)
+    id(com.kproject.simplechat.Dependencies.Plugin.daggerHilt)
+    id(com.kproject.simplechat.Dependencies.Plugin.googlePlayServices)
 }
 
 android {
@@ -58,6 +58,9 @@ android {
 }
 
 dependencies {
+    implementation(project(Dependencies.Module.domain))
+    implementation(project(Dependencies.Module.data))
+
     implementation(Dependencies.coreKtx)
     implementation(Dependencies.composeMaterial)
     implementation(Dependencies.composeUi)

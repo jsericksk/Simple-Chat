@@ -2,8 +2,10 @@ import com.kproject.simplechat.Android
 import com.kproject.simplechat.Dependencies
 
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    id(com.kproject.simplechat.Dependencies.Plugin.androidLibrary)
+    id(com.kproject.simplechat.Dependencies.Plugin.kotlin)
+    id(com.kproject.simplechat.Dependencies.Plugin.kapt)
+    id(com.kproject.simplechat.Dependencies.Plugin.daggerHilt)
 }
 
 android {
@@ -38,10 +40,15 @@ android {
 }
 
 dependencies {
+    implementation(project(Dependencies.Module.domain))
+    implementation(project(Dependencies.Module.commom))
+
     implementation(Dependencies.coreKtx)
 
-    implementation(project(":domain"))
-    implementation(project(":commom"))
+    // Dagger-Hilt
+    implementation(Dependencies.daggerHilt)
+    implementation(Dependencies.hiltNavigationCompose)
+    kapt(Dependencies.hiltAndroidCompiler)
 
     // Coroutines for Android and Firebase
     implementation(Dependencies.kotlinxCoroutinesAndroid)

@@ -1,6 +1,21 @@
 package com.kproject.simplechat
 
 object Dependencies {
+    object Module {
+        const val domain = ":domain"
+        const val data = ":data"
+        const val commom = ":commom"
+    }
+
+    object Plugin {
+        const val androidApplication = "com.android.application"
+        const val androidLibrary = "com.android.library"
+        const val kotlin = "org.jetbrains.kotlin.android"
+        const val kapt = "kotlin-kapt"
+        const val daggerHilt = "dagger.hilt.android.plugin"
+        const val googlePlayServices = "com.google.gms.google-services"
+    }
+
     const val coreKtx = "androidx.core:core-ktx:${Versions.CORE_KTX}"
     const val lifecycleRuntime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.LIFECYCLE_RUNTIME_KTX}"
     const val lifecycleExtensions = "androidx.lifecycle:lifecycle-extensions:${Versions.LIFECYCLE_EXTENSIONS}"
