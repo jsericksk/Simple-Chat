@@ -1,13 +1,18 @@
 package com.kproject.simplechat.domain.usecase.authentication.validation
 
-import com.kproject.simplechat.domain.provider.StringResourceProvider
+import com.kproject.simplechat.commom.exception.AuthenticationException
 
-class ValidatePasswordUseCaseImpl(
-    private val stringResourceProvider: StringResourceProvider
-) : ValidatePasswordUseCase {
+class ValidatePasswordUseCaseImpl : ValidatePasswordUseCase {
 
     override fun invoke(password: String): Boolean {
+        if (password.isBlank()) {
+            throw AuthenticationException.EmptyPasswordException
+        }
 
-        return false
+        if (password.contains(" ")) {
+            throw AuthenticationException.InvalidPasswordException
+        }
+
+        return true
     }
 }

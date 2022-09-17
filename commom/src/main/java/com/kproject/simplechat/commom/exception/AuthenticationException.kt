@@ -1,14 +1,18 @@
 package com.kproject.simplechat.commom.exception
 
-sealed class AuthenticationException(
-    override val message: String = ""
-) : Exception(message) {
+sealed class AuthenticationException : Exception() {
 
-    data class EmailException(
-        override val message: String
-    ) : AuthenticationException(message)
+    object UserNotFoundException : AuthenticationException()
 
-    data class PasswordException(
-        override val message: String
-    ) : AuthenticationException(message)
+    object InvalidEmailException : AuthenticationException()
+
+    object EmptyEmaiException : AuthenticationException()
+
+    object EmailInUseException : AuthenticationException()
+
+    object EmptyPasswordException : AuthenticationException()
+
+    object InvalidPasswordException : AuthenticationException()
+
+    object WrongPasswordException : AuthenticationException()
 }
