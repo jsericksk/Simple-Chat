@@ -2,10 +2,10 @@ import com.kproject.simplechat.Android
 import com.kproject.simplechat.Dependencies
 
 plugins {
-    id(com.kproject.simplechat.Dependencies.Plugin.androidLibrary)
-    id(com.kproject.simplechat.Dependencies.Plugin.kotlin)
-    id(com.kproject.simplechat.Dependencies.Plugin.kapt)
-    id(com.kproject.simplechat.Dependencies.Plugin.daggerHilt)
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -37,6 +37,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    namespace = "com.kproject.simplechat.data"
 }
 
 dependencies {
