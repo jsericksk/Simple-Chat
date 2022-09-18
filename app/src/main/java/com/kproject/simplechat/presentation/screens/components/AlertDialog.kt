@@ -1,6 +1,5 @@
 package com.kproject.simplechat.presentation.screens.components
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,10 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kproject.simplechat.R
+import com.kproject.simplechat.presentation.theme.CompletePreview
 import com.kproject.simplechat.presentation.theme.PreviewTheme
 import com.kproject.simplechat.presentation.theme.TextDefaultColor
 
@@ -123,8 +122,7 @@ private fun CustomAlertDialog(
     }
 }
 
-@Preview(showSystemUi = true, name = "LightTheme")
-@Preview(showSystemUi = true, name = "DarkTheme", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@CompletePreview
 @Composable
 private fun Preview() {
     PreviewTheme {

@@ -1,6 +1,5 @@
 package com.kproject.simplechat.presentation.screens.authentication.login
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,16 +17,15 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kproject.simplechat.R
 import com.kproject.simplechat.presentation.screens.authentication.components.Button
 import com.kproject.simplechat.presentation.screens.authentication.components.FieldType
 import com.kproject.simplechat.presentation.screens.authentication.components.TextField
 import com.kproject.simplechat.presentation.theme.PreviewTheme
+import com.kproject.simplechat.presentation.theme.CompletePreview
 import com.kproject.simplechat.presentation.theme.TextDefaultColor
 
 @Composable
@@ -47,7 +45,7 @@ fun LoginScreen(
             loginViewModel.onPasswordChange(password)
         },
         onButtonLoginClick = {
-
+            loginViewModel.login()
         },
         onNavigateToSignUpScreen = onNavigateToSignUpScreen
     )
@@ -163,8 +161,7 @@ private fun SignUpText(onNavigateToSignUpScreen: () -> Unit) {
     )
 }
 
-@Preview(showSystemUi = true, name = "LightTheme")
-@Preview(showSystemUi = true, name = "DarkTheme", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@CompletePreview
 @Composable
 private fun Preview() {
     val loginUiState = LoginUiState("simplechat@gmail.com.br", "123456")

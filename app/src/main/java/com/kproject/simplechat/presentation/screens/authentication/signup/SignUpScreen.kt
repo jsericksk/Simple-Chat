@@ -1,6 +1,5 @@
 package com.kproject.simplechat.presentation.screens.authentication.signup
 
-import android.content.res.Configuration
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,7 +18,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,6 +26,7 @@ import com.kproject.simplechat.presentation.screens.authentication.components.Bu
 import com.kproject.simplechat.presentation.screens.authentication.components.FieldType
 import com.kproject.simplechat.presentation.screens.authentication.components.TextField
 import com.kproject.simplechat.presentation.theme.PreviewTheme
+import com.kproject.simplechat.presentation.theme.CompletePreview
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil.CoilImage
 
@@ -213,8 +212,7 @@ private fun ProfileImage(
     )
 }
 
-@Preview(showSystemUi = true, name = "LightTheme")
-@Preview(showSystemUi = true, name = "DarkTheme", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@CompletePreview
 @Composable
 private fun Preview() {
     val signUpUiState = SignUpUiState(

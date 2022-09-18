@@ -25,4 +25,8 @@ class LoginViewModel @Inject constructor(
     fun onPasswordChange(password: String) {
         loginUiState = loginUiState.copy(password = password)
     }
+
+    fun login() {
+
+    }
 }

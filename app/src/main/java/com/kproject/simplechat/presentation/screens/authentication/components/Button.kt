@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kproject.simplechat.presentation.theme.PreviewTheme
+import com.kproject.simplechat.presentation.theme.SimplePreview
 
 @Composable
 fun Button(
@@ -35,8 +36,7 @@ fun Button(
     }
 }
 
-@Preview(name = "LightTheme")
-@Preview(name = "DarkTheme", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@SimplePreview
 @Composable
 private fun Preview() {
     PreviewTheme {
