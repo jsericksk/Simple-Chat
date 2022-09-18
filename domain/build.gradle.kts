@@ -11,6 +11,7 @@ java {
 }
 
 dependencies {
+    // Modules
     implementation(project(Dependencies.Module.commom))
 
     testImplementation(Dependencies.testJunit)

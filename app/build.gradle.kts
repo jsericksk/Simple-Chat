@@ -59,8 +59,9 @@ android {
 }
 
 dependencies {
+    // Modules
     implementation(project(Dependencies.Module.domain))
-    implementation(project(Dependencies.Module.data))
+    implementation(project(Dependencies.Module.commom))
 
     implementation(Dependencies.coreKtx)
     implementation(Dependencies.composeMaterial)

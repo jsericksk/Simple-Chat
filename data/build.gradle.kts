@@ -41,6 +41,7 @@ android {
 }
 
 dependencies {
+    // Modules
     implementation(project(Dependencies.Module.domain))
     implementation(project(Dependencies.Module.commom))
 
