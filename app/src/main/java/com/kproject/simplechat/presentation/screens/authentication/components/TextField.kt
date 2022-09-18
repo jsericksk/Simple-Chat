@@ -1,6 +1,5 @@
 package com.kproject.simplechat.presentation.screens.authentication.components
 
-import android.content.res.Configuration
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -12,14 +11,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kproject.simplechat.R
@@ -34,7 +31,6 @@ fun TextField(
     value: String,
     onValueChange: (String) -> Unit,
     hint: String,
-    isError: Boolean = false,
     errorMessage: String = "",
     @DrawableRes leadingIcon: Int,
     keyboardType: KeyboardType = KeyboardType.Text,
@@ -76,7 +72,7 @@ fun TextField(
             ),
             shape = CircleShape,
             singleLine = true,
-            isError = isError,
+            isError = errorMessage.isNotEmpty(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 backgroundColor = MaterialTheme.colors.background,
                 cursorColor = MaterialTheme.colors.primary,
@@ -86,11 +82,13 @@ fun TextField(
                 unfocusedLabelColor = MaterialTheme.colors.onSecondary,
                 errorBorderColor = MaterialTheme.colors.ErrorColor,
                 errorLabelColor = MaterialTheme.colors.ErrorColor,
+                errorCursorColor = MaterialTheme.colors.ErrorColor,
+                errorTrailingIconColor = MaterialTheme.colors.ErrorColor
             ),
             modifier = modifier.fillMaxWidth()
         )
 
-        if (isError) {
+        if (errorMessage.isNotEmpty()) {
             Spacer(Modifier.height(6.dp))
             Text(
                 text = errorMessage,
@@ -126,7 +124,6 @@ private fun Preview() {
                 onValueChange = { },
                 hint = "Type your e-mail",
                 leadingIcon = R.drawable.ic_email,
-                isError = true,
                 errorMessage = "Invalid e-mail"
             )
         }

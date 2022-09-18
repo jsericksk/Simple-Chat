@@ -100,6 +100,7 @@ private fun MainContent(
                 leadingIcon = R.drawable.ic_email,
                 keyboardType = KeyboardType.Email,
                 fieldType = FieldType.Email,
+                errorMessage = loginUiState.emailError
             )
 
             Spacer(Modifier.height(spacingHeight))
@@ -113,6 +114,7 @@ private fun MainContent(
                 leadingIcon = R.drawable.ic_key,
                 keyboardType = KeyboardType.Password,
                 fieldType = FieldType.Password,
+                errorMessage = loginUiState.passwordError
             )
 
             Spacer(Modifier.height(spacingHeight))
