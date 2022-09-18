@@ -25,8 +25,8 @@ import com.kproject.simplechat.R
 import com.kproject.simplechat.presentation.screens.authentication.components.Button
 import com.kproject.simplechat.presentation.screens.authentication.components.FieldType
 import com.kproject.simplechat.presentation.screens.authentication.components.TextField
-import com.kproject.simplechat.presentation.theme.PreviewTheme
 import com.kproject.simplechat.presentation.theme.CompletePreview
+import com.kproject.simplechat.presentation.theme.PreviewTheme
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil.CoilImage
 
@@ -41,19 +41,19 @@ fun SignUpScreen(
     MainContent(
         signUpUiState = signUpUiState,
         onProfileImageChange = { profileImage ->
-            signUpViewModel.onProfileImageChange(profileImage)
+            signUpViewModel.onEvent(SignUpEvent.ProfileImageChanged(profileImage))
         },
         onUsernameChange = { username ->
-            signUpViewModel.onUsernameChange(username)
+            signUpViewModel.onEvent(SignUpEvent.UsernameChanged(username))
         },
         onEmailChange = { email ->
-            signUpViewModel.onEmailChange(email)
+            signUpViewModel.onEvent(SignUpEvent.EmailChanged(email))
         },
         onPasswordChange = { password ->
-            signUpViewModel.onPasswordChange(password)
+            signUpViewModel.onEvent(SignUpEvent.PasswordChanged(password))
         },
-        onConfirmedPasswordChange = { password ->
-            signUpViewModel.onConfirmedPasswordChange(password)
+        onRepeatedPasswordChange = { password ->
+            signUpViewModel.onEvent(SignUpEvent.RepeatedPasswordChanged(password))
         },
         onButtonSignUpClick = {
 
@@ -69,7 +69,7 @@ private fun MainContent(
     onUsernameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onConfirmedPasswordChange: (String) -> Unit,
+    onRepeatedPasswordChange: (String) -> Unit,
     onButtonSignUpClick: () -> Unit
 ) {
     val spacingHeight = 20.dp
@@ -151,9 +151,9 @@ private fun MainContent(
             Spacer(Modifier.height(spacingHeight))
 
             TextField(
-                value = signUpUiState.confirmedPassword,
+                value = signUpUiState.repeatedPassword,
                 onValueChange = { value ->
-                    onConfirmedPasswordChange.invoke(value)
+                    onRepeatedPasswordChange.invoke(value)
                 },
                 hint = stringResource(id = R.string.confirm_password),
                 leadingIcon = R.drawable.ic_key,
@@ -220,7 +220,7 @@ private fun Preview() {
         username = "Simple Chat",
         email = "simplechat@gmail.com.br",
         password = "123456",
-        confirmedPassword = "123456"
+        repeatedPassword = "123456"
     )
     PreviewTheme {
         MainContent(
@@ -229,7 +229,7 @@ private fun Preview() {
             onUsernameChange = {},
             onEmailChange = {},
             onPasswordChange = {},
-            onConfirmedPasswordChange = {},
+            onRepeatedPasswordChange = {},
             onButtonSignUpClick = {}
         )
     }

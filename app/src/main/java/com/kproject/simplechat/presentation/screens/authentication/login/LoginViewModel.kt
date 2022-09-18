@@ -18,12 +18,15 @@ class LoginViewModel @Inject constructor(
     var loginUiState by mutableStateOf(LoginUiState())
         private set
 
-    fun onEmailChange(email: String) {
-        loginUiState = loginUiState.copy(email = email)
-    }
-
-    fun onPasswordChange(password: String) {
-        loginUiState = loginUiState.copy(password = password)
+    fun onEvent(event: LoginEvent) {
+        when (event) {
+            is LoginEvent.EmailChanged -> {
+                loginUiState = loginUiState.copy(email = event.email)
+            }
+            is LoginEvent.PasswordChanged -> {
+                loginUiState = loginUiState.copy(password = event.password)
+            }
+        }
     }
 
     fun login() {

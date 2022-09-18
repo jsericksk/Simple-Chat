@@ -111,14 +111,14 @@ private fun Preview() {
                 hint = "Type your e-mail",
                 leadingIcon = R.drawable.ic_email
             )
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(14.dp))
             TextField(
                 value = "simplechat@gmail.com.br",
                 onValueChange = { },
                 hint = "Type your e-mail",
                 leadingIcon = R.drawable.ic_email
             )
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(14.dp))
             TextField(
                 value = "simplechat",
                 onValueChange = { },

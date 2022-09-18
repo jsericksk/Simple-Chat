@@ -5,5 +5,5 @@ data class SignUpUiState(
     val username: String = "",
     val email: String = "",
     val password: String = "",
-    val confirmedPassword: String = "",
+    val repeatedPassword: String = ""
 )

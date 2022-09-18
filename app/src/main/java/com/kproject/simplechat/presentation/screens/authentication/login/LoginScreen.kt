@@ -39,10 +39,10 @@ fun LoginScreen(
     MainContent(
         loginUiState = loginUiState,
         onEmailChange = { email ->
-            loginViewModel.onEmailChange(email)
+            loginViewModel.onEvent(LoginEvent.EmailChanged(email))
         },
         onPasswordChange = { password ->
-            loginViewModel.onPasswordChange(password)
+            loginViewModel.onEvent(LoginEvent.PasswordChanged(password))
         },
         onButtonLoginClick = {
             loginViewModel.login()
