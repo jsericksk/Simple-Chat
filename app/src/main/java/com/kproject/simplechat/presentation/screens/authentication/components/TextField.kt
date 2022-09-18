@@ -31,7 +31,7 @@ fun TextField(
     value: String,
     onValueChange: (String) -> Unit,
     hint: String,
-    errorMessage: String = "",
+    errorMessage: String? = null,
     @DrawableRes leadingIcon: Int,
     keyboardType: KeyboardType = KeyboardType.Text,
     fieldType: FieldType = FieldType.None
@@ -72,7 +72,7 @@ fun TextField(
             ),
             shape = CircleShape,
             singleLine = true,
-            isError = errorMessage.isNotEmpty(),
+            isError = errorMessage != null,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 backgroundColor = MaterialTheme.colors.background,
                 cursorColor = MaterialTheme.colors.primary,
@@ -88,10 +88,10 @@ fun TextField(
             modifier = modifier.fillMaxWidth()
         )
 
-        if (errorMessage.isNotEmpty()) {
+        errorMessage?.let { message ->
             Spacer(Modifier.height(6.dp))
             Text(
-                text = errorMessage,
+                text = message,
                 color = MaterialTheme.colors.ErrorColor,
                 fontSize = 16.sp,
                 modifier = Modifier.padding(start = 6.dp)

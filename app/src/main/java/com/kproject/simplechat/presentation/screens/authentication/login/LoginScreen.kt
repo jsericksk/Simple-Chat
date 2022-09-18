@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kproject.simplechat.R
+import com.kproject.simplechat.presentation.model.UiText
 import com.kproject.simplechat.presentation.screens.authentication.components.Button
 import com.kproject.simplechat.presentation.screens.authentication.components.FieldType
 import com.kproject.simplechat.presentation.screens.authentication.components.TextField
@@ -100,7 +101,7 @@ private fun MainContent(
                 leadingIcon = R.drawable.ic_email,
                 keyboardType = KeyboardType.Email,
                 fieldType = FieldType.Email,
-                errorMessage = loginUiState.emailError
+                errorMessage = loginUiState.emailError?.asString()
             )
 
             Spacer(Modifier.height(spacingHeight))
@@ -114,7 +115,7 @@ private fun MainContent(
                 leadingIcon = R.drawable.ic_key,
                 keyboardType = KeyboardType.Password,
                 fieldType = FieldType.Password,
-                errorMessage = loginUiState.passwordError
+                errorMessage = loginUiState.passwordError?.asString()
             )
 
             Spacer(Modifier.height(spacingHeight))
@@ -166,7 +167,7 @@ private fun SignUpText(onNavigateToSignUpScreen: () -> Unit) {
 @CompletePreview
 @Composable
 private fun Preview() {
-    val loginUiState = LoginUiState("simplechat@gmail.com.br", "123456")
+    val loginUiState = LoginUiState(email = "simplechat@gmail.com.br", password = "123456")
     PreviewTheme {
         MainContent(
             loginUiState = loginUiState,

@@ -9,7 +9,12 @@ class ValidatePasswordUseCaseImpl : ValidatePasswordUseCase {
             return ValidationState.EmptyPassword
         }
 
-        if (password.any { it.isDigit() }) {
+        if (password.length < 6) {
+            return ValidationState.PasswordTooShort
+        }
+
+        val passwordContainsDigit = password.any { it.isDigit() }
+        if (!passwordContainsDigit) {
             return ValidationState.InvalidPassword
         }
 

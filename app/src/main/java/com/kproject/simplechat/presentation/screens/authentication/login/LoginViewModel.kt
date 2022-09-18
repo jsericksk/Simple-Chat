@@ -4,9 +4,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.kproject.simplechat.commom.exception.AuthenticationException
+import com.kproject.simplechat.commom.validation.ValidationState
 import com.kproject.simplechat.domain.usecase.authentication.validation.ValidateEmailUseCase
 import com.kproject.simplechat.domain.usecase.authentication.validation.ValidatePasswordUseCase
+import com.kproject.simplechat.presentation.mapper.toErrorMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -30,6 +31,20 @@ class LoginViewModel @Inject constructor(
     }
 
     fun login() {
+        val emailValidationState = validateEmailUseCase(loginUiState.email)
+        loginUiState = loginUiState.copy(emailError = emailValidationState.toErrorMessage())
+        val passwordValidationState = validatePasswordUseCase(loginUiState.password)
+        loginUiState = loginUiState.copy(passwordError = passwordValidationState.toErrorMessage())
 
+        val hasError = listOf(
+            emailValidationState,
+            passwordValidationState
+        ).any { validationState ->
+            validationState != ValidationState.Success
+        }
+
+        if (!hasError) {
+
+        }
     }
 }

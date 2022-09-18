@@ -1,9 +1,6 @@
 package com.kproject.simplechat.di
 
-import com.kproject.simplechat.domain.usecase.authentication.validation.ValidateEmailUseCase
-import com.kproject.simplechat.domain.usecase.authentication.validation.ValidateEmailUseCaseImpl
-import com.kproject.simplechat.domain.usecase.authentication.validation.ValidatePasswordUseCase
-import com.kproject.simplechat.domain.usecase.authentication.validation.ValidatePasswordUseCaseImpl
+import com.kproject.simplechat.domain.usecase.authentication.validation.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,8 +13,14 @@ object DomainModule {
 
     @Provides
     @Singleton
-    fun provideValidateEmailUseCase(): ValidateEmailUseCase {
-        return ValidateEmailUseCaseImpl()
+    fun provideEmailValidator(): EmailValidator {
+        return AndroidEmailValidator()
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidateEmailUseCase(emailValidator: EmailValidator): ValidateEmailUseCase {
+        return ValidateEmailUseCaseImpl(emailValidator)
     }
 
     @Provides
@@ -25,5 +28,4 @@ object DomainModule {
     fun provideValidatePasswordUseCase(): ValidatePasswordUseCase {
         return ValidatePasswordUseCaseImpl()
     }
-
 }

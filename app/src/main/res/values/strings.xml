@@ -17,11 +17,13 @@
     <string name="password">Password</string>
     <string name="confirm_password">Confirm password</string>
 
-    <string name="error_fill_all_fields">Fill all fields to continue.</string>
-    <string name="error_email_badly_formatted">The email address is badly formatted.</string>
-    <string name="error_password_too_small">The password must contain at least 6 characters.</string>
-    <string name="error_passwords_do_not_match">The passwords do not match.</string>
-    <string name="error_profile_image_not_selected">Select a profile picture.</string>
+    <string name="error_empty_email">Enter an email</string>
+    <string name="error_email_badly_formatted">The email address is badly formatted</string>
+    <string name="error_empty_password">Enter an password</string>
+    <string name="error_password_too_short">Enter a password of at least 6 characters</string>
+    <string name="error_invalid_password">The password must contain at least one digit</string>
+    <string name="error_passwords_does_not_match">The passwords does not match</string>
+    <string name="error_profile_image_not_selected">Select a profile picture</string>
 
     <string name="error_user_not_found">User with this email doesn\'t exist.</string>
     <string name="error_password_is_wrong">Your password is wrong.</string>
