@@ -20,4 +20,6 @@ val Colors.TextDefaultColor: Color
     @Composable get() = if (isLight) Color(0xFF2B2B2B) else Color(0xFFCECECE)
 val Colors.IconColor: Color
     @Composable get() = if (isLight) Color(0xFF2B2B2B) else Color(0xFFCECECE)
+val Colors.ErrorColor: Color
+    @Composable get() = if (isLight) Color(0xFF9C1616) else Color(0xFF910505)
 

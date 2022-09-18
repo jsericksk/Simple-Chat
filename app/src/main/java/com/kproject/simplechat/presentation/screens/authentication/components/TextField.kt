@@ -2,8 +2,7 @@ package com.kproject.simplechat.presentation.screens.authentication.components
 
 import android.content.res.Configuration
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -13,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
@@ -20,8 +20,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kproject.simplechat.R
+import com.kproject.simplechat.presentation.theme.ErrorColor
 import com.kproject.simplechat.presentation.theme.PreviewTheme
 import com.kproject.simplechat.presentation.theme.SimplePreview
 import com.kproject.simplechat.presentation.theme.TextDefaultColor
@@ -32,6 +34,8 @@ fun TextField(
     value: String,
     onValueChange: (String) -> Unit,
     hint: String,
+    isError: Boolean = false,
+    errorMessage: String = "",
     @DrawableRes leadingIcon: Int,
     keyboardType: KeyboardType = KeyboardType.Text,
     fieldType: FieldType = FieldType.None
@@ -72,6 +76,7 @@ fun TextField(
             ),
             shape = CircleShape,
             singleLine = true,
+            isError = isError,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 backgroundColor = MaterialTheme.colors.background,
                 cursorColor = MaterialTheme.colors.primary,
@@ -79,9 +84,21 @@ fun TextField(
                 trailingIconColor = MaterialTheme.colors.onSecondary,
                 focusedLabelColor = MaterialTheme.colors.secondary,
                 unfocusedLabelColor = MaterialTheme.colors.onSecondary,
+                errorBorderColor = MaterialTheme.colors.ErrorColor,
+                errorLabelColor = MaterialTheme.colors.ErrorColor,
             ),
             modifier = modifier.fillMaxWidth()
         )
+
+        if (isError) {
+            Spacer(Modifier.height(6.dp))
+            Text(
+                text = errorMessage,
+                color = MaterialTheme.colors.ErrorColor,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(start = 6.dp)
+            )
+        }
     }
 }
 
@@ -96,12 +113,21 @@ private fun Preview() {
                 hint = "Type your e-mail",
                 leadingIcon = R.drawable.ic_email
             )
-
+            Spacer(Modifier.height(12.dp))
             TextField(
                 value = "simplechat@gmail.com.br",
                 onValueChange = { },
                 hint = "Type your e-mail",
                 leadingIcon = R.drawable.ic_email
+            )
+            Spacer(Modifier.height(12.dp))
+            TextField(
+                value = "simplechat",
+                onValueChange = { },
+                hint = "Type your e-mail",
+                leadingIcon = R.drawable.ic_email,
+                isError = true,
+                errorMessage = "Invalid e-mail"
             )
         }
     }
