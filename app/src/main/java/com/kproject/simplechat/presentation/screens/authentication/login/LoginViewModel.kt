@@ -39,6 +39,24 @@ class LoginViewModel @Inject constructor(
     }
 
     fun login() {
+        if (!hasValidationError()) {
+            loginDataState = DataState.Loading
+            viewModelScope.launch {
+                val loginResult = loginUseCase(loginUiState.toLoginModel())
+                when (loginResult) {
+                    is DataState.Success -> {
+                        loginDataState = DataState.Success()
+                    }
+                    is DataState.Error -> {
+                        loginDataState = DataState.Error(loginResult.exception)
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    private fun hasValidationError(): Boolean {
         val emailValidationState = validateEmailUseCase(loginUiState.email)
         loginUiState = loginUiState.copy(emailError = emailValidationState.toErrorMessage())
         val passwordValidationState = validatePasswordUseCase(loginUiState.password)
@@ -51,24 +69,6 @@ class LoginViewModel @Inject constructor(
             validationState != ValidationState.Success
         }
 
-        if (!hasError) {
-            onLogin()
-        }
-    }
-
-    private fun onLogin() {
-        loginDataState = DataState.Loading
-        viewModelScope.launch {
-            val loginResult = loginUseCase(loginUiState.toLoginModel())
-            when (loginResult) {
-                is DataState.Success -> {
-                    loginDataState = DataState.Success()
-                }
-                is DataState.Error -> {
-                    loginDataState = DataState.Error(loginResult.exception)
-                }
-                else -> {}
-            }
-        }
+        return hasError
     }
 }
