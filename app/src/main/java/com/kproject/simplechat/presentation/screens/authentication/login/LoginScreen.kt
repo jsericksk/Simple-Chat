@@ -68,7 +68,7 @@ fun LoginScreen(
     AlertDialog(
         showDialog = loginUiState.loginError,
         onDismiss = {
-            loginViewModel.onEvent(LoginEvent.DismissLoginErrorDialog)
+            loginViewModel.onEvent(LoginEvent.OnDismissErrorDialog)
         },
         title = stringResource(id = R.string.error),
         message = loginUiState.loginErrorMessage.asString(),

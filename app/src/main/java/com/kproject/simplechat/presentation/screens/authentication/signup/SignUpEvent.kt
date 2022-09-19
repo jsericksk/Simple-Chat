@@ -6,4 +6,5 @@ sealed class SignUpEvent {
     data class UsernameChanged(val username: String) : SignUpEvent()
     data class PasswordChanged(val password: String) : SignUpEvent()
     data class RepeatedPasswordChanged(val repeatedPassword: String) : SignUpEvent()
+    object OnDismissErrorDialog : SignUpEvent()
 }

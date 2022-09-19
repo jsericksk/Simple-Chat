@@ -8,4 +8,6 @@ sealed class ValidationState {
     object PasswordTooShort : ValidationState()
     object InvalidPassword : ValidationState()
     object RepeatedPasswordDoesNotMatch : ValidationState()
+    object UsernameEmpty : ValidationState()
+    object InvalidUsername : ValidationState()
 }

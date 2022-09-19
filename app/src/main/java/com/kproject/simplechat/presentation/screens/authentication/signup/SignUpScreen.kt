@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.kproject.simplechat.R
 import com.kproject.simplechat.presentation.screens.authentication.components.Button
 import com.kproject.simplechat.presentation.screens.authentication.components.FieldType
@@ -35,7 +35,7 @@ fun SignUpScreen(
     onNavigateToHomeScreen: () -> Unit,
     onNavigateBack: () -> Unit,
 ) {
-    val signUpViewModel: SignUpViewModel = viewModel()
+    val signUpViewModel: SignUpViewModel = hiltViewModel()
     val signUpUiState = signUpViewModel.signUpUiState
 
     MainContent(
@@ -56,7 +56,7 @@ fun SignUpScreen(
             signUpViewModel.onEvent(SignUpEvent.RepeatedPasswordChanged(password))
         },
         onButtonSignUpClick = {
-
+            signUpViewModel.signUp()
         },
     )
 }
@@ -119,7 +119,8 @@ private fun MainContent(
                     onUsernameChange.invoke(value)
                 },
                 hint = stringResource(id = R.string.user_name),
-                leadingIcon = R.drawable.ic_person
+                leadingIcon = R.drawable.ic_person,
+                errorMessage = signUpUiState.usernameError.asString()
             )
 
             Spacer(Modifier.height(spacingHeight))
@@ -133,6 +134,7 @@ private fun MainContent(
                 leadingIcon = R.drawable.ic_key,
                 keyboardType = KeyboardType.Email,
                 fieldType = FieldType.Email,
+                errorMessage = signUpUiState.emailError.asString()
             )
 
             Spacer(Modifier.height(spacingHeight))
@@ -146,6 +148,7 @@ private fun MainContent(
                 leadingIcon = R.drawable.ic_key,
                 keyboardType = KeyboardType.Password,
                 fieldType = FieldType.Password,
+                errorMessage = signUpUiState.passwordError.asString()
             )
 
             Spacer(Modifier.height(spacingHeight))
@@ -159,6 +162,7 @@ private fun MainContent(
                 leadingIcon = R.drawable.ic_key,
                 keyboardType = KeyboardType.Password,
                 fieldType = FieldType.Password,
+                errorMessage = signUpUiState.repeatedPasswordError.asString()
             )
 
             Spacer(Modifier.height(spacingHeight))

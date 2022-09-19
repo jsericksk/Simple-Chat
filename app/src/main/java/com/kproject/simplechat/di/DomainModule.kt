@@ -1,6 +1,5 @@
 package com.kproject.simplechat.di
 
-import com.kproject.simplechat.data.repository.AuthenticationRepositoryImpl
 import com.kproject.simplechat.domain.repository.authentication.AuthenticationRepository
 import com.kproject.simplechat.domain.usecase.authentication.login.LoginUseCase
 import com.kproject.simplechat.domain.usecase.authentication.login.LoginUseCaseImpl
@@ -31,6 +30,12 @@ object DomainModule {
     @Singleton
     fun provideValidatePasswordUseCase(): ValidatePasswordUseCase {
         return ValidatePasswordUseCaseImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidateUsernameUseCase(): ValidateUsernameUseCase {
+        return ValidateUsernameUseCaseImpl()
     }
 
     @Provides

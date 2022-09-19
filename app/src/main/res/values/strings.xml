@@ -14,7 +14,7 @@
     <string name="error">Error</string>
     <string name="unknown_error">Unknown error</string>
 
-    <string name="user_name">User Name</string>
+    <string name="user_name">Username</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm password</string>
@@ -26,6 +26,8 @@
     <string name="error_invalid_password">The password must contain at least one digit</string>
     <string name="error_passwords_does_not_match">The passwords does not match</string>
     <string name="error_profile_image_not_selected">Select a profile picture</string>
+    <string name="error_username_empty">Username cannot be empty</string>
+    <string name="error_invalid_username">Username cannot start with whitespace or @</string>
 
     <string name="error_user_not_found">User with this email doesn\'t exist.</string>
     <string name="error_password_is_wrong">Your password is wrong.</string>

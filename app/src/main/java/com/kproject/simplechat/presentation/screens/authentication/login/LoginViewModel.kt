@@ -36,11 +36,8 @@ class LoginViewModel @Inject constructor(
             is LoginEvent.PasswordChanged -> {
                 loginUiState = loginUiState.copy(password = event.password)
             }
-            LoginEvent.DismissLoginErrorDialog -> {
-                loginUiState = loginUiState.copy(
-                    isLoading = false,
-                    loginError = false
-                )
+            LoginEvent.OnDismissErrorDialog -> {
+                loginUiState = loginUiState.copy(loginError = false)
             }
         }
     }
