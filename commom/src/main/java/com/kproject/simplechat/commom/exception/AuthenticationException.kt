@@ -4,4 +4,6 @@ sealed class AuthenticationException : BaseException() {
     object UserNotFoundException : AuthenticationException()
     object EmailInUseException : AuthenticationException()
     object WrongPasswordException : AuthenticationException()
+    object UnknownLoginException : AuthenticationException()
+    object UnknownSignUpException : AuthenticationException()
 }

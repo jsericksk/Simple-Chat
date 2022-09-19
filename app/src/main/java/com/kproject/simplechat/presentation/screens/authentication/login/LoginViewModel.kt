@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.kproject.simplechat.commom.validation.ValidationState
+import com.kproject.simplechat.domain.usecase.authentication.login.LoginUseCase
 import com.kproject.simplechat.domain.usecase.authentication.validation.ValidateEmailUseCase
 import com.kproject.simplechat.domain.usecase.authentication.validation.ValidatePasswordUseCase
 import com.kproject.simplechat.presentation.mapper.toErrorMessage
@@ -13,6 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
+    private val loginUseCase: LoginUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validatePasswordUseCase: ValidatePasswordUseCase
 ) : ViewModel() {
@@ -44,7 +46,11 @@ class LoginViewModel @Inject constructor(
         }
 
         if (!hasError) {
-
+            onLogin()
         }
+    }
+
+    private fun onLogin() {
+
     }
 }
