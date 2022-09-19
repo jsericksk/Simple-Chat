@@ -1,7 +1,8 @@
 package com.kproject.simplechat.domain.usecase.authentication.login
 
 import com.kproject.simplechat.commom.DataState
+import com.kproject.simplechat.domain.model.authentication.Login
 
 interface LoginUseCase {
-    suspend operator fun invoke(email: String, password: String): DataState<Nothing>
+    suspend operator fun invoke(login: Login): DataState<Nothing>
 }
