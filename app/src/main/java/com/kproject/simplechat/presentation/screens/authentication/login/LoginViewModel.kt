@@ -40,15 +40,21 @@ class LoginViewModel @Inject constructor(
 
     fun login() {
         if (!hasValidationError()) {
-            loginDataState = DataState.Loading
+            loginUiState = loginUiState.copy(isLoading = true)
             viewModelScope.launch {
                 val loginResult = loginUseCase(loginUiState.toLoginModel())
                 when (loginResult) {
                     is DataState.Success -> {
-                        loginDataState = DataState.Success()
+                        loginUiState = loginUiState.copy(isLoading = false)
                     }
                     is DataState.Error -> {
-                        loginDataState = DataState.Error(loginResult.exception)
+                        loginResult.exception?.let { exception ->
+                            loginUiState = loginUiState.copy(
+                                isLoading = false,
+                                loginError = true,
+                                loginErrorMessage = exception.toErrorMessage()
+                            )
+                        }
                     }
                     else -> {}
                 }

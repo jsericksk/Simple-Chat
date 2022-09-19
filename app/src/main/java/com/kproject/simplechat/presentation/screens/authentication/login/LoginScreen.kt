@@ -6,8 +6,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kproject.simplechat.R
 import com.kproject.simplechat.commom.DataState
-import com.kproject.simplechat.presentation.mapper.toErrorMessage
 import com.kproject.simplechat.presentation.screens.authentication.components.Button
 import com.kproject.simplechat.presentation.screens.authentication.components.FieldType
 import com.kproject.simplechat.presentation.screens.authentication.components.TextField
@@ -44,11 +43,6 @@ fun LoginScreen(
     val loginUiState = loginViewModel.loginUiState
     val loginDataState = loginViewModel.loginDataState
 
-    var showProgressDialog by rememberSaveable { mutableStateOf(false) }
-    var showSuccessDialog by rememberSaveable { mutableStateOf(false) }
-    var showErrorDialog by rememberSaveable { mutableStateOf(false) }
-    var errorMessage by rememberSaveable { mutableStateOf("") }
-
     MainContent(
         loginUiState = loginUiState,
         onEmailChange = { email ->
@@ -64,41 +58,18 @@ fun LoginScreen(
     )
 
     LaunchedEffect(key1 = loginDataState) {
-        loginDataState?.let { state ->
-            when (state) {
-                is DataState.Loading -> {
-                    showProgressDialog = true
-                }
-                is DataState.Success -> {
-                    showProgressDialog = false
-                    showSuccessDialog = true
-                }
-                is DataState.Error -> {
-                    showProgressDialog = false
-                    showErrorDialog = true
-                    state.exception?.let { exception ->
-                        errorMessage = exception.toErrorMessage().asString(context)
-                    }
-                }
-            }
+        if (loginDataState is DataState.Success) {
+            onNavigateToHomeScreen.invoke()
         }
     }
 
-    ProgressAlertDialog(showDialog = showProgressDialog)
+    ProgressAlertDialog(showDialog = loginUiState.isLoading)
 
     AlertDialog(
-        showDialog = showSuccessDialog,
-        onDismiss = { showErrorDialog = false },
-        title = "Logged",
-        message = "Login successfull",
-        onClickButtonOk = {}
-    )
-
-    AlertDialog(
-        showDialog = showErrorDialog,
-        onDismiss = { showErrorDialog = false },
+        showDialog = loginUiState.loginError,
+        onDismiss = {},
         title = stringResource(id = R.string.error),
-        message = errorMessage,
+        message = loginUiState.loginErrorMessage.asString(),
         onClickButtonOk = {}
     )
 }
