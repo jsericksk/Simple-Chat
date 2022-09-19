@@ -11,6 +11,7 @@ import com.kproject.simplechat.domain.usecase.authentication.login.LoginUseCase
 import com.kproject.simplechat.domain.usecase.authentication.validation.ValidateEmailUseCase
 import com.kproject.simplechat.domain.usecase.authentication.validation.ValidatePasswordUseCase
 import com.kproject.simplechat.presentation.mapper.toErrorMessage
+import com.kproject.simplechat.presentation.model.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,6 +35,12 @@ class LoginViewModel @Inject constructor(
             }
             is LoginEvent.PasswordChanged -> {
                 loginUiState = loginUiState.copy(password = event.password)
+            }
+            LoginEvent.DismissLoginErrorDialog -> {
+                loginUiState = loginUiState.copy(
+                    isLoading = false,
+                    loginError = false
+                )
             }
         }
     }

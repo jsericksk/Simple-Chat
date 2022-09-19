@@ -67,7 +67,9 @@ fun LoginScreen(
 
     AlertDialog(
         showDialog = loginUiState.loginError,
-        onDismiss = {},
+        onDismiss = {
+            loginViewModel.onEvent(LoginEvent.DismissLoginErrorDialog)
+        },
         title = stringResource(id = R.string.error),
         message = loginUiState.loginErrorMessage.asString(),
         onClickButtonOk = {}
@@ -123,7 +125,7 @@ private fun MainContent(
                 leadingIcon = R.drawable.ic_email,
                 keyboardType = KeyboardType.Email,
                 fieldType = FieldType.Email,
-                errorMessage = loginUiState.emailError?.asString()
+                errorMessage = loginUiState.emailError.asString()
             )
 
             Spacer(Modifier.height(spacingHeight))
@@ -137,7 +139,7 @@ private fun MainContent(
                 leadingIcon = R.drawable.ic_key,
                 keyboardType = KeyboardType.Password,
                 fieldType = FieldType.Password,
-                errorMessage = loginUiState.passwordError?.asString()
+                errorMessage = loginUiState.passwordError.asString()
             )
 
             Spacer(Modifier.height(spacingHeight))

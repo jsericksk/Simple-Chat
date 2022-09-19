@@ -5,9 +5,9 @@ import com.kproject.simplechat.presentation.model.UiText
 
 data class LoginUiState(
     val email: String = "",
-    val emailError: UiText? = null,
+    val emailError: UiText = UiText.HardcodedString(""),
     val password: String = "",
-    val passwordError: UiText? = null,
+    val passwordError: UiText = UiText.HardcodedString(""),
     val isLoading: Boolean = false,
     val loginError: Boolean = false,
     val loginErrorMessage: UiText = UiText.HardcodedString("")
