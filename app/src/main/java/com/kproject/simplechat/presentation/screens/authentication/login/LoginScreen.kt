@@ -40,11 +40,11 @@ fun LoginScreen(
 ) {
     val context = LocalContext.current
     val loginViewModel: LoginViewModel = hiltViewModel()
-    val loginUiState = loginViewModel.loginUiState
-    val loginDataState = loginViewModel.loginDataState
+    val uiState = loginViewModel.uiState
+    val loginState = loginViewModel.loginState
 
     MainContent(
-        loginUiState = loginUiState,
+        loginUiState = uiState,
         onEmailChange = { email ->
             loginViewModel.onEvent(LoginEvent.EmailChanged(email))
         },
@@ -57,21 +57,21 @@ fun LoginScreen(
         onNavigateToSignUpScreen = onNavigateToSignUpScreen
     )
 
-    LaunchedEffect(key1 = loginDataState) {
-        if (loginDataState is DataState.Success) {
+    LaunchedEffect(key1 = loginState) {
+        if (loginState is DataState.Success) {
             onNavigateToHomeScreen.invoke()
         }
     }
 
-    ProgressAlertDialog(showDialog = loginUiState.isLoading)
+    ProgressAlertDialog(showDialog = uiState.isLoading)
 
     AlertDialog(
-        showDialog = loginUiState.loginError,
+        showDialog = uiState.loginError,
         onDismiss = {
             loginViewModel.onEvent(LoginEvent.OnDismissErrorDialog)
         },
         title = stringResource(id = R.string.error),
-        message = loginUiState.loginErrorMessage.asString(),
+        message = uiState.loginErrorMessage.asString(),
         onClickButtonOk = {}
     )
 }

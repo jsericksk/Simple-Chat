@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,9 +23,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kproject.simplechat.R
+import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.presentation.screens.authentication.components.Button
 import com.kproject.simplechat.presentation.screens.authentication.components.FieldType
 import com.kproject.simplechat.presentation.screens.authentication.components.TextField
+import com.kproject.simplechat.presentation.screens.components.AlertDialog
+import com.kproject.simplechat.presentation.screens.components.ProgressAlertDialog
 import com.kproject.simplechat.presentation.theme.CompletePreview
 import com.kproject.simplechat.presentation.theme.PreviewTheme
 import com.skydoves.landscapist.ImageOptions
@@ -33,13 +37,14 @@ import com.skydoves.landscapist.coil.CoilImage
 @Composable
 fun SignUpScreen(
     onNavigateToHomeScreen: () -> Unit,
-    onNavigateBack: () -> Unit,
+    onNavigateBack: () -> Unit
 ) {
     val signUpViewModel: SignUpViewModel = hiltViewModel()
-    val signUpUiState = signUpViewModel.signUpUiState
+    val uiState = signUpViewModel.uiState
+    val signUpState = signUpViewModel.signUpState
 
     MainContent(
-        signUpUiState = signUpUiState,
+        uiState = uiState,
         onProfileImageChange = { profileImage ->
             signUpViewModel.onEvent(SignUpEvent.ProfileImageChanged(profileImage))
         },
@@ -57,14 +62,32 @@ fun SignUpScreen(
         },
         onButtonSignUpClick = {
             signUpViewModel.signUp()
+        }
+    )
+
+    LaunchedEffect(key1 = signUpState) {
+        if (signUpState is DataState.Success) {
+            onNavigateToHomeScreen.invoke()
+        }
+    }
+
+    ProgressAlertDialog(showDialog = uiState.isLoading)
+
+    AlertDialog(
+        showDialog = uiState.signUpError,
+        onDismiss = {
+            signUpViewModel.onEvent(SignUpEvent.OnDismissErrorDialog)
         },
+        title = stringResource(id = R.string.error),
+        message = uiState.signUpErrorMessage.asString(),
+        onClickButtonOk = {}
     )
 }
 
 @Composable
 private fun MainContent(
     modifier: Modifier = Modifier,
-    signUpUiState: SignUpUiState,
+    uiState: SignUpUiState,
     onProfileImageChange: (String) -> Unit,
     onUsernameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
@@ -105,7 +128,7 @@ private fun MainContent(
                 .padding(24.dp)
         ) {
             ProfileImage(
-                signUpUiState = signUpUiState,
+                signUpUiState = uiState,
                 onProfileImageChange = { profileImage ->
                     onProfileImageChange.invoke(profileImage)
                 }
@@ -114,19 +137,19 @@ private fun MainContent(
             Spacer(Modifier.height(spacingHeight))
 
             TextField(
-                value = signUpUiState.username,
+                value = uiState.username,
                 onValueChange = { value ->
                     onUsernameChange.invoke(value)
                 },
                 hint = stringResource(id = R.string.user_name),
                 leadingIcon = R.drawable.ic_person,
-                errorMessage = signUpUiState.usernameError.asString()
+                errorMessage = uiState.usernameError.asString()
             )
 
             Spacer(Modifier.height(spacingHeight))
 
             TextField(
-                value = signUpUiState.email,
+                value = uiState.email,
                 onValueChange = { value ->
                     onEmailChange.invoke(value)
                 },
@@ -134,13 +157,13 @@ private fun MainContent(
                 leadingIcon = R.drawable.ic_key,
                 keyboardType = KeyboardType.Email,
                 fieldType = FieldType.Email,
-                errorMessage = signUpUiState.emailError.asString()
+                errorMessage = uiState.emailError.asString()
             )
 
             Spacer(Modifier.height(spacingHeight))
 
             TextField(
-                value = signUpUiState.password,
+                value = uiState.password,
                 onValueChange = { value ->
                     onPasswordChange.invoke(value)
                 },
@@ -148,13 +171,13 @@ private fun MainContent(
                 leadingIcon = R.drawable.ic_key,
                 keyboardType = KeyboardType.Password,
                 fieldType = FieldType.Password,
-                errorMessage = signUpUiState.passwordError.asString()
+                errorMessage = uiState.passwordError.asString()
             )
 
             Spacer(Modifier.height(spacingHeight))
 
             TextField(
-                value = signUpUiState.repeatedPassword,
+                value = uiState.repeatedPassword,
                 onValueChange = { value ->
                     onRepeatedPasswordChange.invoke(value)
                 },
@@ -162,7 +185,7 @@ private fun MainContent(
                 leadingIcon = R.drawable.ic_key,
                 keyboardType = KeyboardType.Password,
                 fieldType = FieldType.Password,
-                errorMessage = signUpUiState.repeatedPasswordError.asString()
+                errorMessage = uiState.repeatedPasswordError.asString()
             )
 
             Spacer(Modifier.height(spacingHeight))
@@ -228,7 +251,7 @@ private fun Preview() {
     )
     PreviewTheme {
         MainContent(
-            signUpUiState = signUpUiState,
+            uiState = signUpUiState,
             onProfileImageChange = {},
             onUsernameChange = {},
             onEmailChange = {},

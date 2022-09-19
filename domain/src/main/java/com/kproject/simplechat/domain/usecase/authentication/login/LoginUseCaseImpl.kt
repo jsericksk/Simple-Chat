@@ -8,7 +8,7 @@ class LoginUseCaseImpl(
     private val authenticationRepository: AuthenticationRepository
 ) : LoginUseCase {
 
-    override suspend fun invoke(login: Login): DataState<Nothing> {
+    override suspend fun invoke(login: Login): DataState<Unit> {
         return authenticationRepository.login(login)
     }
 }

@@ -6,9 +6,9 @@ import com.kproject.simplechat.domain.model.authentication.SignUp
 
 interface AuthenticationRepository {
 
-    suspend fun login(login: Login): DataState<Nothing>
+    suspend fun login(login: Login): DataState<Unit>
 
-    suspend fun signUp(signUp: SignUp): DataState<Nothing>
+    suspend fun signUp(signUp: SignUp): DataState<Unit>
 
-    suspend fun logout(): DataState<Nothing>
+    suspend fun logout(): DataState<Unit>
 }

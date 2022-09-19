@@ -11,7 +11,6 @@ import com.kproject.simplechat.domain.usecase.authentication.login.LoginUseCase
 import com.kproject.simplechat.domain.usecase.authentication.validation.ValidateEmailUseCase
 import com.kproject.simplechat.domain.usecase.authentication.validation.ValidatePasswordUseCase
 import com.kproject.simplechat.presentation.mapper.toErrorMessage
-import com.kproject.simplechat.presentation.model.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,55 +21,57 @@ class LoginViewModel @Inject constructor(
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validatePasswordUseCase: ValidatePasswordUseCase
 ) : ViewModel() {
-    var loginUiState by mutableStateOf(LoginUiState())
+    var uiState by mutableStateOf(LoginUiState())
         private set
 
-    var loginDataState: DataState<Nothing>? by mutableStateOf(null)
+    var loginState: DataState<Unit>? by mutableStateOf(null)
         private set
 
     fun onEvent(event: LoginEvent) {
         when (event) {
             is LoginEvent.EmailChanged -> {
-                loginUiState = loginUiState.copy(email = event.email)
+                uiState = uiState.copy(email = event.email)
             }
             is LoginEvent.PasswordChanged -> {
-                loginUiState = loginUiState.copy(password = event.password)
+                uiState = uiState.copy(password = event.password)
             }
             LoginEvent.OnDismissErrorDialog -> {
-                loginUiState = loginUiState.copy(loginError = false)
+                uiState = uiState.copy(loginError = false)
             }
         }
     }
 
     fun login() {
         if (!hasValidationError()) {
-            loginUiState = loginUiState.copy(isLoading = true)
+            uiState = uiState.copy(isLoading = true)
             viewModelScope.launch {
-                val loginResult = loginUseCase(loginUiState.toLoginModel())
+                val loginResult = loginUseCase(uiState.toLoginModel())
                 when (loginResult) {
                     is DataState.Success -> {
-                        loginUiState = loginUiState.copy(isLoading = false)
+                        uiState = uiState.copy(isLoading = false)
                     }
                     is DataState.Error -> {
                         loginResult.exception?.let { exception ->
-                            loginUiState = loginUiState.copy(
+                            uiState = uiState.copy(
                                 isLoading = false,
                                 loginError = true,
                                 loginErrorMessage = exception.toErrorMessage()
                             )
                         }
                     }
-                    else -> {}
+                    else -> {
+                        uiState = uiState.copy(isLoading = false)
+                    }
                 }
             }
         }
     }
 
     private fun hasValidationError(): Boolean {
-        val emailValidationState = validateEmailUseCase(loginUiState.email)
-        loginUiState = loginUiState.copy(emailError = emailValidationState.toErrorMessage())
-        val passwordValidationState = validatePasswordUseCase(loginUiState.password)
-        loginUiState = loginUiState.copy(passwordError = passwordValidationState.toErrorMessage())
+        val emailValidationState = validateEmailUseCase(uiState.email)
+        uiState = uiState.copy(emailError = emailValidationState.toErrorMessage())
+        val passwordValidationState = validatePasswordUseCase(uiState.password)
+        uiState = uiState.copy(passwordError = passwordValidationState.toErrorMessage())
 
         val hasError = listOf(
             emailValidationState,

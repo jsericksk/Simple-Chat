@@ -1,36 +1,40 @@
 package com.kproject.simplechat.data.repository
 
+import android.net.Uri
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.commom.exception.AuthenticationException
+import com.kproject.simplechat.data.model.User
+import com.kproject.simplechat.data.utils.Constants
 import com.kproject.simplechat.domain.model.authentication.Login
 import com.kproject.simplechat.domain.model.authentication.SignUp
 import com.kproject.simplechat.domain.repository.authentication.AuthenticationRepository
 import kotlinx.coroutines.tasks.await
+import java.util.*
 
 private const val TAG = "AuthenticationRepositoryImpl"
-private const val ERROR_USER_NOT_FOUND = "ERROR_USER_NOT_FOUND"
-private const val ERROR_WRONG_PASSWORD = "ERROR_WRONG_PASSWORD"
 
 class AuthenticationRepositoryImpl(
     private val firebaseAuth: FirebaseAuth,
     private val firebaseFirestore: FirebaseFirestore,
 ) : AuthenticationRepository {
 
-    override suspend fun login(login: Login): DataState<Nothing> {
+    override suspend fun login(login: Login): DataState<Unit> {
         return try {
             firebaseAuth.signInWithEmailAndPassword(login.email, login.password).await()
             DataState.Success()
         } catch (e: FirebaseAuthException) {
-            Log.e(TAG, "Error in login: ${e.message} ${e.errorCode}")
+            Log.e(TAG, "Login error: ${e.message} ${e.errorCode}")
             when (e.errorCode) {
-                ERROR_USER_NOT_FOUND -> {
+                Constants.ErrorUserNotFound -> {
                     DataState.Error(AuthenticationException.UserNotFoundException)
                 }
-                ERROR_WRONG_PASSWORD -> {
+                Constants.ErrorWrongPassword -> {
                     DataState.Error(AuthenticationException.WrongPasswordException)
                 }
                 else ->{
@@ -38,16 +42,67 @@ class AuthenticationRepositoryImpl(
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error in login: ${e.message}")
+            Log.e(TAG, "Login error: ${e.message}")
             DataState.Error(AuthenticationException.UnknownLoginException)
         }
     }
 
-    override suspend fun signUp(signUp: SignUp): DataState<Nothing> {
-        TODO("Not yet implemented")
+    override suspend fun signUp(signUp: SignUp): DataState<Unit> {
+        return try {
+            firebaseAuth.createUserWithEmailAndPassword(signUp.email, signUp.password).await()
+            val profileImageUrl = saveProfileImageInStorage(signUp.profileImage)
+
+            saveUserInFirestore(
+                username = signUp.username,
+                profileImage = profileImageUrl
+            )
+
+            DataState.Success()
+        } catch (e: FirebaseAuthException) {
+            Log.d(TAG, "SignUp error: ${e.errorCode}")
+            when (e.errorCode) {
+                Constants.ErrorEmailAlreadyInUse -> {
+                    DataState.Error(AuthenticationException.EmailInUseException)
+                }
+                else -> {
+                    DataState.Error(AuthenticationException.UnknownSignUpException)
+                }
+            }
+        } catch (e: Exception) {
+            DataState.Error(AuthenticationException.UnknownSignUpException)
+        }
     }
 
-    override suspend fun logout(): DataState<Nothing> {
+    private suspend fun saveProfileImageInStorage(profileImage: String): String {
+        return try {
+            val imageName = UUID.randomUUID().toString()
+            val imageUri = Uri.parse(profileImage)
+            val profileImageUrl = Firebase.storage.reference.child("profile_images/$imageName")
+                .putFile(imageUri).await().storage.downloadUrl.await().toString()
+            profileImageUrl
+        } catch (e: Exception) {
+            Log.d(TAG, "saveProfileImageInStorage() error: ${e.message}")
+            ""
+        }
+    }
+
+    private suspend fun saveUserInFirestore(username: String, profileImage: String) {
+        val userId = firebaseAuth.currentUser?.uid
+        userId?.let { id ->
+            val user = User(
+                userId = id,
+                username = username,
+                profileImage = profileImage
+            )
+            firebaseFirestore
+                .collection(Constants.FirebaseCollectionUsers)
+                .document(id)
+                .set(user)
+                .await()
+        }
+    }
+
+    override suspend fun logout(): DataState<Unit> {
         TODO("Not yet implemented")
     }
 }
