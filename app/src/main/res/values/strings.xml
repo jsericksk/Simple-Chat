@@ -11,15 +11,17 @@
     <string name="login">Login</string>
     <string name="create_your_account">Create your account</string>
     <string name="dont_have_an_account">Don\'t have an account?</string>
+    <string name="error">Error</string>
+    <string name="unknown_error">Unknown error</string>
 
     <string name="user_name">User Name</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm password</string>
 
-    <string name="error_empty_email">Enter an email</string>
+    <string name="error_empty_email">Email cannot be empty</string>
     <string name="error_email_badly_formatted">The email address is badly formatted</string>
-    <string name="error_empty_password">Enter an password</string>
+    <string name="error_empty_password">Password cannot be empty</string>
     <string name="error_password_too_short">Enter a password of at least 6 characters</string>
     <string name="error_invalid_password">The password must contain at least one digit</string>
     <string name="error_passwords_does_not_match">The passwords does not match</string>
@@ -29,7 +31,7 @@
     <string name="error_password_is_wrong">Your password is wrong.</string>
     <string name="error_email_already_in_use">The email has already been registered. Please
         login with your password.</string>
-    <string name="error_sign_in">There was an error trying to login.</string>
+    <string name="error_login">There was an error trying to login.</string>
     <string name="error_sign_up">There was an error trying to register.</string>
 
     <!-- Home Screen and Chat Screen -->

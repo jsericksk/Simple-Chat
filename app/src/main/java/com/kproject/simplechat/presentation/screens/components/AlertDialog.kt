@@ -1,14 +1,9 @@
 package com.kproject.simplechat.presentation.screens.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.kproject.simplechat.R
 import com.kproject.simplechat.presentation.theme.CompletePreview
 import com.kproject.simplechat.presentation.theme.PreviewTheme
@@ -118,6 +114,36 @@ private fun CustomAlertDialog(
             },
             backgroundColor = MaterialTheme.colors.background,
             shape = shape
+        )
+    }
+}
+
+@Composable
+fun ProgressAlertDialog(
+    showDialog: Boolean,
+    shape: Shape = RoundedCornerShape(14.dp)
+) {
+    if (showDialog) {
+        Dialog(
+            onDismissRequest = {},
+            content = {
+                Box(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .background(
+                            color = MaterialTheme.colors.background,
+                            shape = shape
+                        )
+                ) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colors.secondary,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(14.dp)
+                            .align(Alignment.Center)
+                    )
+                }
+            }
         )
     }
 }
