@@ -52,6 +52,7 @@ object Dependencies {
     // Accompanist
     const val accompanistNavigationAnimation = "com.google.accompanist:accompanist-navigation-animation:${Versions.ACCOMPANIST}"
     const val accompanistPager = "com.google.accompanist:accompanist-pager:${Versions.ACCOMPANIST}"
+    const val accompanistPagerIndicator = "com.google.accompanist:accompanist-pager-indicators:${Versions.ACCOMPANIST}"
 
     const val landscapist = "com.github.skydoves:landscapist-coil:${Versions.LANDSCAPIST}"
 

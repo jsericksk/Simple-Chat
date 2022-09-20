@@ -59,6 +59,7 @@ class SignUpViewModel @Inject constructor(
                 val signUpResult = signUpUseCase(uiState.toSignUpModel())
                 when (signUpResult) {
                     is DataState.Success -> {
+                        signUpState = DataState.Success()
                         uiState = uiState.copy(isLoading = false)
                     }
                     is DataState.Error -> {

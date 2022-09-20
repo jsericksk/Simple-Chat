@@ -90,6 +90,7 @@ dependencies {
     // Accompanist Navigation Animation and Pager
     implementation(Dependencies.accompanistNavigationAnimation)
     implementation(Dependencies.accompanistPager)
+    implementation(Dependencies.accompanistPagerIndicator)
 
     // Landscapist
     implementation(Dependencies.landscapist)

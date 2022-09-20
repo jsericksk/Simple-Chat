@@ -35,7 +35,7 @@ class LoginViewModel @Inject constructor(
             is LoginEvent.PasswordChanged -> {
                 uiState = uiState.copy(password = event.password)
             }
-            LoginEvent.OnDismissErrorDialog -> {
+            is LoginEvent.OnDismissErrorDialog -> {
                 uiState = uiState.copy(loginError = false)
             }
         }
@@ -48,6 +48,7 @@ class LoginViewModel @Inject constructor(
                 val loginResult = loginUseCase(uiState.toLoginModel())
                 when (loginResult) {
                     is DataState.Success -> {
+                        loginState = DataState.Success()
                         uiState = uiState.copy(isLoading = false)
                     }
                     is DataState.Error -> {
