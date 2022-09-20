@@ -1,9 +1,9 @@
 package com.kproject.simplechat.domain.usecase.authentication.validation
 
 import com.kproject.simplechat.commom.validation.ValidationState
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.junit.Assert
 
 class ValidateEmailUseCaseTest {
     private lateinit var validateEmailUseCase: ValidateEmailUseCase
@@ -21,7 +21,7 @@ class ValidateEmailUseCaseTest {
 
         val result = validateEmailUseCase(email)
 
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 
     @Test
@@ -32,7 +32,7 @@ class ValidateEmailUseCaseTest {
 
         val result = validateEmailUseCase(email)
 
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 
     @Test
@@ -43,7 +43,7 @@ class ValidateEmailUseCaseTest {
 
         val result = validateEmailUseCase(email)
 
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 
     @Test
@@ -54,6 +54,6 @@ class ValidateEmailUseCaseTest {
 
         val result = validateEmailUseCase(email)
 
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 }
