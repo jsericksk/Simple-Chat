@@ -6,7 +6,7 @@ class ValidateUsernameUseCaseImpl : ValidateUsernameUseCase {
 
     override fun invoke(username: String): ValidationState {
         if (username.isBlank()) {
-            return ValidationState.UsernameEmpty
+            return ValidationState.EmptyUsername
         }
 
         if (username.startsWith(" ") || username.startsWith("@")) {

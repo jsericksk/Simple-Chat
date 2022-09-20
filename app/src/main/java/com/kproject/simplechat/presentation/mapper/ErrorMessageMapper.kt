@@ -15,7 +15,7 @@ fun ValidationState.toErrorMessage(): UiText  {
         ValidationState.PasswordTooShort -> UiText.StringResource(R.string.error_password_too_short)
         ValidationState.InvalidPassword -> UiText.StringResource(R.string.error_invalid_password)
         ValidationState.RepeatedPasswordDoesNotMatch -> UiText.StringResource(R.string.error_passwords_does_not_match)
-        ValidationState.UsernameEmpty -> UiText.StringResource(R.string.error_username_empty)
+        ValidationState.EmptyUsername -> UiText.StringResource(R.string.error_username_empty)
         ValidationState.InvalidUsername -> UiText.StringResource(R.string.error_invalid_username)
         else -> UiText.HardcodedString("")
     }
