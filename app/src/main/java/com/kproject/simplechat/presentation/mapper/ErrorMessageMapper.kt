@@ -8,6 +8,7 @@ import com.kproject.simplechat.presentation.model.UiText
 
 fun ValidationState.toErrorMessage(): UiText  {
     return when (this) {
+        ValidationState.ProfilePictureNotSelected -> UiText.StringResource(R.string.error_profile_picture_not_selected)
         ValidationState.EmptyEmail -> UiText.StringResource(R.string.error_empty_email)
         ValidationState.InvalidEmail -> UiText.StringResource(R.string.error_email_badly_formatted)
         ValidationState.EmptyPassword -> UiText.StringResource(R.string.error_empty_password)

@@ -18,6 +18,18 @@ object DomainModule {
 
     @Provides
     @Singleton
+    fun provideValidateProfilePictureUseCase(): ValidateProfilePictureUseCase {
+        return ValidateProfilePictureUseCaseImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidateUsernameUseCase(): ValidateUsernameUseCase {
+        return ValidateUsernameUseCaseImpl()
+    }
+
+    @Provides
+    @Singleton
     fun provideEmailValidator(): EmailValidator {
         return AndroidEmailValidator()
     }
@@ -36,8 +48,8 @@ object DomainModule {
 
     @Provides
     @Singleton
-    fun provideValidateUsernameUseCase(): ValidateUsernameUseCase {
-        return ValidateUsernameUseCaseImpl()
+    fun provideValidateRepeatedPasswordUseCase(): ValidateRepeatedPasswordUseCase {
+        return ValidateRepeatedPasswordUseCaseImpl()
     }
 
     @Provides

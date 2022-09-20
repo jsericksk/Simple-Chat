@@ -30,6 +30,7 @@ import com.kproject.simplechat.presentation.screens.authentication.components.Te
 import com.kproject.simplechat.presentation.screens.components.AlertDialog
 import com.kproject.simplechat.presentation.screens.components.ProgressAlertDialog
 import com.kproject.simplechat.presentation.theme.CompletePreview
+import com.kproject.simplechat.presentation.theme.ErrorColor
 import com.kproject.simplechat.presentation.theme.PreviewTheme
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil.CoilImage
@@ -45,8 +46,8 @@ fun SignUpScreen(
 
     MainContent(
         uiState = uiState,
-        onProfileImageChange = { profileImage ->
-            signUpViewModel.onEvent(SignUpEvent.ProfileImageChanged(profileImage))
+        onProfilePictureChange = { profileImage ->
+            signUpViewModel.onEvent(SignUpEvent.ProfilePictureChanged(profileImage))
         },
         onUsernameChange = { username ->
             signUpViewModel.onEvent(SignUpEvent.UsernameChanged(username))
@@ -88,7 +89,7 @@ fun SignUpScreen(
 private fun MainContent(
     modifier: Modifier = Modifier,
     uiState: SignUpUiState,
-    onProfileImageChange: (String) -> Unit,
+    onProfilePictureChange: (String) -> Unit,
     onUsernameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
@@ -127,10 +128,10 @@ private fun MainContent(
             modifier = modifier
                 .padding(24.dp)
         ) {
-            ProfileImage(
-                signUpUiState = uiState,
-                onProfileImageChange = { profileImage ->
-                    onProfileImageChange.invoke(profileImage)
+            ProfilePicture(
+                uiState = uiState,
+                onProfilePictureChange = { profilePicture ->
+                    onProfilePictureChange.invoke(profilePicture)
                 }
             )
 
@@ -199,51 +200,64 @@ private fun MainContent(
 }
 
 @Composable
-private fun ProfileImage(
-    signUpUiState: SignUpUiState,
-    onProfileImageChange: (String) -> Unit,
+private fun ProfilePicture(
+    uiState: SignUpUiState,
+    onProfilePictureChange: (String) -> Unit,
 ) {
     val imagePick = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let { selectedImageUri ->
-            onProfileImageChange.invoke(selectedImageUri.toString())
+            onProfilePictureChange.invoke(selectedImageUri.toString())
         }
     }
 
-    val contentScale = if (signUpUiState.profileImage.isEmpty()) {
+    val contentScale = if (uiState.profilePicture.isEmpty()) {
         ContentScale.Inside
     } else {
         ContentScale.Crop
     }
 
-    CoilImage(
-        imageModel = signUpUiState.profileImage.ifEmpty { R.drawable.ic_add_a_photo },
-        previewPlaceholder = R.drawable.ic_add_a_photo,
-        imageOptions = ImageOptions(contentScale = contentScale),
-        modifier = Modifier
-            .size(100.dp)
-            .clip(CircleShape)
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colors.secondary,
-                shape = CircleShape
-            )
-            .clickable {
-                imagePick.launch("image/*")
-            }
-            .background(
-                color = if (signUpUiState.profileImage.isNotEmpty())
-                    Color.Transparent else MaterialTheme.colors.secondary
-            ),
-    )
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        CoilImage(
+            imageModel = uiState.profilePicture.ifEmpty { R.drawable.ic_add_a_photo },
+            previewPlaceholder = R.drawable.ic_add_a_photo,
+            imageOptions = ImageOptions(contentScale = contentScale),
+            modifier = Modifier
+                .size(100.dp)
+                .clip(CircleShape)
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colors.secondary,
+                    shape = CircleShape
+                )
+                .clickable {
+                    imagePick.launch("image/*")
+                }
+                .background(
+                    color = if (uiState.profilePicture.isNotEmpty())
+                        Color.Transparent else MaterialTheme.colors.secondary
+                )
+        )
+
+        Spacer(Modifier.height(12.dp))
+
+        Text(
+            text = uiState.profilePictureError.asString(),
+            color = MaterialTheme.colors.ErrorColor,
+            fontSize = 16.sp
+        )
+    }
 }
 
 @CompletePreview
 @Composable
 private fun Preview() {
     val signUpUiState = SignUpUiState(
-        profileImage = "",
+        profilePicture = "",
         username = "Simple Chat",
         email = "simplechat@gmail.com.br",
         password = "123456",
@@ -252,7 +266,7 @@ private fun Preview() {
     PreviewTheme {
         MainContent(
             uiState = signUpUiState,
-            onProfileImageChange = {},
+            onProfilePictureChange = {},
             onUsernameChange = {},
             onEmailChange = {},
             onPasswordChange = {},

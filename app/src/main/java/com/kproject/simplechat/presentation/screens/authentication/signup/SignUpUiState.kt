@@ -4,7 +4,8 @@ import com.kproject.simplechat.domain.model.authentication.SignUp
 import com.kproject.simplechat.presentation.model.UiText
 
 data class SignUpUiState(
-    val profileImage: String = "",
+    val profilePicture: String = "",
+    val profilePictureError: UiText = UiText.HardcodedString(""),
     val email: String = "",
     val emailError: UiText = UiText.HardcodedString(""),
     val username: String = "",
@@ -18,4 +19,4 @@ data class SignUpUiState(
     val signUpErrorMessage: UiText = UiText.HardcodedString("")
 )
 
-fun SignUpUiState.toSignUpModel() = SignUp(profileImage, username, email, password)
+fun SignUpUiState.toSignUpModel() = SignUp(profilePicture, username, email, password)

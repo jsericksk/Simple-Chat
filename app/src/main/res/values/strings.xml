@@ -25,7 +25,7 @@
     <string name="error_password_too_short">Enter a password of at least 6 characters</string>
     <string name="error_invalid_password">The password must contain at least one digit</string>
     <string name="error_passwords_does_not_match">The passwords does not match</string>
-    <string name="error_profile_image_not_selected">Select a profile picture</string>
+    <string name="error_profile_picture_not_selected">Select a profile picture</string>
     <string name="error_username_empty">Username cannot be empty</string>
     <string name="error_invalid_username">Username cannot start with whitespace or @</string>
 

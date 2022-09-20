@@ -50,11 +50,11 @@ class AuthenticationRepositoryImpl(
     override suspend fun signUp(signUp: SignUp): DataState<Unit> {
         return try {
             firebaseAuth.createUserWithEmailAndPassword(signUp.email, signUp.password).await()
-            val profileImageUrl = saveProfileImageInStorage(signUp.profileImage)
+            val profilePictureUrl = saveProfilePictureInStorage(signUp.profileImage)
 
             saveUserInFirestore(
                 username = signUp.username,
-                profileImage = profileImageUrl
+                profileImage = profilePictureUrl
             )
 
             DataState.Success()
@@ -73,13 +73,13 @@ class AuthenticationRepositoryImpl(
         }
     }
 
-    private suspend fun saveProfileImageInStorage(profileImage: String): String {
+    private suspend fun saveProfilePictureInStorage(profileImage: String): String {
         return try {
             val imageName = UUID.randomUUID().toString()
             val imageUri = Uri.parse(profileImage)
-            val profileImageUrl = Firebase.storage.reference.child("profile_images/$imageName")
+            val profilePictureUrl = Firebase.storage.reference.child("profile_images/$imageName")
                 .putFile(imageUri).await().storage.downloadUrl.await().toString()
-            profileImageUrl
+            profilePictureUrl
         } catch (e: Exception) {
             Log.d(TAG, "saveProfileImageInStorage() error: ${e.message}")
             ""

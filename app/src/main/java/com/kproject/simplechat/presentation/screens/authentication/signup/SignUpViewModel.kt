@@ -5,15 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kproject.simplechat.R
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.commom.validation.ValidationState
 import com.kproject.simplechat.domain.usecase.authentication.signup.SignUpUseCase
-import com.kproject.simplechat.domain.usecase.authentication.validation.ValidateEmailUseCase
-import com.kproject.simplechat.domain.usecase.authentication.validation.ValidatePasswordUseCase
-import com.kproject.simplechat.domain.usecase.authentication.validation.ValidateUsernameUseCase
+import com.kproject.simplechat.domain.usecase.authentication.validation.*
 import com.kproject.simplechat.presentation.mapper.toErrorMessage
-import com.kproject.simplechat.presentation.model.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,9 +17,11 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val signUpUseCase: SignUpUseCase,
+    private val validateProfilePictureUseCase: ValidateProfilePictureUseCase,
     private val validateUsernameUseCase: ValidateUsernameUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validatePasswordUseCase: ValidatePasswordUseCase,
+    private val validateRepeatedPasswordUseCase: ValidateRepeatedPasswordUseCase
 ) : ViewModel() {
     var uiState by mutableStateOf(SignUpUiState())
         private set
@@ -33,8 +31,8 @@ class SignUpViewModel @Inject constructor(
 
     fun onEvent(event: SignUpEvent) {
         when (event) {
-            is SignUpEvent.ProfileImageChanged -> {
-                uiState = uiState.copy(profileImage = event.profileImage)
+            is SignUpEvent.ProfilePictureChanged -> {
+                uiState = uiState.copy(profilePicture = event.profilePicture)
             }
             is SignUpEvent.EmailChanged -> {
                 uiState = uiState.copy(email = event.email)
@@ -81,28 +79,25 @@ class SignUpViewModel @Inject constructor(
     }
 
     private fun hasValidationError(): Boolean {
+        val profilePictureValidationState = validateProfilePictureUseCase(uiState.profilePicture)
+        uiState = uiState.copy(profilePictureError = profilePictureValidationState.toErrorMessage())
         val usernameValidationState = validateUsernameUseCase(uiState.username)
         uiState = uiState.copy(usernameError = usernameValidationState.toErrorMessage())
         val emailValidationState = validateEmailUseCase(uiState.email)
         uiState = uiState.copy(emailError = emailValidationState.toErrorMessage())
         val passwordValidationState = validatePasswordUseCase(uiState.password)
         uiState = uiState.copy(passwordError = passwordValidationState.toErrorMessage())
+        val repeatedPasswordValidationState =
+                validateRepeatedPasswordUseCase(uiState.password, uiState.repeatedPassword)
+        uiState = uiState.copy(repeatedPasswordError = repeatedPasswordValidationState.toErrorMessage())
 
-        if (uiState.repeatedPassword != uiState.password) {
-            uiState = uiState.copy(
-                repeatedPasswordError = UiText.StringResource(R.string.error_passwords_does_not_match)
-            )
-            return false
-        } else {
-            uiState = uiState.copy(
-                repeatedPasswordError = UiText.HardcodedString("")
-            )
-        }
 
         val hasError = listOf(
+            profilePictureValidationState,
             usernameValidationState,
             emailValidationState,
-            passwordValidationState
+            passwordValidationState,
+            repeatedPasswordValidationState
         ).any { validationState ->
             validationState != ValidationState.Success
         }
