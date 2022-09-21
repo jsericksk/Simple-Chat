@@ -5,17 +5,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.kproject.simplechat.commom.DataState
-import com.kproject.simplechat.presentation.model.fakeLatestMessagesList
+import com.kproject.simplechat.presentation.model.LatestMessage
 
 class LatestMessagesViewModel(
 
 ) : ViewModel() {
-    var uiState by mutableStateOf(LatestMessagesUiState(
-        latestMessagesList = fakeLatestMessagesList
-    ))
+    var uiState by mutableStateOf(LatestMessagesUiState())
         private set
 
-    var dataState: DataState<Unit>? by mutableStateOf(null)
+    var dataState: DataState<List<LatestMessage>> by mutableStateOf(DataState.Loading)
         private set
 
 

@@ -1,4 +1,4 @@
-package com.kproject.simplechat.presentation.screens.home.latestmessages
+package com.kproject.simplechat.presentation.screens.home.registeredUserss
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,22 +18,24 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kproject.simplechat.R
 import com.kproject.simplechat.commom.DataState
-import com.kproject.simplechat.presentation.model.LatestMessage
-import com.kproject.simplechat.presentation.model.fakeLatestMessagesList
+import com.kproject.simplechat.presentation.model.User
+import com.kproject.simplechat.presentation.model.fakeRegisteredUsersList
 import com.kproject.simplechat.presentation.screens.components.CustomImage
 import com.kproject.simplechat.presentation.screens.components.EmptyListInfo
 import com.kproject.simplechat.presentation.screens.components.LoadingIndicator
+import com.kproject.simplechat.presentation.screens.home.registeredusers.RegisteredUsersUiState
+import com.kproject.simplechat.presentation.screens.home.registeredusers.RegisteredUsersViewModel
 import com.kproject.simplechat.presentation.theme.PreviewTheme
 import com.kproject.simplechat.presentation.theme.SimplePreview
 import com.kproject.simplechat.presentation.theme.TextDefaultColor
 
 @Composable
-fun LatestMessagesScreen(
+fun RegisteredUsersScreen(
     onNavigateToChatScreen: () -> Unit,
 ) {
-    val latestMessagesViewModel: LatestMessagesViewModel = viewModel()
-    val uiState = latestMessagesViewModel.uiState
-    val dataState = latestMessagesViewModel.dataState
+    val registeredUsersViewModel: RegisteredUsersViewModel = viewModel()
+    val uiState = registeredUsersViewModel.uiState
+    val dataState = registeredUsersViewModel.dataState
 
     MainContent(
         uiState = uiState,
@@ -47,8 +49,8 @@ fun LatestMessagesScreen(
 @Composable
 private fun MainContent(
     modifier: Modifier = Modifier,
-    uiState: LatestMessagesUiState,
-    dataState: DataState<List<LatestMessage>>,
+    uiState: RegisteredUsersUiState,
+    dataState: DataState<List<User>>,
     onNavigateToChatScreen: (index: Int) -> Unit
 ) {
     when (dataState) {
@@ -58,8 +60,8 @@ private fun MainContent(
             )
         }
         is DataState.Success -> {
-            LatestMessagesList(
-                latestMessageList = uiState.latestMessagesList,
+            RegisteredUsersList(
+                registeredUsersList = uiState.registeredUsersList,
                 onClick = { index ->
                     onNavigateToChatScreen.invoke(index)
                 },
@@ -68,9 +70,9 @@ private fun MainContent(
         }
         is DataState.Error -> {
             EmptyListInfo(
-                iconResId = R.drawable.ic_message,
+                iconResId = R.drawable.ic_person_off,
                 title = stringResource(id = R.string.error),
-                description = stringResource(id = R.string.error_get_latest_messages_list),
+                description = stringResource(id = R.string.error_get_user_list),
                 modifier = modifier
             )
         }
@@ -78,19 +80,19 @@ private fun MainContent(
 }
 
 @Composable
-private fun LatestMessagesList(
+private fun RegisteredUsersList(
     modifier: Modifier = Modifier,
-    latestMessageList: List<LatestMessage>,
+    registeredUsersList: List<User>,
     onClick: (index: Int) -> Unit
 ) {
     Column {
-        if (latestMessageList.isNotEmpty()) {
+        if (registeredUsersList.isNotEmpty()) {
             LazyColumn(
                 modifier = modifier.fillMaxSize()
             ) {
-                itemsIndexed(latestMessageList) { index, latestMessage ->
-                    LatestMessagesListItem(
-                        latestMessage = latestMessage,
+                itemsIndexed(registeredUsersList) { index, user ->
+                    RegisteredUsersListItem(
+                        user = user,
                         onClick = {
                             onClick(index)
                         }
@@ -108,8 +110,8 @@ private fun LatestMessagesList(
 }
 
 @Composable
-private fun LatestMessagesListItem(
-    latestMessage: LatestMessage,
+private fun RegisteredUsersListItem(
+    user: User,
     onClick: () -> Unit
 ) {
     Column(
@@ -123,7 +125,7 @@ private fun LatestMessagesListItem(
                 .clickable { onClick() }
         ) {
             CustomImage(
-                imageModel = latestMessage,
+                imageModel = user.profilePicture,
                 modifier = Modifier
                     .size(60.dp)
                     .clip(CircleShape)
@@ -138,23 +140,16 @@ private fun LatestMessagesListItem(
                     .weight(1f)
             ) {
                 Text(
-                    text = latestMessage.username,
+                    text = user.username,
                     color = MaterialTheme.colors.TextDefaultColor,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     fontSize = 18.sp,
                 )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = latestMessage.latestMessage,
-                    color = MaterialTheme.colors.TextDefaultColor,
-                    maxLines = 1,
-                    fontSize = 16.sp
-                )
             }
 
             Text(
-                text = latestMessage.formattedDate,
+                text = user.formattedRegistrationDate,
                 color = MaterialTheme.colors.TextDefaultColor,
                 fontSize = 12.sp
             )
@@ -166,8 +161,8 @@ private fun LatestMessagesListItem(
 @Composable
 private fun Preview() {
     PreviewTheme {
-        val uiState = LatestMessagesUiState(
-            latestMessagesList = fakeLatestMessagesList
+        val uiState = RegisteredUsersUiState(
+            registeredUsersList = fakeRegisteredUsersList
         )
         MainContent(
             uiState = uiState,
