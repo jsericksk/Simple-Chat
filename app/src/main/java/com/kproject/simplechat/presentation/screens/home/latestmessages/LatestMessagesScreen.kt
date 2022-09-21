@@ -19,8 +19,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kproject.simplechat.R
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.presentation.model.LatestMessage
+import com.kproject.simplechat.presentation.model.fakeLatestMessagesList
 import com.kproject.simplechat.presentation.screens.components.CustomImage
 import com.kproject.simplechat.presentation.screens.components.EmptyListInfo
+import com.kproject.simplechat.presentation.screens.components.LoadingIndicator
 import com.kproject.simplechat.presentation.theme.PreviewTheme
 import com.kproject.simplechat.presentation.theme.SimplePreview
 import com.kproject.simplechat.presentation.theme.TextDefaultColor
@@ -28,7 +30,6 @@ import com.kproject.simplechat.presentation.theme.TextDefaultColor
 @Composable
 fun LatestMessagesScreen(
     onNavigateToChatScreen: () -> Unit,
-
 ) {
     val latestMessagesViewModel: LatestMessagesViewModel = viewModel()
     val uiState = latestMessagesViewModel.uiState
@@ -37,7 +38,7 @@ fun LatestMessagesScreen(
     MainContent(
         uiState = uiState,
         dataState = DataState.Success(),
-        onNavigateToChatScreen = {
+        onNavigateToChatScreen = { index ->
 
         }
     )
@@ -52,21 +53,25 @@ private fun MainContent(
 ) {
     when (dataState) {
         DataState.Loading -> {
-
+            LoadingIndicator(
+                modifier = modifier
+            )
         }
         is DataState.Success -> {
             LatestMessagesList(
                 latestMessageList = uiState.latestMessagesList,
                 onClick = { index ->
                     onNavigateToChatScreen.invoke(index)
-                }
+                },
+                modifier = modifier
             )
         }
         is DataState.Error -> {
             EmptyListInfo(
                 iconResId = R.drawable.ic_message,
                 title = stringResource(id = R.string.error),
-                description = stringResource(id = R.string.error_get_latest_messages_list)
+                description = stringResource(id = R.string.error_get_latest_messages_list),
+                modifier = modifier
             )
         }
     }
@@ -139,7 +144,7 @@ private fun LatestMessagesListItem(
                     maxLines = 1,
                     fontSize = 18.sp,
                 )
-
+                Spacer(Modifier.height(4.dp))
                 Text(
                     text = latestMessage.latestMessage,
                     color = MaterialTheme.colors.TextDefaultColor,
@@ -159,21 +164,15 @@ private fun LatestMessagesListItem(
 
 @SimplePreview
 @Composable
-private fun LatestMessagesListItemPreview() {
+private fun Preview() {
     PreviewTheme {
-        val latestMessage = LatestMessage(
-            chatId = "",
-            latestMessage = "Hello my friend",
-            senderId = "123456",
-            receiverId = "123456789",
-            username = "Simple Chat",
-            userProfilePicture = "",
-            timestamp = null
+        val uiState = LatestMessagesUiState(
+            latestMessagesList = fakeLatestMessagesList
         )
-
-        LatestMessagesListItem(
-            latestMessage = latestMessage,
-            onClick = {}
+        MainContent(
+            uiState = uiState,
+            dataState = DataState.Success(),
+            onNavigateToChatScreen = {}
         )
     }
 }
