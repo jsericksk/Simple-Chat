@@ -114,13 +114,13 @@ private fun LatestMessagesListItem(
 ) {
     Column(
         modifier = Modifier
+            .clickable { onClick() }
             .padding(8.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onClick() }
         ) {
             CustomImage(
                 imageModel = latestMessage,

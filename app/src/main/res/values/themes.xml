@@ -2,6 +2,6 @@
 <resources>
 
     <style name="Theme.SimpleChat" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/purple_700</item>
+        <item name="android:statusBarColor">#002C63</item>
     </style>
 </resources>

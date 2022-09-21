@@ -13,7 +13,7 @@ class RegisteredUsersViewModel(
     var uiState by mutableStateOf(RegisteredUsersUiState())
         private set
 
-    var dataState: DataState<List<User>> by mutableStateOf(DataState.Loading)
+    var dataState: DataState<List<User>> by mutableStateOf(DataState.Success())
         private set
 
 

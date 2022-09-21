@@ -13,7 +13,7 @@ class LatestMessagesViewModel(
     var uiState by mutableStateOf(LatestMessagesUiState())
         private set
 
-    var dataState: DataState<List<LatestMessage>> by mutableStateOf(DataState.Loading)
+    var dataState: DataState<List<LatestMessage>> by mutableStateOf(DataState.Success())
         private set
 
 

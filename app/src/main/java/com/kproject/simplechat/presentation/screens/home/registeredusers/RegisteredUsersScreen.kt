@@ -116,13 +116,12 @@ private fun RegisteredUsersListItem(
 ) {
     Column(
         modifier = Modifier
+            .clickable { onClick() }
             .padding(8.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onClick() }
+            modifier = Modifier.fillMaxWidth()
         ) {
             CustomImage(
                 imageModel = user.profilePicture,
