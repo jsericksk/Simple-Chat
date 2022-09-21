@@ -8,6 +8,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import com.kproject.simplechat.presentation.navigation.NavigationGraph
+import com.kproject.simplechat.presentation.screens.home.HomeScreen
 import com.kproject.simplechat.presentation.theme.SimpleChatTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,7 +23,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    NavigationGraph()
+                    // NavigationGraph()
+                    HomeScreen(onNavigateToChatScreen = {})
                 }
             }
         }

@@ -94,6 +94,7 @@ dependencies {
 
     // Landscapist
     implementation(Dependencies.landscapist)
+    implementation(Dependencies.landscapistPlaceholder)
 
     testImplementation(Dependencies.testJunit)
     androidTestImplementation(Dependencies.androidTestJunit)

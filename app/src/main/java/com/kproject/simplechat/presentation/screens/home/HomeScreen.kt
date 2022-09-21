@@ -1,5 +1,6 @@
 package com.kproject.simplechat.presentation.screens.home
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
@@ -12,6 +13,7 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.kproject.simplechat.presentation.navigation.Screen
 import com.kproject.simplechat.presentation.screens.authentication.login.LoginUiState
+import com.kproject.simplechat.presentation.screens.home.latestmessages.LatestMessagesScreen
 
 @Composable
 fun HomeScreen(
@@ -28,27 +30,31 @@ private fun MainContent(
     val pages = listOf("Chats", "Users")
     val pagerState = rememberPagerState()
 
-    TabRow(
-        selectedTabIndex = pagerState.currentPage,
-        indicator = { tabPositions ->
-            TabRowDefaults.Indicator(
-                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-            )
+    Column() {
+        TabRow(
+            selectedTabIndex = pagerState.currentPage,
+            indicator = { tabPositions ->
+                TabRowDefaults.Indicator(
+                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                )
+            }
+        ) {
+            pages.forEachIndexed { index, title ->
+                Tab(
+                    text = { Text(title) },
+                    selected = pagerState.currentPage == index,
+                    onClick = { /* TODO */ },
+                )
+            }
         }
-    ) {
-        pages.forEachIndexed { index, title ->
-            Tab(
-                text = { Text(title) },
-                selected = pagerState.currentPage == index,
-                onClick = { /* TODO */ },
-            )
-        }
-    }
 
-    HorizontalPager(
-        count = pages.size,
-        state = pagerState,
-    ) { page ->
-        Text(text = "$page")
+        HorizontalPager(
+            count = pages.size,
+            state = pagerState,
+        ) { page ->
+           LatestMessagesScreen {
+
+           }
+        }
     }
 }

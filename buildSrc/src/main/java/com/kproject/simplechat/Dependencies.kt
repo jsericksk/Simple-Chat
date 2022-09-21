@@ -54,7 +54,9 @@ object Dependencies {
     const val accompanistPager = "com.google.accompanist:accompanist-pager:${Versions.ACCOMPANIST}"
     const val accompanistPagerIndicator = "com.google.accompanist:accompanist-pager-indicators:${Versions.ACCOMPANIST}"
 
+    // Landscapist
     const val landscapist = "com.github.skydoves:landscapist-coil:${Versions.LANDSCAPIST}"
+    const val landscapistPlaceholder = "com.github.skydoves:landscapist-placeholder:${Versions.LANDSCAPIST}"
 
     // Retrofit
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.RETROFIT}"
