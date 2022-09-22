@@ -23,8 +23,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    // NavigationGraph()
-                    HomeScreen(onNavigateToChatScreen = {})
+                    NavigationGraph()
+                    // HomeScreen(onNavigateToChatScreen = {})
                 }
             }
         }
