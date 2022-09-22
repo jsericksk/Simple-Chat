@@ -1,11 +1,13 @@
 package com.kproject.simplechat.di
 
 import com.kproject.simplechat.domain.repository.authentication.AuthenticationRepository
+import com.kproject.simplechat.domain.repository.preferences.DataStoreRepository
 import com.kproject.simplechat.domain.usecase.authentication.login.LoginUseCase
 import com.kproject.simplechat.domain.usecase.authentication.login.LoginUseCaseImpl
 import com.kproject.simplechat.domain.usecase.authentication.signup.SignUpUseCase
 import com.kproject.simplechat.domain.usecase.authentication.signup.SignUpUseCaseImpl
 import com.kproject.simplechat.domain.usecase.authentication.validation.*
+import com.kproject.simplechat.domain.usecase.preferences.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -62,5 +64,26 @@ object DomainModule {
     @Singleton
     fun provideSignUpUseCase(authenticationRepository: AuthenticationRepository): SignUpUseCase {
         return SignUpUseCaseImpl(authenticationRepository)
+    }
+
+    /**
+     * Preferences use cases
+     */
+    @Provides
+    @Singleton
+    fun provideGetPreferenceAsyncUseCase(dataStoreRepository: DataStoreRepository): GetPreferenceAsyncUseCase {
+        return GetPreferenceAsyncUseCaseImpl(dataStoreRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetPreferenceSyncUseCase(dataStoreRepository: DataStoreRepository): GetPreferenceSyncUseCase {
+        return GetPreferenceSyncUseCaseImpl(dataStoreRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSavePreferenceUseCase(dataStoreRepository: DataStoreRepository): SavePreferenceUseCase {
+        return SavePreferenceUseCaseImpl(dataStoreRepository)
     }
 }

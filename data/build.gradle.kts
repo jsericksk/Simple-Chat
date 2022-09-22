@@ -67,6 +67,9 @@ dependencies {
     implementation(Dependencies.retrofit)
     implementation(Dependencies.retrofitConverterGson)
 
+    // DataStore
+    implementation(Dependencies.datastorePreferences)
+
     // Tests
     testImplementation(Dependencies.testJunit)
 }

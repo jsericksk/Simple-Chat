@@ -16,6 +16,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -35,11 +36,13 @@ private const val PageUsers = 1
 fun HomeScreen(
     onNavigateToChatScreen: () -> Unit,
 ) {
+    val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
+
     MainContent(
         onNavigateToChatScreen = {
 
         },
-        isDarkMode = true,
+        isDarkMode = homeScreenViewModel.isDarkMode,
         onChangeTheme = {
 
         }

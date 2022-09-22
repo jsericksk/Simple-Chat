@@ -14,5 +14,8 @@ dependencies {
     // Modules
     implementation(project(Dependencies.Module.commom))
 
+    // Coroutines
+    implementation(Dependencies.kotlinxCoroutines)
+
     testImplementation(Dependencies.testJunit)
 }

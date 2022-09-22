@@ -25,7 +25,7 @@ object Versions {
     const val HILT_NAVIGATION_COMPOSE = "1.0.0"
 
     // Coroutines
-    const val KOTLIN_COROUTINES_ANDROID = "1.6.4"
+    const val KOTLIN_COROUTINES = "1.6.4"
     const val KOTLIN_COROUTINES_PLAY_SERVICES = "1.6.4"
 
     const val NAVIGATION_COMPOSE = "2.5.2"
