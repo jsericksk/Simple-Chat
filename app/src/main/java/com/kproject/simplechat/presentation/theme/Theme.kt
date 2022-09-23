@@ -7,6 +7,7 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kproject.simplechat.presentation.MainViewModel
 
 private val DarkColorPalette = darkColors(
     primary = PrimaryDark,
@@ -24,10 +25,10 @@ private val LightColorPalette = lightColors(
 
 @Composable
 fun SimpleChatTheme(
-    themeViewModel: ThemeViewModel,
+    mainViewModel: MainViewModel,
     content: @Composable () -> Unit
 ) {
-    val colors = if (themeViewModel.isDarkMode) {
+    val colors = if (mainViewModel.isDarkMode) {
         DarkColorPalette
     } else {
         LightColorPalette

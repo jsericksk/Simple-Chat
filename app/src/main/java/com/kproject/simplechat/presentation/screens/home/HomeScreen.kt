@@ -23,12 +23,12 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.kproject.simplechat.R
+import com.kproject.simplechat.presentation.MainViewModel
 import com.kproject.simplechat.presentation.screens.components.CustomImage
 import com.kproject.simplechat.presentation.screens.home.latestmessages.LatestMessagesScreen
 import com.kproject.simplechat.presentation.screens.home.registeredUserss.RegisteredUsersScreen
 import com.kproject.simplechat.presentation.theme.CompletePreview
 import com.kproject.simplechat.presentation.theme.PreviewTheme
-import com.kproject.simplechat.presentation.theme.ThemeViewModel
 import kotlinx.coroutines.launch
 
 private const val PageChat = 0
@@ -36,16 +36,16 @@ private const val PageUsers = 1
 
 @Composable
 fun HomeScreen(
-    themeViewModel: ThemeViewModel,
+    mainViewModel: MainViewModel,
     onNavigateToChatScreen: () -> Unit,
 ) {
     val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
 
     MainContent(
-        isDarkMode = themeViewModel.isDarkMode,
+        isDarkMode = mainViewModel.isDarkMode,
         uiState = homeScreenViewModel.uiState,
         onChangeTheme = {
-            themeViewModel.changeTheme()
+            mainViewModel.changeTheme()
         },
         onNavigateToChatScreen = {
 

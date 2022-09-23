@@ -7,14 +7,14 @@ import androidx.compose.runtime.Composable
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.kproject.simplechat.presentation.MainViewModel
 import com.kproject.simplechat.presentation.screens.authentication.login.LoginScreen
 import com.kproject.simplechat.presentation.screens.authentication.signup.SignUpScreen
 import com.kproject.simplechat.presentation.screens.home.HomeScreen
-import com.kproject.simplechat.presentation.theme.ThemeViewModel
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun NavigationGraph(themeViewModel: ThemeViewModel) {
+fun NavigationGraph(mainViewModel: MainViewModel) {
     val navController = rememberAnimatedNavController()
 
     AnimatedNavHost(navController = navController, startDestination = Screen.LoginScreen.route) {
@@ -59,7 +59,7 @@ fun NavigationGraph(themeViewModel: ThemeViewModel) {
         // HomeScreen
         composable(route = Screen.HomeScreen.route) {
             HomeScreen(
-                themeViewModel = themeViewModel,
+                mainViewModel = mainViewModel,
                 onNavigateToChatScreen = {},
             )
         }
