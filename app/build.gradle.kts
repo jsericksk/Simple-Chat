@@ -61,8 +61,9 @@ android {
 dependencies {
     // Modules
     implementation(project(Dependencies.Module.domain))
-    implementation(project(Dependencies.Module.data))
     implementation(project(Dependencies.Module.commom))
+    // Only needed for dependency injection
+    implementation(project(Dependencies.Module.data))
 
     implementation(Dependencies.coreKtx)
     implementation(Dependencies.composeMaterial)
@@ -73,16 +74,14 @@ dependencies {
     implementation(Dependencies.lifecycleExtensions)
     implementation(Dependencies.lifecycleViewModelCompose)
     implementation(Dependencies.activityCompose)
-    implementation(Dependencies.datastorePreferences)
 
     // Dagger-Hilt
     implementation(Dependencies.daggerHilt)
     implementation(Dependencies.hiltNavigationCompose)
     kapt(Dependencies.hiltAndroidCompiler)
 
-    // Coroutines for Android and Firebase
+    // Coroutines for Android
     implementation(Dependencies.kotlinxCoroutinesAndroid)
-    implementation(Dependencies.kotlinxCoroutinesPlayServices)
 
     // Navigation Compose
     implementation(Dependencies.navigationCompose)
@@ -96,6 +95,7 @@ dependencies {
     implementation(Dependencies.landscapist)
     implementation(Dependencies.landscapistPlaceholder)
 
+    // Tests
     testImplementation(Dependencies.testJunit)
     androidTestImplementation(Dependencies.androidTestJunit)
     androidTestImplementation(Dependencies.androidTestEspresso)
