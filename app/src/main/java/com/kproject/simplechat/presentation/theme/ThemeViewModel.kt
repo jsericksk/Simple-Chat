@@ -5,10 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kproject.simplechat.commom.constants.PrefsConstants
 import com.kproject.simplechat.domain.usecase.preferences.GetPreferenceAsyncUseCase
 import com.kproject.simplechat.domain.usecase.preferences.GetPreferenceSyncUseCase
 import com.kproject.simplechat.domain.usecase.preferences.SavePreferenceUseCase
-import com.kproject.simplechat.presentation.utils.PrefsConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -26,7 +26,7 @@ class ThemeViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getPreferenceAsyncUseCase(
-                key = PrefsConstants.PrefIsDarkMode,
+                key = PrefsConstants.IsDarkMode,
                 defaultValue = true
             ).collectLatest {
                 isDarkMode = it as Boolean
@@ -37,7 +37,7 @@ class ThemeViewModel @Inject constructor(
     fun changeTheme() {
         viewModelScope.launch {
             savePreferenceUseCase(
-                key = PrefsConstants.PrefIsDarkMode,
+                key = PrefsConstants.IsDarkMode,
                 value = !isDarkMode
             )
         }

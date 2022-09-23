@@ -1,7 +1,7 @@
 package com.kproject.simplechat.di
 
 import android.content.Context
-import com.kproject.simplechat.data.repository.DataStoreRepositoryImpl
+import com.kproject.simplechat.data.repository.preferences.DataStoreRepositoryImpl
 import com.kproject.simplechat.domain.repository.preferences.DataStoreRepository
 import com.kproject.simplechat.domain.usecase.preferences.*
 import dagger.Module
@@ -14,12 +14,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object PreferencesDomainModule {
-
-    @Provides
-    @Singleton
-    fun provideDataStoreRepository(@ApplicationContext applicationContext: Context): DataStoreRepository {
-        return DataStoreRepositoryImpl(applicationContext)
-    }
 
     @Provides
     @Singleton

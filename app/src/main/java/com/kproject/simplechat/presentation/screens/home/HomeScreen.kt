@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -41,13 +42,15 @@ fun HomeScreen(
     val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
 
     MainContent(
-        onNavigateToChatScreen = {
-
-        },
         isDarkMode = themeViewModel.isDarkMode,
+        uiState = homeScreenViewModel.uiState,
         onChangeTheme = {
             themeViewModel.changeTheme()
+        },
+        onNavigateToChatScreen = {
+
         }
+
     )
 }
 
@@ -55,6 +58,7 @@ fun HomeScreen(
 @Composable
 private fun MainContent(
     modifier: Modifier = Modifier,
+    uiState: HomeUiState,
     isDarkMode: Boolean,
     onChangeTheme: () -> Unit,
     onNavigateToChatScreen: () -> Unit,
@@ -70,7 +74,7 @@ private fun MainContent(
         modifier = modifier.fillMaxWidth()
     ) {
         TopBar(
-            userProfilePicture = "",
+            userProfilePicture = uiState.userProfilePicture,
             isDarkMode = isDarkMode,
             onChangeTheme = onChangeTheme
         )
@@ -136,10 +140,11 @@ private fun TopBar(
             .padding(12.dp)
     ) {
         CustomImage(
-            imageModel = userProfilePicture,
+            imageModel = userProfilePicture.ifEmpty { R.drawable.ic_person },
             modifier = Modifier
                 .size(40.dp)
                 .clip(RoundedCornerShape(12.dp)),
+            colorFilter = if (userProfilePicture.isEmpty()) ColorFilter.tint(Color.White) else null
         )
         Spacer(Modifier.width(8.dp))
         Text(
@@ -168,6 +173,7 @@ private fun TopBar(
 private fun Preview() {
     PreviewTheme {
         MainContent(
+            uiState = HomeUiState(),
             isDarkMode = true,
             onChangeTheme = {},
             onNavigateToChatScreen = {}

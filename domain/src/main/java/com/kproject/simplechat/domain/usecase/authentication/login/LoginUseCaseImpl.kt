@@ -2,7 +2,7 @@ package com.kproject.simplechat.domain.usecase.authentication.login
 
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.domain.model.authentication.Login
-import com.kproject.simplechat.domain.repository.authentication.AuthenticationRepository
+import com.kproject.simplechat.domain.repository.firebase.AuthenticationRepository
 
 class LoginUseCaseImpl(
     private val authenticationRepository: AuthenticationRepository

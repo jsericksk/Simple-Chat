@@ -25,14 +25,18 @@ import com.skydoves.landscapist.placeholder.shimmer.ShimmerPlugin
 fun CustomImage(
     modifier: Modifier = Modifier,
     imageModel: Any,
-    contentScale: ContentScale = ContentScale.Crop
+    contentScale: ContentScale = ContentScale.Crop,
+    colorFilter: ColorFilter? = null
 ) {
     val shimmerBaseColor = MaterialTheme.colors.background
     val shimmerHighlightColor = MaterialTheme.colors.onSecondary
 
     CoilImage(
         imageModel = imageModel,
-        imageOptions = ImageOptions(contentScale = contentScale),
+        imageOptions = ImageOptions(
+            contentScale = contentScale,
+            colorFilter = colorFilter
+        ),
         failure = {
             FailureIndicator()
         },

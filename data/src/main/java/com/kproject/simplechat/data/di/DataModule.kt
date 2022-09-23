@@ -1,11 +1,12 @@
 package com.kproject.simplechat.data.di
 
-import android.app.Application
 import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.kproject.simplechat.data.repository.AuthenticationRepositoryImpl
-import com.kproject.simplechat.domain.repository.authentication.AuthenticationRepository
+import com.kproject.simplechat.data.repository.firebase.AuthenticationRepositoryImpl
+import com.kproject.simplechat.data.repository.preferences.DataStoreRepositoryImpl
+import com.kproject.simplechat.domain.repository.firebase.AuthenticationRepository
+import com.kproject.simplechat.domain.repository.preferences.DataStoreRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,8 +34,15 @@ object DataModule {
     @Singleton
     fun provideAuthenticationRepository(
         firebaseAuth: FirebaseAuth,
-        firebaseFirestore: FirebaseFirestore
+        firebaseFirestore: FirebaseFirestore,
+        dataStoreRepository: DataStoreRepository
     ): AuthenticationRepository {
-        return AuthenticationRepositoryImpl(firebaseAuth, firebaseFirestore)
+        return AuthenticationRepositoryImpl(firebaseAuth, firebaseFirestore, dataStoreRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDataStoreRepository(@ApplicationContext applicationContext: Context): DataStoreRepository {
+        return DataStoreRepositoryImpl(applicationContext)
     }
 }

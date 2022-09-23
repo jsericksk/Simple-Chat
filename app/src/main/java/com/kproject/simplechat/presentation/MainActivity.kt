@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    // NavigationGraph(themeViewModel = themeViewModel)
+                    //NavigationGraph(themeViewModel = themeViewModel)
                     HomeScreen(
                         themeViewModel = themeViewModel,
                         onNavigateToChatScreen = {}

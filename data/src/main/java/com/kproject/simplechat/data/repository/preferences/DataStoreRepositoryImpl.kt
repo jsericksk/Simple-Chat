@@ -1,4 +1,4 @@
-package com.kproject.simplechat.data.repository
+package com.kproject.simplechat.data.repository.preferences
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
