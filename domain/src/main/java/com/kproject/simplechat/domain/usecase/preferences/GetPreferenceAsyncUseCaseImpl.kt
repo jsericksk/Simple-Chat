@@ -7,7 +7,7 @@ class GetPreferenceAsyncUseCaseImpl(
     private val dataStoreRepository: DataStoreRepository
 ) : GetPreferenceAsyncUseCase {
 
-    override suspend fun getPreferenceAsync(key: String, defaultValue: Any): Flow<Any> {
+    override suspend operator fun invoke(key: String, defaultValue: Any): Flow<Any> {
         return dataStoreRepository.getPreferenceAsync(key, defaultValue)
     }
 }

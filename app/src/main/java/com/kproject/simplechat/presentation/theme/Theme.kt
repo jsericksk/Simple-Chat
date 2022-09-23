@@ -6,6 +6,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 
 private val DarkColorPalette = darkColors(
     primary = PrimaryDark,
@@ -22,8 +23,11 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-fun SimpleChatTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = if (darkTheme) {
+fun SimpleChatTheme(
+    themeViewModel: ThemeViewModel,
+    content: @Composable () -> Unit
+) {
+    val colors = if (themeViewModel.isDarkMode) {
         DarkColorPalette
     } else {
         LightColorPalette

@@ -27,6 +27,7 @@ import com.kproject.simplechat.presentation.screens.home.latestmessages.LatestMe
 import com.kproject.simplechat.presentation.screens.home.registeredUserss.RegisteredUsersScreen
 import com.kproject.simplechat.presentation.theme.CompletePreview
 import com.kproject.simplechat.presentation.theme.PreviewTheme
+import com.kproject.simplechat.presentation.theme.ThemeViewModel
 import kotlinx.coroutines.launch
 
 private const val PageChat = 0
@@ -34,6 +35,7 @@ private const val PageUsers = 1
 
 @Composable
 fun HomeScreen(
+    themeViewModel: ThemeViewModel,
     onNavigateToChatScreen: () -> Unit,
 ) {
     val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
@@ -42,9 +44,9 @@ fun HomeScreen(
         onNavigateToChatScreen = {
 
         },
-        isDarkMode = homeScreenViewModel.isDarkMode,
+        isDarkMode = themeViewModel.isDarkMode,
         onChangeTheme = {
-
+            themeViewModel.changeTheme()
         }
     )
 }

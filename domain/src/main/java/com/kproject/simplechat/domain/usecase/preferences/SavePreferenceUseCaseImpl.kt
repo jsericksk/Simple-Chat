@@ -6,7 +6,7 @@ class SavePreferenceUseCaseImpl(
     private val dataStoreRepository: DataStoreRepository
 ) : SavePreferenceUseCase {
 
-    override suspend fun savePreference(key: String, value: Any) {
+    override suspend operator fun invoke(key: String, value: Any) {
         dataStoreRepository.savePreference(key, value)
     }
 }

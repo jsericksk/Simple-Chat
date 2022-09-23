@@ -6,7 +6,7 @@ class GetPreferenceSyncUseCaseImpl(
     private val dataStoreRepository: DataStoreRepository
 ) : GetPreferenceSyncUseCase {
 
-    override fun getPreferenceAsync(key: String, defaultValue: Any): Any {
+    override operator fun invoke(key: String, defaultValue: Any): Any {
         return dataStoreRepository.getPreferenceSync(key, defaultValue)
     }
 }
