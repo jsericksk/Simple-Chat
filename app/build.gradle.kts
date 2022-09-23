@@ -95,6 +95,9 @@ dependencies {
     implementation(Dependencies.landscapist)
     implementation(Dependencies.landscapistPlaceholder)
 
+    // Splash Screen
+    implementation(Dependencies.splashScreen)
+
     // Tests
     testImplementation(Dependencies.testJunit)
     androidTestImplementation(Dependencies.androidTestJunit)

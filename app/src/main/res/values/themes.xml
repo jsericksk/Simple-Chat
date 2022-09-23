@@ -4,4 +4,11 @@
     <style name="Theme.SimpleChat" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">#002C63</item>
     </style>
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#1F1F1F</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.SimpleChat</item>
+    </style>
+
 </resources>
