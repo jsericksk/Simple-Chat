@@ -1,13 +1,10 @@
 package com.kproject.simplechat.di
 
-import android.content.Context
-import com.kproject.simplechat.data.repository.preferences.DataStoreRepositoryImpl
 import com.kproject.simplechat.domain.repository.preferences.DataStoreRepository
 import com.kproject.simplechat.domain.usecase.preferences.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 

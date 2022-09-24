@@ -8,7 +8,6 @@ import com.kproject.simplechat.data.mapper.toUserModel
 import com.kproject.simplechat.data.model.UserEntity
 import com.kproject.simplechat.data.utils.Constants
 import com.kproject.simplechat.domain.model.firebase.LatestMessageModel
-import com.kproject.simplechat.domain.model.firebase.UserModel
 import com.kproject.simplechat.domain.repository.firebase.UserRepository
 import com.kproject.simplechat.domain.repository.preferences.DataStoreRepository
 import kotlinx.coroutines.channels.awaitClose
@@ -26,7 +25,7 @@ class UserRepositoryImpl(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getRegisteredUserList() = callbackFlow {
+    override suspend fun getRegisteredUsers() = callbackFlow {
         var snapshotListener: ListenerRegistration? = null
         try {
             val userList = mutableListOf<UserEntity>()
@@ -48,6 +47,7 @@ class UserRepositoryImpl(
                     val registeredUsers = userList.map { userEntity ->
                         userEntity.toUserModel()
                     }
+
                     trySend(DataState.Success(data = registeredUsers))
                 }
             }

@@ -7,6 +7,6 @@ object Constants {
 
     const val FirebaseCollectionUsers = "users"
     const val FirebaseCollectionChatMessages = "chat_messages"
-    const val FirebaseCollectionLastMessages = "last_messages"
+    const val FirebaseCollectionLatestMessages = "latest_messages"
     const val FirebaseCollectionMessages = "messages"
 }

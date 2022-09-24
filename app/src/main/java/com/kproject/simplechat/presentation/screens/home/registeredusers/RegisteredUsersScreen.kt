@@ -1,4 +1,4 @@
-package com.kproject.simplechat.presentation.screens.home.registeredUserss
+package com.kproject.simplechat.presentation.screens.home.registeredusers
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.kproject.simplechat.R
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.presentation.model.User
@@ -23,8 +23,6 @@ import com.kproject.simplechat.presentation.model.fakeRegisteredUsersList
 import com.kproject.simplechat.presentation.screens.components.CustomImage
 import com.kproject.simplechat.presentation.screens.components.EmptyListInfo
 import com.kproject.simplechat.presentation.screens.components.LoadingIndicator
-import com.kproject.simplechat.presentation.screens.home.registeredusers.RegisteredUsersUiState
-import com.kproject.simplechat.presentation.screens.home.registeredusers.RegisteredUsersViewModel
 import com.kproject.simplechat.presentation.theme.PreviewTheme
 import com.kproject.simplechat.presentation.theme.SimplePreview
 import com.kproject.simplechat.presentation.theme.TextDefaultColor
@@ -33,7 +31,7 @@ import com.kproject.simplechat.presentation.theme.TextDefaultColor
 fun RegisteredUsersScreen(
     onNavigateToChatScreen: () -> Unit,
 ) {
-    val registeredUsersViewModel: RegisteredUsersViewModel = viewModel()
+    val registeredUsersViewModel: RegisteredUsersViewModel = hiltViewModel()
     val uiState = registeredUsersViewModel.uiState
     val dataState = registeredUsersViewModel.dataState
 
@@ -61,7 +59,7 @@ private fun MainContent(
         }
         is DataState.Success -> {
             RegisteredUsersList(
-                registeredUsersList = uiState.registeredUsersList,
+                registeredUsersList = uiState.registeredUsers,
                 onClick = { index ->
                     onNavigateToChatScreen.invoke(index)
                 },
@@ -161,7 +159,7 @@ private fun RegisteredUsersListItem(
 private fun Preview() {
     PreviewTheme {
         val uiState = RegisteredUsersUiState(
-            registeredUsersList = fakeRegisteredUsersList
+            registeredUsers = fakeRegisteredUsersList
         )
         MainContent(
             uiState = uiState,
