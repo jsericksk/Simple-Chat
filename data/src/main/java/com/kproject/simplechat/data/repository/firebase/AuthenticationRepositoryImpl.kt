@@ -30,7 +30,7 @@ class AuthenticationRepositoryImpl(
     override suspend fun login(login: Login): DataState<Unit> {
         return try {
             firebaseAuth.signInWithEmailAndPassword(login.email, login.password).await()
-            saveUserInfoLocally(profilePictureUrl = "")
+            saveUserInfoLocally(isUserLoggedIn = true)
             DataState.Success()
         } catch (e: FirebaseAuthException) {
             Log.e(TAG, "Login error: ${e.message} ${e.errorCode}")
@@ -63,7 +63,10 @@ class AuthenticationRepositoryImpl(
                 profilePicture = profilePictureUrl
             )
 
-            saveUserInfoLocally(profilePictureUrl = profilePictureUrl)
+            saveUserInfoLocally(
+                profilePictureUrl = profilePictureUrl,
+                isUserLoggedIn = true
+            )
 
             DataState.Success()
         } catch (e: FirebaseAuthException) {
@@ -94,17 +97,6 @@ class AuthenticationRepositoryImpl(
         }
     }
 
-    private suspend fun saveUserInfoLocally(profilePictureUrl: String) {
-        dataStoreRepository.savePreference(
-            key = PrefsConstants.UserProfilePicture,
-            value = profilePictureUrl
-        )
-        dataStoreRepository.savePreference(
-            key = PrefsConstants.IsUserLoggedIn,
-            value = true
-        )
-    }
-
     private suspend fun saveUserInFirestore(username: String, profilePicture: String) {
         val userId = firebaseAuth.currentUser?.uid
         userId?.let { id ->
@@ -122,6 +114,22 @@ class AuthenticationRepositoryImpl(
     }
 
     override suspend fun logout(): DataState<Unit> {
-        TODO("Not yet implemented")
+        saveUserInfoLocally()
+        firebaseAuth.signOut()
+        return DataState.Success()
+    }
+
+    private suspend fun saveUserInfoLocally(
+        profilePictureUrl: String = "",
+        isUserLoggedIn: Boolean = false
+    ) {
+        dataStoreRepository.savePreference(
+            key = PrefsConstants.UserProfilePicture,
+            value = profilePictureUrl
+        )
+        dataStoreRepository.savePreference(
+            key = PrefsConstants.IsUserLoggedIn,
+            value = isUserLoggedIn
+        )
     }
 }
