@@ -6,6 +6,7 @@ import com.kproject.simplechat.domain.usecase.authentication.login.LoginUseCaseI
 import com.kproject.simplechat.domain.usecase.authentication.signup.SignUpUseCase
 import com.kproject.simplechat.domain.usecase.authentication.signup.SignUpUseCaseImpl
 import com.kproject.simplechat.domain.usecase.authentication.validation.*
+import com.kproject.simplechat.domain.usecase.authentication.LogoutUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -62,5 +63,11 @@ object AuthenticationDomainModule {
     @Singleton
     fun provideSignUpUseCase(authenticationRepository: AuthenticationRepository): SignUpUseCase {
         return SignUpUseCaseImpl(authenticationRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLogoutUseCase(authenticationRepository: AuthenticationRepository): LogoutUseCase {
+        return LogoutUseCase(authenticationRepository::logout)
     }
 }
