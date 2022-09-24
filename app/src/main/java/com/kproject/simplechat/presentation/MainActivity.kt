@@ -31,8 +31,8 @@ class MainActivity : ComponentActivity() {
                 ) {
                     NavigationGraph(mainViewModel = mainViewModel)
                     /**HomeScreen(
-                        mainViewModel = mainViewModel,
-                        onNavigateToChatScreen = {}
+                    mainViewModel = mainViewModel,
+                    onNavigateToChatScreen = {}
                     )*/
                 }
             }
