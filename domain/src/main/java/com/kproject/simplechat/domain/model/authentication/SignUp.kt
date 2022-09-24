@@ -1,7 +1,7 @@
 package com.kproject.simplechat.domain.model.authentication
 
 data class SignUp(
-    val profileImage: String = "",
+    val profilePicture: String = "",
     val username: String = "",
     val email: String = "",
     val password: String = ""

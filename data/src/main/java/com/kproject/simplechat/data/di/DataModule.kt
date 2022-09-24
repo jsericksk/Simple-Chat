@@ -51,9 +51,10 @@ object DataModule {
     @Provides
     @Singleton
     fun provideUserRepository(
+        firebaseAuth: FirebaseAuth,
         firebaseFirestore: FirebaseFirestore,
         dataStoreRepository: DataStoreRepository
     ): UserRepository {
-        return UserRepositoryImpl(firebaseFirestore, dataStoreRepository)
+        return UserRepositoryImpl(firebaseAuth, firebaseFirestore, dataStoreRepository)
     }
 }

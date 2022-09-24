@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.kproject.simplechat.R
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.presentation.model.LatestMessage
@@ -31,7 +31,7 @@ import com.kproject.simplechat.presentation.theme.TextDefaultColor
 fun LatestMessagesScreen(
     onNavigateToChatScreen: () -> Unit,
 ) {
-    val latestMessagesViewModel: LatestMessagesViewModel = viewModel()
+    val latestMessagesViewModel: LatestMessagesViewModel = hiltViewModel()
     val uiState = latestMessagesViewModel.uiState
     val dataState = latestMessagesViewModel.dataState
 
@@ -59,7 +59,7 @@ private fun MainContent(
         }
         is DataState.Success -> {
             LatestMessagesList(
-                latestMessageList = uiState.latestMessagesList,
+                latestMessageList = uiState.latestMessages,
                 onClick = { index ->
                     onNavigateToChatScreen.invoke(index)
                 },
@@ -83,27 +83,25 @@ private fun LatestMessagesList(
     latestMessageList: List<LatestMessage>,
     onClick: (index: Int) -> Unit
 ) {
-    Column {
-        if (latestMessageList.isNotEmpty()) {
-            LazyColumn(
-                modifier = modifier.fillMaxSize()
-            ) {
-                itemsIndexed(latestMessageList) { index, latestMessage ->
-                    LatestMessagesListItem(
-                        latestMessage = latestMessage,
-                        onClick = {
-                            onClick(index)
-                        }
-                    )
-                }
+    if (latestMessageList.isNotEmpty()) {
+        LazyColumn(
+            modifier = modifier.fillMaxSize()
+        ) {
+            itemsIndexed(latestMessageList) { index, latestMessage ->
+                LatestMessagesListItem(
+                    latestMessage = latestMessage,
+                    onClick = {
+                        onClick(index)
+                    }
+                )
             }
-        } else {
-            EmptyListInfo(
-                iconResId = R.drawable.ic_message,
-                title = stringResource(id = R.string.info_title_empty_latest_messages_list),
-                description = stringResource(id = R.string.info_description_empty_latest_messages_list)
-            )
         }
+    } else {
+        EmptyListInfo(
+            iconResId = R.drawable.ic_message,
+            title = stringResource(id = R.string.info_title_empty_latest_messages_list),
+            description = stringResource(id = R.string.info_description_empty_latest_messages_list)
+        )
     }
 }
 
@@ -167,7 +165,7 @@ private fun LatestMessagesListItem(
 private fun Preview() {
     PreviewTheme {
         val uiState = LatestMessagesUiState(
-            latestMessagesList = fakeLatestMessagesList
+            latestMessages = fakeLatestMessagesList
         )
         MainContent(
             uiState = uiState,

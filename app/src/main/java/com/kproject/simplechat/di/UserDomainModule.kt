@@ -1,6 +1,8 @@
 package com.kproject.simplechat.di
 
 import com.kproject.simplechat.domain.repository.firebase.UserRepository
+import com.kproject.simplechat.domain.usecase.user.GetLatestMessagesUseCase
+import com.kproject.simplechat.domain.usecase.user.GetLatestMessagesUseCaseImpl
 import com.kproject.simplechat.domain.usecase.user.GetRegisteredUsersUseCase
 import com.kproject.simplechat.domain.usecase.user.GetRegisteredUsersUseCaseImpl
 import dagger.Module
@@ -19,4 +21,9 @@ object UserDomainModule {
         return GetRegisteredUsersUseCaseImpl(userRepository)
     }
 
+    @Provides
+    @Singleton
+    fun provideGetLatestMessagesUseCase(userRepository: UserRepository): GetLatestMessagesUseCase {
+        return GetLatestMessagesUseCaseImpl(userRepository)
+    }
 }

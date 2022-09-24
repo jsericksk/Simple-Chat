@@ -83,27 +83,25 @@ private fun RegisteredUsersList(
     registeredUsersList: List<User>,
     onClick: (index: Int) -> Unit
 ) {
-    Column {
-        if (registeredUsersList.isNotEmpty()) {
-            LazyColumn(
-                modifier = modifier.fillMaxSize()
-            ) {
-                itemsIndexed(registeredUsersList) { index, user ->
-                    RegisteredUsersListItem(
-                        user = user,
-                        onClick = {
-                            onClick(index)
-                        }
-                    )
-                }
+    if (registeredUsersList.isNotEmpty()) {
+        LazyColumn(
+            modifier = modifier.fillMaxSize()
+        ) {
+            itemsIndexed(registeredUsersList) { index, user ->
+                RegisteredUsersListItem(
+                    user = user,
+                    onClick = {
+                        onClick(index)
+                    }
+                )
             }
-        } else {
-            EmptyListInfo(
-                iconResId = R.drawable.ic_message,
-                title = stringResource(id = R.string.info_title_empty_latest_messages_list),
-                description = stringResource(id = R.string.info_description_empty_latest_messages_list)
-            )
         }
+    } else {
+        EmptyListInfo(
+            iconResId = R.drawable.ic_message,
+            title = stringResource(id = R.string.info_title_empty_latest_messages_list),
+            description = stringResource(id = R.string.info_description_empty_latest_messages_list)
+        )
     }
 }
 
