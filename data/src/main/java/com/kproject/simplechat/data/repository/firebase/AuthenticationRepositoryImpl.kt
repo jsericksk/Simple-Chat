@@ -10,14 +10,12 @@ import com.google.firebase.storage.ktx.storage
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.commom.constants.PrefsConstants
 import com.kproject.simplechat.commom.exception.AuthenticationException
-import com.kproject.simplechat.data.model.User
+import com.kproject.simplechat.data.model.UserEntity
 import com.kproject.simplechat.data.utils.Constants
 import com.kproject.simplechat.domain.model.authentication.Login
 import com.kproject.simplechat.domain.model.authentication.SignUp
 import com.kproject.simplechat.domain.repository.firebase.AuthenticationRepository
 import com.kproject.simplechat.domain.repository.preferences.DataStoreRepository
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.*
 
@@ -111,10 +109,10 @@ class AuthenticationRepositoryImpl(
     private suspend fun saveUserInFirestore(username: String, profilePicture: String) {
         val userId = firebaseAuth.currentUser?.uid
         userId?.let { id ->
-            val user = User(
+            val user = UserEntity(
                 userId = id,
                 username = username,
-                profileImage = profilePicture
+                profilePicture = profilePicture
             )
             firebaseFirestore
                 .collection(Constants.FirebaseCollectionUsers)
