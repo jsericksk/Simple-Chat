@@ -15,12 +15,12 @@ object UserDomainModule {
     @Provides
     @Singleton
     fun provideGetRegisteredUsersUseCase(userRepository: UserRepository): GetRegisteredUsersUseCase {
-        return GetRegisteredUsersUseCaseImpl(userRepository)
+        return GetRegisteredUsersUseCase(userRepository::getRegisteredUsers)
     }
 
     @Provides
     @Singleton
     fun provideGetLatestMessagesUseCase(userRepository: UserRepository): GetLatestMessagesUseCase {
-        return GetLatestMessagesUseCaseImpl(userRepository)
+        return GetLatestMessagesUseCase(userRepository::getLatestMessages)
     }
 }
