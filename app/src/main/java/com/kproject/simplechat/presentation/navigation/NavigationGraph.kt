@@ -17,7 +17,25 @@ import com.kproject.simplechat.presentation.screens.home.HomeScreen
 fun NavigationGraph(mainViewModel: MainViewModel) {
     val navController = rememberAnimatedNavController()
 
-    AnimatedNavHost(navController = navController, startDestination = Screen.LoginScreen.route) {
+    AnimatedNavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
+        composable(route = Screen.HomeScreen.route) {
+            if (mainViewModel.isUserLoggedIn) {
+                HomeScreen(
+                    mainViewModel = mainViewModel,
+                    onNavigateToChatScreen = {},
+                )
+            } else {
+                LoginScreen(
+                    onNavigateToHomeScreen = {
+                        navController.navigate(Screen.HomeScreen.route)
+                    },
+                    onNavigateToSignUpScreen = {
+                        navController.navigate(Screen.SignUpScreen.route)
+                    }
+                )
+            }
+        }
+
         // LoginScreen
         composable(route = Screen.LoginScreen.route) {
             LoginScreen(
@@ -46,7 +64,7 @@ fun NavigationGraph(mainViewModel: MainViewModel) {
                 )
             }
         ) {
-           SignUpScreen(
+            SignUpScreen(
                 onNavigateToHomeScreen = {
                     navController.navigate(Screen.HomeScreen.route)
                 },
@@ -56,12 +74,6 @@ fun NavigationGraph(mainViewModel: MainViewModel) {
             )
         }
 
-        // HomeScreen
-        composable(route = Screen.HomeScreen.route) {
-            HomeScreen(
-                mainViewModel = mainViewModel,
-                onNavigateToChatScreen = {},
-            )
-        }
+
     }
 }

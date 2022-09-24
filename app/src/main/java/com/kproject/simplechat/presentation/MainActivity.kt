@@ -1,6 +1,8 @@
 package com.kproject.simplechat.presentation
 
 import android.os.Bundle
+import android.view.View
+import android.view.ViewTreeObserver
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -9,7 +11,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.kproject.simplechat.presentation.screens.home.HomeScreen
+import com.kproject.simplechat.presentation.navigation.NavigationGraph
 import com.kproject.simplechat.presentation.theme.SimpleChatTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,14 +22,33 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+        loadInitialConfigurations()
+        setContent {
+            SimpleChatTheme(mainViewModel = mainViewModel) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colors.background
+                ) {
+                    NavigationGraph(mainViewModel = mainViewModel)
+                    /**HomeScreen(
+                        mainViewModel = mainViewModel,
+                        onNavigateToChatScreen = {}
+                    )*/
+                }
+            }
+        }
+    }
 
-        // Set up an OnPreDrawListener to the root view.
-        /**
+    /**
+     * Loads some initial configurations before displaying the first screen, such as checking
+     * whether the user is logged in or not to display the corresponding screen.
+     */
+    private fun loadInitialConfigurations() {
         val content: View = findViewById(android.R.id.content)
         content.viewTreeObserver.addOnPreDrawListener(
             object : ViewTreeObserver.OnPreDrawListener {
                 override fun onPreDraw(): Boolean {
-                    return if (themeViewModel.contentReady) {
+                    return if (mainViewModel.isContentReady()) {
                         content.viewTreeObserver.removeOnPreDrawListener(this)
                         true
                     } else {
@@ -35,22 +56,6 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-        )*/
-
-        setContent {
-            //val themeViewModel: ThemeViewModel = hiltViewModel()
-            SimpleChatTheme(mainViewModel = mainViewModel) {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    // NavigationGraph(mainViewModel = mainViewModel)
-                    HomeScreen(
-                        mainViewModel = mainViewModel,
-                        onNavigateToChatScreen = {}
-                    )
-                }
-            }
-        }
+        )
     }
 }

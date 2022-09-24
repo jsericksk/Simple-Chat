@@ -25,20 +25,48 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
     var isDarkMode by mutableStateOf(true)
         private set
+    var isUserLoggedIn = false
+        private set
 
-    // var contentReady = false
+    private var isDarkModePreferenceCollected = false
+    private var isUserLoggedInPreferenceCollected = false
 
     init {
         viewModelScope.launch {
-            // Collect changes in theme mode
+            collectThemeChanges()
+            isUserLeggedIn()
+        }
+    }
+
+    private fun collectThemeChanges() {
+        viewModelScope.launch {
             getPreferenceAsyncUseCase(
                 key = PrefsConstants.IsDarkMode,
                 defaultValue = true
             ).collectLatest {
                 isDarkMode = it as Boolean
-                // contentReady = true
+                isDarkModePreferenceCollected = true
             }
         }
+    }
+
+    private fun isUserLeggedIn() {
+        viewModelScope.launch {
+            getPreferenceAsyncUseCase(
+                key = PrefsConstants.IsUserLoggedIn,
+                defaultValue = false
+            ).collectLatest {
+                isUserLoggedIn = it as Boolean
+                isUserLoggedInPreferenceCollected = true
+            }
+        }
+    }
+
+    fun isContentReady(): Boolean {
+        if (isDarkModePreferenceCollected && isUserLoggedInPreferenceCollected) {
+            return true
+        }
+        return false
     }
 
     fun changeTheme() {
