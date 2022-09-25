@@ -27,6 +27,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.kproject.simplechat.R
 import com.kproject.simplechat.presentation.MainViewModel
 import com.kproject.simplechat.presentation.model.User
+import com.kproject.simplechat.presentation.screens.components.AlertDialog
 import com.kproject.simplechat.presentation.screens.components.CustomImage
 import com.kproject.simplechat.presentation.screens.home.latestmessages.LatestMessagesScreen
 import com.kproject.simplechat.presentation.screens.home.registeredusers.RegisteredUsersScreen
@@ -142,6 +143,7 @@ private fun TopBar(
     onLogout: () -> Unit
 ) {
     var showProfileViewerDialog by remember { mutableStateOf(false) }
+    var showLogoutConfirmDialog by remember { mutableStateOf(false) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -185,7 +187,15 @@ private fun TopBar(
         showDialog = showProfileViewerDialog,
         onDismiss = { showProfileViewerDialog = false },
         uiState = uiState,
-        onLogout = onLogout
+        onLogout = { showLogoutConfirmDialog = true }
+    )
+
+    AlertDialog(
+        showDialog = showLogoutConfirmDialog,
+        onDismiss = { showLogoutConfirmDialog = false },
+        title = stringResource(id = R.string.dialog_title_confirm_logout),
+        message = stringResource(id = R.string.dialog_message_confirm_logout),
+        onClickButtonOk = onLogout
     )
 }
 
@@ -231,7 +241,7 @@ private fun ProfileViewerDialog(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
-                            .padding(horizontal = 24.dp, vertical = 12.dp)
+                            .padding(start = 24.dp, end = 24.dp, top = 12.dp, bottom = 24.dp)
                             .fillMaxWidth()
                     ) {
                         Text(
