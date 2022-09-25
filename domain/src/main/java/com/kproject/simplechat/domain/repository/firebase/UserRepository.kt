@@ -10,4 +10,6 @@ interface UserRepository {
     suspend fun getLatestMessages(): Flow<DataState<List<LatestMessageModel>>>
 
     suspend fun getRegisteredUsers(): Flow<DataState<List<UserModel>>>
+
+    suspend fun getCurrentUser(): DataState<UserModel>
 }

@@ -5,16 +5,20 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.auth.User
+import com.google.firebase.installations.Utils
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.data.mapper.toLatestMessageModel
 import com.kproject.simplechat.data.mapper.toUserModel
 import com.kproject.simplechat.data.model.LatestMessageEntity
 import com.kproject.simplechat.data.model.UserEntity
 import com.kproject.simplechat.data.utils.Constants
+import com.kproject.simplechat.domain.model.firebase.UserModel
 import com.kproject.simplechat.domain.repository.firebase.UserRepository
 import com.kproject.simplechat.domain.repository.preferences.DataStoreRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
 
 private const val TAG = "UserRepositoryImpl"
 
@@ -93,6 +97,26 @@ class UserRepositoryImpl(
 
         awaitClose {
             snapshotListener?.remove()
+        }
+    }
+
+    override suspend fun getCurrentUser(): DataState<UserModel> {
+        return try {
+            getCurrentUserId()?.let { userId ->
+                val documentSnapshot = firebaseFirestore.collection(Constants.FirebaseCollectionUsers)
+                    .document(userId).get().await()
+                documentSnapshot?.let { document ->
+                    val user = document.toObject(UserEntity::class.java)
+                    user?.let { userEntity ->
+                        return DataState.Success(userEntity.toUserModel())
+                    }
+                }
+            }
+
+            return DataState.Error()
+        } catch (e: Exception) {
+            Log.d(TAG, "Error getCurrentUser: ${e.message}")
+            DataState.Error()
         }
     }
 

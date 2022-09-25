@@ -63,10 +63,7 @@ class AuthenticationRepositoryImpl(
                 profilePicture = profilePictureUrl
             )
 
-            saveUserInfoLocally(
-                profilePictureUrl = profilePictureUrl,
-                isUserLoggedIn = true
-            )
+            saveUserInfoLocally(isUserLoggedIn = true)
 
             DataState.Success()
         } catch (e: FirebaseAuthException) {
@@ -114,19 +111,12 @@ class AuthenticationRepositoryImpl(
     }
 
     override suspend fun logout(): DataState<Unit> {
-        saveUserInfoLocally()
+        saveUserInfoLocally(isUserLoggedIn = false)
         firebaseAuth.signOut()
         return DataState.Success()
     }
 
-    private suspend fun saveUserInfoLocally(
-        profilePictureUrl: String = "",
-        isUserLoggedIn: Boolean = false
-    ) {
-        dataStoreRepository.savePreference(
-            key = PrefsConstants.UserProfilePicture,
-            value = profilePictureUrl
-        )
+    private suspend fun saveUserInfoLocally(isUserLoggedIn: Boolean) {
         dataStoreRepository.savePreference(
             key = PrefsConstants.IsUserLoggedIn,
             value = isUserLoggedIn
