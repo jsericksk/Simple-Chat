@@ -42,6 +42,7 @@ private const val PageUsers = 1
 @Composable
 fun HomeScreen(
     mainViewModel: MainViewModel,
+    onNavigateToLoginScreen: () -> Unit,
     onNavigateToChatScreen: () -> Unit,
 ) {
     val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
@@ -57,6 +58,7 @@ fun HomeScreen(
         },
         onLogout = {
             homeScreenViewModel.logout()
+            onNavigateToLoginScreen.invoke()
         }
     )
 }

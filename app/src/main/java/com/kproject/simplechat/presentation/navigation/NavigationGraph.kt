@@ -23,6 +23,12 @@ fun NavigationGraph(mainViewModel: MainViewModel) {
             if (mainViewModel.isUserLoggedIn) {
                 HomeScreen(
                     mainViewModel = mainViewModel,
+                    onNavigateToLoginScreen = {
+                        navController.navigateWithPopUp(
+                            toRoute = Screen.LoginScreen.route,
+                            fromRoute = Screen.HomeScreen.route
+                        )
+                    },
                     onNavigateToChatScreen = {},
                 )
             } else {
@@ -41,7 +47,9 @@ fun NavigationGraph(mainViewModel: MainViewModel) {
         }
 
         // LoginScreen
-        composable(route = Screen.LoginScreen.route) {
+        composable(
+            route = Screen.LoginScreen.route,
+        ) {
             LoginScreen(
                 onNavigateToHomeScreen = {
                     navController.navigate(Screen.HomeScreen.route)
