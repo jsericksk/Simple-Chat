@@ -141,13 +141,17 @@ private fun RegisteredUsersListItem(
                     maxLines = 1,
                     fontSize = 18.sp,
                 )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    text = stringResource(
+                        id = R.string.user_registration_date,
+                        formatArgs = arrayOf(user.formattedRegistrationDate)
+                    ),
+                    color = MaterialTheme.colors.TextDefaultColor,
+                    maxLines = 1,
+                    fontSize = 14.sp
+                )
             }
-
-            Text(
-                text = user.formattedRegistrationDate,
-                color = MaterialTheme.colors.TextDefaultColor,
-                fontSize = 12.sp
-            )
         }
     }
 }

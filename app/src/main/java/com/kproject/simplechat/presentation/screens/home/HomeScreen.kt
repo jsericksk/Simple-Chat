@@ -253,17 +253,14 @@ private fun ProfileViewerDialog(
 
                         Spacer(Modifier.height(8.dp))
 
-                        Text(
-                            text = stringResource(id = R.string.registration_date),
-                            color = MaterialTheme.colors.TextDefaultColor,
-                            fontSize = 16.sp
-                        )
-
-                        Spacer(Modifier.height(4.dp))
-
-                        val registrationDate = uiState.user.registrationDate?.let {
-                            uiState.user.formattedRegistrationDate
-                        } ?: stringResource(id = R.string.unknown_registration_date)
+                        val registrationDate = if (uiState.user.registrationDate != null) {
+                            stringResource(
+                                id = R.string.user_registration_date,
+                                formatArgs = arrayOf(uiState.user.formattedRegistrationDate)
+                            )
+                        } else {
+                            stringResource(id = R.string.unknown_registration_date)
+                        }
 
                         Text(
                             text = registrationDate,

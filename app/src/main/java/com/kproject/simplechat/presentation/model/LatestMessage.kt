@@ -12,7 +12,7 @@ data class LatestMessage(
     var userProfilePicture: String = "",
     var timestamp: Date? = null
 ) {
-    val formattedDate = Utils.getFormattedDate(timestamp)
+    val formattedDate = Utils.getChatMessageFormattedDate(timestamp)
 }
 
 val fakeLatestMessagesList = (0..20).map { index ->

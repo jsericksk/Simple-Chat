@@ -1,5 +1,6 @@
 package com.kproject.simplechat.presentation.utils
 
+import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -11,14 +12,20 @@ object Utils {
      * sending a message and the date returned by Firebase, as the timestamp is marked as
      * @ServerTimestamp and will be recorded by the date of the Firebase server.
      */
-    fun getFormattedDate(date: Date?): String {
+    fun getChatMessageFormattedDate(date: Date?): String {
         val currentDate = date ?: Calendar.getInstance().time
         val currentLocalDay = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             .format(Calendar.getInstance().time)
         val currentTimestampDay = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             .format(currentDate)
         val dateFormat =
-                if (currentLocalDay == currentTimestampDay) "HH:mm" else "HH:mm (dd/MM/yyyy)"
+                if (currentLocalDay == currentTimestampDay) "HH:mm" else "HH:mm, dd MMM yyyy"
         return SimpleDateFormat(dateFormat, Locale.getDefault()).format(currentDate)
+    }
+
+    fun getUserRegistrationFormattedDate(date: Date?): String {
+        Log.d("TAG", "Ope meu patrão, chamou de novo")
+        val currentDate = date ?: Calendar.getInstance().time
+        return SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(currentDate)
     }
 }

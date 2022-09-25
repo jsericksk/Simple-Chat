@@ -44,7 +44,8 @@
     <string name="theme_system">System default</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
-    <string name="registration_date">Registered at:</string>
+    <string name="user_registration_date">Join date: %s</string>
+
     <string name="unknown_user">Unknown user</string>
     <string name="unknown_registration_date">Unknown registration date</string>
 

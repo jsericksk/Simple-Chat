@@ -9,7 +9,7 @@ data class User(
     var profilePicture: String = "",
     var registrationDate: Date? = null
 ) {
-    val formattedRegistrationDate = Utils.getFormattedDate(registrationDate)
+    val formattedRegistrationDate = Utils.getUserRegistrationFormattedDate(registrationDate)
 }
 
 val fakeRegisteredUsersList = (0..20).map { index ->
