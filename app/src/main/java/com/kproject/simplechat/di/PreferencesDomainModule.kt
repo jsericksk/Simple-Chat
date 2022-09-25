@@ -1,7 +1,9 @@
 package com.kproject.simplechat.di
 
 import com.kproject.simplechat.domain.repository.preferences.DataStoreRepository
-import com.kproject.simplechat.domain.usecase.preferences.*
+import com.kproject.simplechat.domain.usecase.preferences.GetPreferenceAsyncUseCase
+import com.kproject.simplechat.domain.usecase.preferences.GetPreferenceSyncUseCase
+import com.kproject.simplechat.domain.usecase.preferences.SavePreferenceUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,18 +17,18 @@ object PreferencesDomainModule {
     @Provides
     @Singleton
     fun provideGetPreferenceAsyncUseCase(dataStoreRepository: DataStoreRepository): GetPreferenceAsyncUseCase {
-        return GetPreferenceAsyncUseCaseImpl(dataStoreRepository)
+        return GetPreferenceAsyncUseCase(dataStoreRepository::getPreferenceAsync)
     }
 
     @Provides
     @Singleton
     fun provideGetPreferenceSyncUseCase(dataStoreRepository: DataStoreRepository): GetPreferenceSyncUseCase {
-        return GetPreferenceSyncUseCaseImpl(dataStoreRepository)
+        return GetPreferenceSyncUseCase(dataStoreRepository::getPreferenceSync)
     }
 
     @Provides
     @Singleton
     fun provideSavePreferenceUseCase(dataStoreRepository: DataStoreRepository): SavePreferenceUseCase {
-        return SavePreferenceUseCaseImpl(dataStoreRepository)
+        return SavePreferenceUseCase(dataStoreRepository::savePreference)
     }
 }

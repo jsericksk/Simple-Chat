@@ -1,12 +1,10 @@
 package com.kproject.simplechat.di
 
 import com.kproject.simplechat.domain.repository.firebase.AuthenticationRepository
-import com.kproject.simplechat.domain.usecase.authentication.login.LoginUseCase
-import com.kproject.simplechat.domain.usecase.authentication.login.LoginUseCaseImpl
-import com.kproject.simplechat.domain.usecase.authentication.signup.SignUpUseCase
-import com.kproject.simplechat.domain.usecase.authentication.signup.SignUpUseCaseImpl
-import com.kproject.simplechat.domain.usecase.authentication.validation.*
 import com.kproject.simplechat.domain.usecase.authentication.LogoutUseCase
+import com.kproject.simplechat.domain.usecase.authentication.login.LoginUseCase
+import com.kproject.simplechat.domain.usecase.authentication.signup.SignUpUseCase
+import com.kproject.simplechat.domain.usecase.authentication.validation.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -56,13 +54,13 @@ object AuthenticationDomainModule {
     @Provides
     @Singleton
     fun provideLoginUseCase(authenticationRepository: AuthenticationRepository): LoginUseCase {
-        return LoginUseCaseImpl(authenticationRepository)
+        return LoginUseCase(authenticationRepository::login)
     }
 
     @Provides
     @Singleton
     fun provideSignUpUseCase(authenticationRepository: AuthenticationRepository): SignUpUseCase {
-        return SignUpUseCaseImpl(authenticationRepository)
+        return SignUpUseCase(authenticationRepository::signUp)
     }
 
     @Provides
