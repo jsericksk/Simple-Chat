@@ -42,7 +42,6 @@ class HomeScreenViewModel @Inject constructor(
             val result = getCurrentUserUseCase()
             if (result is DataState.Success) {
                 result.data?.let { userModel ->
-                    Log.d(TAG, "User no ViewModel: $userModel")
                     uiState = uiState.copy(user = userModel.toUser())
                 }
             }

@@ -5,8 +5,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.auth.User
-import com.google.firebase.installations.Utils
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.data.mapper.toLatestMessageModel
 import com.kproject.simplechat.data.mapper.toUserModel
