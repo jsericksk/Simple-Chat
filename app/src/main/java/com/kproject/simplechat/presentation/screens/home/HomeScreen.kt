@@ -1,11 +1,12 @@
 package com.kproject.simplechat.presentation.screens.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -17,6 +18,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -24,11 +26,13 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.kproject.simplechat.R
 import com.kproject.simplechat.presentation.MainViewModel
+import com.kproject.simplechat.presentation.model.User
 import com.kproject.simplechat.presentation.screens.components.CustomImage
 import com.kproject.simplechat.presentation.screens.home.latestmessages.LatestMessagesScreen
 import com.kproject.simplechat.presentation.screens.home.registeredusers.RegisteredUsersScreen
 import com.kproject.simplechat.presentation.theme.CompletePreview
 import com.kproject.simplechat.presentation.theme.PreviewTheme
+import com.kproject.simplechat.presentation.theme.TextDefaultColor
 import kotlinx.coroutines.launch
 
 private const val PageChat = 0
@@ -49,8 +53,10 @@ fun HomeScreen(
         },
         onNavigateToChatScreen = {
 
+        },
+        onLogout = {
+            homeScreenViewModel.logout()
         }
-
     )
 }
 
@@ -61,6 +67,7 @@ private fun MainContent(
     uiState: HomeUiState,
     isDarkMode: Boolean,
     onChangeTheme: () -> Unit,
+    onLogout: () -> Unit,
     onNavigateToChatScreen: () -> Unit,
 ) {
     val pages = listOf(
@@ -74,9 +81,10 @@ private fun MainContent(
         modifier = modifier.fillMaxWidth()
     ) {
         TopBar(
-            userProfilePicture = uiState.userProfilePicture,
+            uiState = uiState,
             isDarkMode = isDarkMode,
-            onChangeTheme = onChangeTheme
+            onChangeTheme = onChangeTheme,
+            onLogout = onLogout
         )
 
         TabRow(
@@ -128,10 +136,13 @@ private fun MainContent(
 
 @Composable
 private fun TopBar(
-    userProfilePicture: String,
+    uiState: HomeUiState,
     isDarkMode: Boolean,
-    onChangeTheme: () -> Unit
+    onChangeTheme: () -> Unit,
+    onLogout: () -> Unit
 ) {
+    var showProfileViewerDialog by remember { mutableStateOf(false) }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -140,11 +151,14 @@ private fun TopBar(
             .padding(12.dp)
     ) {
         CustomImage(
-            imageModel = userProfilePicture.ifEmpty { R.drawable.ic_person },
+            imageModel = uiState.user.profilePicture.ifEmpty { R.drawable.ic_person },
+            colorFilter = if (uiState.user.profilePicture.isEmpty()) ColorFilter.tint(Color.White) else null,
             modifier = Modifier
                 .size(40.dp)
-                .clip(RoundedCornerShape(12.dp)),
-            colorFilter = if (userProfilePicture.isEmpty()) ColorFilter.tint(Color.White) else null
+                .clip(RoundedCornerShape(12.dp))
+                .clickable {
+                    showProfileViewerDialog = true
+                }
         )
         Spacer(Modifier.width(8.dp))
         Text(
@@ -166,17 +180,119 @@ private fun TopBar(
             )
         }
     }
+
+    ProfileViewerDialog(
+        showDialog = showProfileViewerDialog,
+        onDismiss = { showProfileViewerDialog = false },
+        uiState = uiState,
+        onLogout = onLogout
+    )
+}
+
+@Composable
+private fun ProfileViewerDialog(
+    showDialog: Boolean,
+    onDismiss: () -> Unit,
+    uiState: HomeUiState,
+    onLogout: () -> Unit
+) {
+    if (showDialog) {
+        Dialog(
+            onDismissRequest = { onDismiss.invoke() },
+            content = {
+                Column(
+                    modifier = Modifier
+                        .background(
+                            color = MaterialTheme.colors.background,
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .height(120.dp)
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colors.secondary),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CustomImage(
+                            imageModel = uiState.user.profilePicture.ifEmpty { R.drawable.ic_person },
+                            colorFilter = if (uiState.user.profilePicture.isEmpty())
+                                ColorFilter.tint(Color.White) else null,
+                            modifier = Modifier
+                                .size(120.dp)
+                                .padding(14.dp)
+                                .clip(CircleShape)
+                        )
+                    }
+
+                    Spacer(Modifier.height(4.dp))
+
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .padding(horizontal = 24.dp, vertical = 12.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Text(
+                            text = uiState.user.username.ifEmpty { stringResource(id = R.string.unknown_user) },
+                            color = MaterialTheme.colors.TextDefaultColor,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+
+                        Spacer(Modifier.height(8.dp))
+
+                        Text(
+                            text = stringResource(id = R.string.registration_date),
+                            color = MaterialTheme.colors.TextDefaultColor,
+                            fontSize = 16.sp
+                        )
+
+                        Spacer(Modifier.height(4.dp))
+
+                        val registrationDate = uiState.user.registrationDate?.let {
+                            uiState.user.formattedRegistrationDate
+                        } ?: stringResource(id = R.string.unknown_registration_date)
+
+                        Text(
+                            text = registrationDate,
+                            color = MaterialTheme.colors.TextDefaultColor,
+                            fontSize = 16.sp
+                        )
+
+                        Spacer(Modifier.height(24.dp))
+
+                        Button(
+                            onClick = onLogout,
+                            shape = CircleShape,
+                            contentPadding = PaddingValues(14.dp),
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.logout),
+                                fontSize = 16.sp,
+                                color = Color.White
+                            )
+                        }
+                    }
+                }
+            }
+        )
+    }
 }
 
 @CompletePreview
 @Composable
-private fun Preview() {
+private fun ProfileViewerDialogPreview() {
     PreviewTheme {
-        MainContent(
-            uiState = HomeUiState(),
-            isDarkMode = true,
-            onChangeTheme = {},
-            onNavigateToChatScreen = {}
+        val uiState = HomeUiState(
+            user = User(username = "Simple Chat")
+        )
+        ProfileViewerDialog(
+            showDialog = true,
+            onDismiss = {},
+            uiState = uiState,
+            onLogout = {}
         )
     }
 }

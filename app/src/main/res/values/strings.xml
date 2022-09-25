@@ -44,7 +44,11 @@
     <string name="theme_system">System default</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
+    <string name="registration_date">Registered at:</string>
+    <string name="unknown_user">Unknown user</string>
+    <string name="unknown_registration_date">Unknown registration date</string>
 
+    <string name="logout">Logout</string>
     <string name="dialog_title_confirm_logout">Confirm Logout</string>
     <string name="dialog_message_confirm_logout">Are you sure you want to logout?</string>
 
@@ -61,7 +65,6 @@
     <string name="info_description_message_empty_message_list">Be the first to start the conversation!</string>
 
     <string name="error_get_latest_messages_list">There was an error trying to fetch the latest messages.</string>
-
 
     <string name="message">Message</string>
 
