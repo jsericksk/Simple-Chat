@@ -12,6 +12,7 @@ import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.kproject.simplechat.presentation.navigation.NavigationGraph
+import com.kproject.simplechat.presentation.screens.chat.ChatScreen
 import com.kproject.simplechat.presentation.theme.SimpleChatTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,11 +30,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    NavigationGraph(mainViewModel = mainViewModel)
-                    /**HomeScreen(
-                    mainViewModel = mainViewModel,
-                    onNavigateToChatScreen = {}
-                    )*/
+                    // NavigationGraph(mainViewModel = mainViewModel)
+                    ChatScreen(
+                        onNavigateBack = {}
+                    )
                 }
             }
         }

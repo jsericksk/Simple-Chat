@@ -63,9 +63,12 @@
     <string name="info_description_empty_registered_user_list">No other users were found. New users
         will appear here.</string>
     <string name="info_title_empty_message_list">No chat found</string>
-    <string name="info_description_message_empty_message_list">Be the first to start the conversation!</string>
+    <string name="info_description_empty_message_list">Be the first to start the conversation!</string>
 
     <string name="error_get_latest_messages_list">There was an error trying to fetch the latest messages.</string>
+
+    <string name="error_get_chat_messages_list">There was an error trying to fetch the chat messages.</string>
+
 
     <string name="message">Message</string>
 
