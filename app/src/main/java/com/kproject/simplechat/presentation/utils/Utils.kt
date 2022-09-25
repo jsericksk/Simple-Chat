@@ -1,6 +1,5 @@
 package com.kproject.simplechat.presentation.utils
 
-import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -24,7 +23,6 @@ object Utils {
     }
 
     fun getUserRegistrationFormattedDate(date: Date?): String {
-        Log.d("TAG", "Ope meu patrão, chamou de novo")
         val currentDate = date ?: Calendar.getInstance().time
         return SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(currentDate)
     }

@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -27,7 +28,10 @@ fun NavigationGraph(mainViewModel: MainViewModel) {
             } else {
                 LoginScreen(
                     onNavigateToHomeScreen = {
-                        navController.navigate(Screen.HomeScreen.route)
+                        navController.navigateWithPopUp(
+                            toRoute = Screen.HomeScreen.route,
+                            fromRoute = Screen.LoginScreen.route
+                        )
                     },
                     onNavigateToSignUpScreen = {
                         navController.navigate(Screen.SignUpScreen.route)
@@ -66,7 +70,10 @@ fun NavigationGraph(mainViewModel: MainViewModel) {
         ) {
             SignUpScreen(
                 onNavigateToHomeScreen = {
-                    navController.navigate(Screen.HomeScreen.route)
+                    navController.navigateWithPopUp(
+                        toRoute = Screen.HomeScreen.route,
+                        fromRoute = Screen.SignUpScreen.route
+                    )
                 },
                 onNavigateBack = {
                     navController.popBackStack()
@@ -75,5 +82,14 @@ fun NavigationGraph(mainViewModel: MainViewModel) {
         }
 
 
+    }
+}
+
+private fun NavHostController.navigateWithPopUp(toRoute: String, fromRoute: String) {
+    navigate(toRoute) {
+        popUpTo(fromRoute) {
+            inclusive = true
+        }
+        launchSingleTop = true
     }
 }
