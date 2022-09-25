@@ -76,8 +76,11 @@ class UserRepositoryImpl(
                     }
 
                     for (document in it.documents) {
+                        val currentUserId = getCurrentUserId()
                         document.toObject(UserEntity::class.java)?.let { user ->
-                            userList.add(user)
+                            if (user.userId != currentUserId) {
+                                userList.add(user)
+                            }
                         }
                     }
 
