@@ -12,4 +12,6 @@ interface UserRepository {
     suspend fun getRegisteredUsers(): Flow<DataState<List<UserModel>>>
 
     suspend fun getCurrentUser(): DataState<UserModel>
+
+    fun getLoggedUserId(): String?
 }

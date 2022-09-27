@@ -29,10 +29,10 @@ class UserRepositoryImpl(
     override suspend fun getLatestMessages() = callbackFlow {
         var snapshotListener: ListenerRegistration? = null
         try {
-            getCurrentUserId()?.let { currentUserId ->
+            getLoggedUserId()?.let { loggedUserId ->
                 val docReference = firebaseFirestore
                     .collection(Constants.FirebaseCollectionLatestMessages)
-                    .document(currentUserId).collection(Constants.FirebaseCollectionMessages)
+                    .document(loggedUserId).collection(Constants.FirebaseCollectionMessages)
                     .orderBy("timestamp", Query.Direction.DESCENDING)
 
                 val latestMessageList = mutableListOf<LatestMessageEntity>()
@@ -76,9 +76,9 @@ class UserRepositoryImpl(
                     }
 
                     for (document in it.documents) {
-                        val currentUserId = getCurrentUserId()
+                        val loggedUserId = getLoggedUserId()
                         document.toObject(UserEntity::class.java)?.let { user ->
-                            if (user.userId != currentUserId) {
+                            if (user.userId != loggedUserId) {
                                 userList.add(user)
                             }
                         }
@@ -103,7 +103,7 @@ class UserRepositoryImpl(
 
     override suspend fun getCurrentUser(): DataState<UserModel> {
         return try {
-            getCurrentUserId()?.let { userId ->
+            getLoggedUserId()?.let { userId ->
                 val documentSnapshot = firebaseFirestore.collection(Constants.FirebaseCollectionUsers)
                     .document(userId).get().await()
                 documentSnapshot?.let { document ->
@@ -121,7 +121,7 @@ class UserRepositoryImpl(
         }
     }
 
-    fun getCurrentUserId(): String? {
+    override fun getLoggedUserId(): String? {
         return firebaseAuth.currentUser?.uid
     }
 }
