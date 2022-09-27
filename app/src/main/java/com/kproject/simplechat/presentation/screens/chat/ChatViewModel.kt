@@ -45,4 +45,8 @@ class ChatViewModel @Inject constructor(
     fun initializeUser(user: User) {
         uiState = uiState.copy(user = user)
     }
+
+    fun onMessageChange(message: String) {
+        uiState = uiState.copy(message = message)
+    }
 }

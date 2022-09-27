@@ -8,10 +8,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
@@ -21,7 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,9 +36,8 @@ import com.kproject.simplechat.presentation.model.fakeChatMessagesList
 import com.kproject.simplechat.presentation.screens.components.CustomImage
 import com.kproject.simplechat.presentation.screens.components.EmptyListInfo
 import com.kproject.simplechat.presentation.screens.components.LoadingIndicator
-import com.kproject.simplechat.presentation.theme.CompletePreview
-import com.kproject.simplechat.presentation.theme.PreviewTheme
-import com.kproject.simplechat.presentation.theme.TextDefaultColor
+import com.kproject.simplechat.presentation.theme.*
+import com.kproject.simplechat.presentation.utils.Utils
 
 @Composable
 fun ChatScreen(
@@ -55,6 +56,12 @@ fun ChatScreen(
         uiState = uiState,
         dataState = dataState,
         loggedUserId = "",
+        onMessageValueChange = { message ->
+            chatViewModel.onMessageChange(message)
+        },
+        onSendMessage = { message ->
+
+        },
         onNavigateBack = onNavigateBack
     )
 }
@@ -65,6 +72,8 @@ private fun MainContent(
     uiState: ChatUiState,
     dataState: DataState<Unit>,
     loggedUserId: String,
+    onMessageValueChange: (String) -> Unit,
+    onSendMessage: (String) -> Unit,
     onNavigateBack: () -> Unit
 ) {
     Column {
@@ -80,11 +89,25 @@ private fun MainContent(
                 )
             }
             is DataState.Success -> {
-                ChatList(
-                    chatMessagesList = uiState.chatMessageList,
-                    loggedUserId = loggedUserId,
-                    modifier = Modifier.padding(18.dp)
-                )
+                Column {
+                    ChatList(
+                        chatMessagesList = uiState.chatMessageList,
+                        loggedUserId = loggedUserId,
+                        modifier = Modifier
+                            .weight(1f)
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    ChatTextField(
+                        message = uiState.message,
+                        onMessageValueChange = { message ->
+                            onMessageValueChange.invoke(message)
+                        },
+                        onSendMessage = { message ->
+                            onSendMessage.invoke(message)
+                        },
+                        modifier = Modifier.padding(12.dp)
+                    )
+                }
             }
             is DataState.Error -> {
                 EmptyListInfo(
@@ -214,6 +237,71 @@ private fun ChatListItem(
     }
 }
 
+@Composable
+private fun ChatTextField(
+    modifier: Modifier = Modifier,
+    message: String,
+    onMessageValueChange: (String) -> Unit,
+    onSendMessage: (String) -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
+        TextField(
+            value = message,
+            onValueChange = { value ->
+                onMessageValueChange.invoke(value)
+            },
+            textStyle = TextStyle(
+                color = MaterialTheme.colors.TextDefaultColor,
+                fontSize = 18.sp
+            ),
+            placeholder = {
+                Text(
+                    text = stringResource(id = R.string.message),
+                    color = MaterialTheme.colors.secondary
+                )
+            },
+            maxLines = 4,
+            shape = CircleShape,
+            colors = TextFieldDefaults.textFieldColors(
+                cursorColor = MaterialTheme.colors.TextDefaultColor,
+                backgroundColor = MaterialTheme.colors.ChatTextFieldBackgroundColor,
+                leadingIconColor = Color.White,
+                trailingIconColor = Color.White,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                focusedLabelColor = MaterialTheme.colors.secondary,
+                unfocusedLabelColor = MaterialTheme.colors.onSecondary,
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        )
+
+        Spacer(Modifier.width(8.dp))
+
+        IconButton(
+            onClick = { onSendMessage.invoke(message) },
+            enabled = message.isNotBlank(),
+            modifier = Modifier.background(
+                color = MaterialTheme.colors.secondary,
+                shape = CircleShape
+            )
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_send),
+                contentDescription = null,
+                tint = Color.White
+            )
+        }
+    }
+}
+
 @CompletePreview
 @Composable
 private fun Preview() {
@@ -226,6 +314,8 @@ private fun Preview() {
             uiState = uiState,
             dataState = DataState.Success(),
             loggedUserId = "123",
+            onMessageValueChange = {},
+            onSendMessage = {},
             onNavigateBack = {}
         )
     }
