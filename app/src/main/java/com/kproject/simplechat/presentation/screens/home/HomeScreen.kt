@@ -26,6 +26,7 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.kproject.simplechat.R
 import com.kproject.simplechat.presentation.MainViewModel
+import com.kproject.simplechat.presentation.mapper.toJson
 import com.kproject.simplechat.presentation.model.User
 import com.kproject.simplechat.presentation.screens.components.AlertDialog
 import com.kproject.simplechat.presentation.screens.components.CustomImage
@@ -43,7 +44,7 @@ private const val PageUsers = 1
 fun HomeScreen(
     mainViewModel: MainViewModel,
     onNavigateToLoginScreen: () -> Unit,
-    onNavigateToChatScreen: () -> Unit,
+    onNavigateToChatScreen: (User) -> Unit,
 ) {
     val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
 
@@ -53,8 +54,8 @@ fun HomeScreen(
         onChangeTheme = {
             mainViewModel.changeTheme()
         },
-        onNavigateToChatScreen = {
-
+        onNavigateToChatScreen = { user ->
+            onNavigateToChatScreen.invoke(user)
         },
         onLogout = {
             homeScreenViewModel.logout()
@@ -71,7 +72,7 @@ private fun MainContent(
     isDarkMode: Boolean,
     onChangeTheme: () -> Unit,
     onLogout: () -> Unit,
-    onNavigateToChatScreen: () -> Unit,
+    onNavigateToChatScreen: (User) -> Unit,
 ) {
     val pages = listOf(
         stringResource(id = R.string.chat),
@@ -120,15 +121,15 @@ private fun MainContent(
             when (page) {
                 PageChat -> {
                     LatestMessagesScreen(
-                        onNavigateToChatScreen = {
-
+                        onNavigateToChatScreen = { user ->
+                            onNavigateToChatScreen.invoke(user)
                         }
                     )
                 }
                 PageUsers -> {
                     RegisteredUsersScreen(
-                        onNavigateToChatScreen = {
-
+                        onNavigateToChatScreen = { user ->
+                            onNavigateToChatScreen.invoke(user)
                         }
                     )
                 }

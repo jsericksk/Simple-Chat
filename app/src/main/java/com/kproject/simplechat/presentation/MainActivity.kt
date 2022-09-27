@@ -30,10 +30,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    // NavigationGraph(mainViewModel = mainViewModel)
-                    ChatScreen(
+                    NavigationGraph(mainViewModel = mainViewModel)
+                    /**ChatScreen(
                         onNavigateBack = {}
-                    )
+                    )*/
                 }
             }
         }

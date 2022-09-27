@@ -19,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.kproject.simplechat.R
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.presentation.model.LatestMessage
+import com.kproject.simplechat.presentation.model.User
 import com.kproject.simplechat.presentation.model.fakeLatestMessagesList
 import com.kproject.simplechat.presentation.screens.components.CustomImage
 import com.kproject.simplechat.presentation.screens.components.EmptyListInfo
@@ -29,7 +30,7 @@ import com.kproject.simplechat.presentation.theme.TextDefaultColor
 
 @Composable
 fun LatestMessagesScreen(
-    onNavigateToChatScreen: () -> Unit,
+    onNavigateToChatScreen: (user: User) -> Unit,
 ) {
     val latestMessagesViewModel: LatestMessagesViewModel = hiltViewModel()
     val uiState = latestMessagesViewModel.uiState
@@ -39,7 +40,13 @@ fun LatestMessagesScreen(
         uiState = uiState,
         dataState = dataState,
         onNavigateToChatScreen = { index ->
-
+            val message = uiState.latestMessages[index]
+            val user = User(
+                userId = message.chatId,
+                username = message.username,
+                profilePicture = message.userProfilePicture,
+            )
+            onNavigateToChatScreen.invoke(user)
         }
     )
 }

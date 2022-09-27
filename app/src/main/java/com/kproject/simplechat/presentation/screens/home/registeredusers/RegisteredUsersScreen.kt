@@ -29,7 +29,7 @@ import com.kproject.simplechat.presentation.theme.TextDefaultColor
 
 @Composable
 fun RegisteredUsersScreen(
-    onNavigateToChatScreen: () -> Unit,
+    onNavigateToChatScreen: (user: User) -> Unit,
 ) {
     val registeredUsersViewModel: RegisteredUsersViewModel = hiltViewModel()
     val uiState = registeredUsersViewModel.uiState
@@ -39,7 +39,8 @@ fun RegisteredUsersScreen(
         uiState = uiState,
         dataState = dataState,
         onNavigateToChatScreen = { index ->
-
+            val user = uiState.registeredUsers[index]
+            onNavigateToChatScreen.invoke(user)
         }
     )
 }
@@ -91,7 +92,7 @@ private fun RegisteredUsersList(
                 RegisteredUsersListItem(
                     user = user,
                     onClick = {
-                        onClick(index)
+                        onClick.invoke(index)
                     }
                 )
             }
@@ -112,7 +113,7 @@ private fun RegisteredUsersListItem(
 ) {
     Column(
         modifier = Modifier
-            .clickable { onClick() }
+            .clickable { onClick.invoke() }
             .padding(8.dp)
     ) {
         Row(

@@ -34,6 +34,7 @@ object Versions {
     const val LANDSCAPIST = "2.0.0"
 
     const val RETROFIT = "2.9.0"
+    const val GSON = "2.9.1"
 
     const val SPLASH_SCREEN = "1.0.0"
 }

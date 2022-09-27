@@ -95,6 +95,9 @@ dependencies {
     implementation(Dependencies.landscapist)
     implementation(Dependencies.landscapistPlaceholder)
 
+    // Gson
+    implementation(Dependencies.gson)
+
     // Splash Screen
     implementation(Dependencies.splashScreen)
 

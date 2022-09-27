@@ -7,16 +7,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,30 +26,30 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kproject.simplechat.R
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.presentation.model.ChatMessage
-import com.kproject.simplechat.presentation.screens.components.EmptyListInfo
-import com.kproject.simplechat.presentation.screens.components.LoadingIndicator
-import com.kproject.simplechat.presentation.theme.PreviewTheme
-import com.kproject.simplechat.presentation.theme.SimplePreview
-import com.kproject.simplechat.presentation.theme.TextDefaultColor
-import com.kproject.simplechat.presentation.utils.Utils
-import kotlinx.coroutines.launch
-import com.kproject.simplechat.R
 import com.kproject.simplechat.presentation.model.User
 import com.kproject.simplechat.presentation.model.fakeChatMessagesList
 import com.kproject.simplechat.presentation.screens.components.CustomImage
-import com.kproject.simplechat.presentation.screens.home.HomeUiState
+import com.kproject.simplechat.presentation.screens.components.EmptyListInfo
+import com.kproject.simplechat.presentation.screens.components.LoadingIndicator
 import com.kproject.simplechat.presentation.theme.CompletePreview
+import com.kproject.simplechat.presentation.theme.PreviewTheme
+import com.kproject.simplechat.presentation.theme.TextDefaultColor
 
 @Composable
 fun ChatScreen(
+    user: User,
     onNavigateBack: () -> Unit
 ) {
     val chatViewModel: ChatViewModel = hiltViewModel()
     val uiState: ChatUiState = chatViewModel.uiState
     val dataState = chatViewModel.dataState
 
+    LaunchedEffect(user) {
+        chatViewModel.initializeUser(user)
+    }
 
     MainContent(
         uiState = uiState,

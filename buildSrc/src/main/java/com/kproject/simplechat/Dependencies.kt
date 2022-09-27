@@ -63,6 +63,9 @@ object Dependencies {
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.RETROFIT}"
     const val retrofitConverterGson = "com.squareup.retrofit2:converter-gson:${Versions.RETROFIT}"
 
+    // Gson
+    const val gson = "com.google.code.gson:gson:${Versions.GSON}"
+
     const val splashScreen = "androidx.core:core-splashscreen:${Versions.SPLASH_SCREEN}"
 
     // Tests

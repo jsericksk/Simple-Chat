@@ -1,5 +1,7 @@
 package com.kproject.simplechat.presentation.model
 
+import android.net.Uri
+import com.google.gson.Gson
 import com.kproject.simplechat.presentation.utils.Utils
 import java.util.*
 

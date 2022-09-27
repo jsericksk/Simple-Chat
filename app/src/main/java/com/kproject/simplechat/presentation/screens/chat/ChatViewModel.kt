@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.presentation.model.ChatMessage
+import com.kproject.simplechat.presentation.model.User
 import com.kproject.simplechat.presentation.model.fakeChatMessagesList
 import com.kproject.simplechat.presentation.screens.authentication.login.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,5 +40,9 @@ class ChatViewModel @Inject constructor(
                 chatMessageList = fakeChatMessagesList
             )
         }
+    }
+
+    fun initializeUser(user: User) {
+        uiState = uiState.copy(user = user)
     }
 }
