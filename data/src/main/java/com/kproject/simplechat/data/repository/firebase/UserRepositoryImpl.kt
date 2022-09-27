@@ -68,7 +68,9 @@ class UserRepositoryImpl(
         var snapshotListener: ListenerRegistration? = null
         try {
             val userList = mutableListOf<UserEntity>()
-            val docReference = firebaseFirestore.collection(Constants.FirebaseCollectionUsers)
+            val docReference = firebaseFirestore
+                .collection(Constants.FirebaseCollectionUsers)
+                .orderBy("registrationDate", Query.Direction.DESCENDING)
             snapshotListener = docReference.addSnapshotListener { querySnapshot, e ->
                 querySnapshot?.let {
                     if (userList.isNotEmpty()) {
