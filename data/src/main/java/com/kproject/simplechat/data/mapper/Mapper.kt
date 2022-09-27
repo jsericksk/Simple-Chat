@@ -14,3 +14,6 @@ fun LatestMessageEntity.toLatestMessageModel() = LatestMessageModel(
 )
 
 fun ChatMessageEntity.toChatMessageModel() = ChatMessageModel(message, senderId, receiverId, sendDate)
+
+fun ChatMessageModel.toChatMessageEntity() = ChatMessageEntity(message, senderId, receiverId, sendDate)
+

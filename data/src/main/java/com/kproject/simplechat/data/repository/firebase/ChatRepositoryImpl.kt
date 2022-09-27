@@ -5,6 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.kproject.simplechat.commom.DataState
+import com.kproject.simplechat.data.mapper.toChatMessageEntity
 import com.kproject.simplechat.data.mapper.toChatMessageModel
 import com.kproject.simplechat.data.mapper.toUserModel
 import com.kproject.simplechat.data.model.ChatMessageEntity
@@ -16,6 +17,7 @@ import com.kproject.simplechat.domain.repository.firebase.ChatRepository
 import com.kproject.simplechat.domain.repository.firebase.UserRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
 
 private const val TAG = "ChatRepositoryImpl"
 
@@ -64,7 +66,19 @@ class ChatRepositoryImpl(
     }
 
     override suspend fun sendMessage(message: ChatMessageModel): DataState<Unit> {
-        TODO("Not yet implemented")
+        return try {
+            val chatRoomId = Utils.createChatRoomId(message.senderId, message.receiverId)
+            firebaseFirestore
+                .collection(Constants.FirebaseCollectionChatMessages)
+                .document(chatRoomId)
+                .collection(Constants.FirebaseCollectionMessages)
+                .add(message.toChatMessageEntity())
+                .await()
+            DataState.Success()
+        } catch (e: Exception) {
+            Log.d(TAG, "Error sendMessage(): ${e.message}")
+            DataState.Error()
+        }
     }
 
     override suspend fun saveLatestMessage(latestMessageModel: LatestMessageModel): DataState<Unit> {

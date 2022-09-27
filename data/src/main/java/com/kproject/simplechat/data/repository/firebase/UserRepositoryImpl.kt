@@ -34,7 +34,6 @@ class UserRepositoryImpl(
                     .collection(Constants.FirebaseCollectionLatestMessages)
                     .document(loggedUserId).collection(Constants.FirebaseCollectionMessages)
                     .orderBy("timestamp", Query.Direction.DESCENDING)
-
                 val latestMessageList = mutableListOf<LatestMessageEntity>()
                 snapshotListener = docReference.addSnapshotListener { querySnapshot, e ->
                     querySnapshot?.let {

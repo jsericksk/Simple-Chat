@@ -4,9 +4,11 @@ import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kproject.simplechat.data.repository.firebase.AuthenticationRepositoryImpl
+import com.kproject.simplechat.data.repository.firebase.ChatRepositoryImpl
 import com.kproject.simplechat.data.repository.firebase.UserRepositoryImpl
 import com.kproject.simplechat.data.repository.preferences.DataStoreRepositoryImpl
 import com.kproject.simplechat.domain.repository.firebase.AuthenticationRepository
+import com.kproject.simplechat.domain.repository.firebase.ChatRepository
 import com.kproject.simplechat.domain.repository.firebase.UserRepository
 import com.kproject.simplechat.domain.repository.preferences.DataStoreRepository
 import dagger.Module
@@ -56,5 +58,14 @@ object DataModule {
         dataStoreRepository: DataStoreRepository
     ): UserRepository {
         return UserRepositoryImpl(firebaseAuth, firebaseFirestore, dataStoreRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideChatRepository(
+        firebaseFirestore: FirebaseFirestore,
+        userRepository: UserRepository
+    ): ChatRepository {
+        return ChatRepositoryImpl(firebaseFirestore, userRepository)
     }
 }
