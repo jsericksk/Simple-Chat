@@ -6,11 +6,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kproject.simplechat.commom.DataState
-import com.kproject.simplechat.domain.usecase.authentication.LogoutUseCase
+import com.kproject.simplechat.domain.usecase.firebase.authentication.LogoutUseCase
 import com.kproject.simplechat.domain.usecase.preferences.GetPreferenceAsyncUseCase
 import com.kproject.simplechat.domain.usecase.preferences.GetPreferenceSyncUseCase
 import com.kproject.simplechat.domain.usecase.preferences.SavePreferenceUseCase
-import com.kproject.simplechat.domain.usecase.user.GetCurrentUserUseCase
+import com.kproject.simplechat.domain.usecase.firebase.user.GetCurrentUserUseCase
 import com.kproject.simplechat.presentation.mapper.toUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

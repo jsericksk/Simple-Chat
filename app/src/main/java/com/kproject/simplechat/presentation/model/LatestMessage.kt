@@ -4,13 +4,13 @@ import com.kproject.simplechat.presentation.utils.Utils
 import java.util.*
 
 data class LatestMessage(
-    var chatId: String = "",
-    var latestMessage: String = "",
-    var senderId: String = "",
-    var receiverId: String = "",
-    var username: String = "",
-    var userProfilePicture: String = "",
-    var timestamp: Date? = null
+    val chatId: String = "",
+    val latestMessage: String = "",
+    val senderId: String = "",
+    val receiverId: String = "",
+    val username: String = "",
+    val userProfilePicture: String = "",
+    val timestamp: Date? = null
 ) {
     val formattedDate = Utils.getChatMessageFormattedDate(timestamp)
 }

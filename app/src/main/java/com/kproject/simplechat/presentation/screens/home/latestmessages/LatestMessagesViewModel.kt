@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kproject.simplechat.commom.DataState
-import com.kproject.simplechat.domain.usecase.user.GetLatestMessagesUseCase
+import com.kproject.simplechat.domain.usecase.firebase.user.GetLatestMessagesUseCase
 import com.kproject.simplechat.presentation.mapper.toLatestMessage
 import com.kproject.simplechat.presentation.model.LatestMessage
 import dagger.hilt.android.lifecycle.HiltViewModel

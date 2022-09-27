@@ -4,10 +4,10 @@ import com.kproject.simplechat.presentation.utils.Utils
 import java.util.*
 
 data class ChatMessage(
-    var message: String = "",
-    var senderId: String = "",
-    var receiverId: String = "",
-    var sendDate: Date? = null
+    val message: String = "",
+    val senderId: String = "",
+    val receiverId: String = "",
+    val sendDate: Date? = null
 ) {
     val formattedDate = Utils.getChatMessageFormattedDate(sendDate)
 }

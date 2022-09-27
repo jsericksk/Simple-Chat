@@ -1,4 +1,4 @@
-package com.kproject.simplechat.domain.usecase.user
+package com.kproject.simplechat.domain.usecase.firebase.user
 
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.domain.model.firebase.UserModel

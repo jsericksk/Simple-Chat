@@ -1,9 +1,9 @@
 package com.kproject.simplechat.di
 
 import com.kproject.simplechat.domain.repository.firebase.UserRepository
-import com.kproject.simplechat.domain.usecase.user.GetCurrentUserUseCase
-import com.kproject.simplechat.domain.usecase.user.GetLatestMessagesUseCase
-import com.kproject.simplechat.domain.usecase.user.GetRegisteredUsersUseCase
+import com.kproject.simplechat.domain.usecase.firebase.user.GetCurrentUserUseCase
+import com.kproject.simplechat.domain.usecase.firebase.user.GetLatestMessagesUseCase
+import com.kproject.simplechat.domain.usecase.firebase.user.GetRegisteredUsersUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

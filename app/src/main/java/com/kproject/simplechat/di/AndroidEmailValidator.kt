@@ -1,7 +1,7 @@
 package com.kproject.simplechat.di
 
 import androidx.core.util.PatternsCompat
-import com.kproject.simplechat.domain.usecase.authentication.validation.EmailValidator
+import com.kproject.simplechat.domain.usecase.firebase.authentication.validation.EmailValidator
 
 class AndroidEmailValidator : EmailValidator {
 

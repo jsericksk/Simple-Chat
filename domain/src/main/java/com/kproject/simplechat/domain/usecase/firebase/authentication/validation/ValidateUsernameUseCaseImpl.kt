@@ -1,4 +1,4 @@
-package com.kproject.simplechat.domain.usecase.authentication.validation
+package com.kproject.simplechat.domain.usecase.firebase.authentication.validation
 
 import com.kproject.simplechat.commom.validation.ValidationState
 

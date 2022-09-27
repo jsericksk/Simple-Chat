@@ -1,4 +1,4 @@
-package com.kproject.simplechat.domain.usecase.authentication.login
+package com.kproject.simplechat.domain.usecase.firebase.authentication.login
 
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.domain.model.authentication.Login

@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.commom.validation.ValidationState
-import com.kproject.simplechat.domain.usecase.authentication.login.LoginUseCase
-import com.kproject.simplechat.domain.usecase.authentication.validation.ValidateEmailUseCase
-import com.kproject.simplechat.domain.usecase.authentication.validation.ValidatePasswordUseCase
+import com.kproject.simplechat.domain.usecase.firebase.authentication.login.LoginUseCase
+import com.kproject.simplechat.domain.usecase.firebase.authentication.validation.ValidateEmailUseCase
+import com.kproject.simplechat.domain.usecase.firebase.authentication.validation.ValidatePasswordUseCase
 import com.kproject.simplechat.presentation.mapper.toErrorMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

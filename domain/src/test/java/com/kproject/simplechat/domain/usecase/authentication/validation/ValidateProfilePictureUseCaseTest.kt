@@ -1,6 +1,8 @@
 package com.kproject.simplechat.domain.usecase.authentication.validation
 
 import com.kproject.simplechat.commom.validation.ValidationState
+import com.kproject.simplechat.domain.usecase.firebase.authentication.validation.ValidateProfilePictureUseCase
+import com.kproject.simplechat.domain.usecase.firebase.authentication.validation.ValidateProfilePictureUseCaseImpl
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
