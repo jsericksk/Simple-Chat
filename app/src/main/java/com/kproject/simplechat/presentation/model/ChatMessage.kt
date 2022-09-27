@@ -18,11 +18,12 @@ val fakeChatMessagesList = (0..20).map { index ->
     } else {
         "I'm fine and you? :)"
     }
+    val senderId = if (index % 2 == 0) "123456" else "123456789"
 
     ChatMessage(
         message = message,
-        senderId = "12345$index",
-        receiverId = "12345678$index"
+        senderId = senderId,
+        receiverId = "123456$index"
     )
 }
 

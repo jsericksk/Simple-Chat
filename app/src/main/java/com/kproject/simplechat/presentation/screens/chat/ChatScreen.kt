@@ -1,7 +1,6 @@
 package com.kproject.simplechat.presentation.screens.chat
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -19,8 +18,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
@@ -36,8 +33,10 @@ import com.kproject.simplechat.presentation.model.fakeChatMessagesList
 import com.kproject.simplechat.presentation.screens.components.CustomImage
 import com.kproject.simplechat.presentation.screens.components.EmptyListInfo
 import com.kproject.simplechat.presentation.screens.components.LoadingIndicator
-import com.kproject.simplechat.presentation.theme.*
-import com.kproject.simplechat.presentation.utils.Utils
+import com.kproject.simplechat.presentation.theme.ChatTextFieldBackgroundColor
+import com.kproject.simplechat.presentation.theme.CompletePreview
+import com.kproject.simplechat.presentation.theme.PreviewTheme
+import com.kproject.simplechat.presentation.theme.TextDefaultColor
 
 @Composable
 fun ChatScreen(
@@ -55,7 +54,7 @@ fun ChatScreen(
     MainContent(
         uiState = uiState,
         dataState = dataState,
-        loggedUserId = "",
+        loggedUserId = "123456",
         onMessageValueChange = { message ->
             chatViewModel.onMessageChange(message)
         },
@@ -96,7 +95,7 @@ private fun MainContent(
                         modifier = Modifier
                             .weight(1f)
                     )
-                    Spacer(Modifier.height(12.dp))
+                    Spacer(Modifier.height(8.dp))
                     ChatTextField(
                         message = uiState.message,
                         onMessageValueChange = { message ->
@@ -131,7 +130,7 @@ private fun TopBar(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.primary)
-            .padding(12.dp)
+            .padding(10.dp)
     ) {
         IconButton(onClick = onNavigateBack) {
             Icon(
@@ -145,11 +144,8 @@ private fun TopBar(
             imageModel = uiState.user.profilePicture.ifEmpty { R.drawable.ic_person },
             colorFilter = if (uiState.user.profilePicture.isEmpty()) ColorFilter.tint(Color.White) else null,
             modifier = Modifier
-                .size(40.dp)
+                .size(45.dp)
                 .clip(CircleShape)
-                .clickable {
-
-                }
         )
         Spacer(Modifier.width(8.dp))
         Text(
@@ -207,11 +203,21 @@ private fun ChatListItem(
     chatMessage: ChatMessage,
     loggedUserId: String
 ) {
-    val messageReceived = loggedUserId == chatMessage.senderId
+    val messageReceived = loggedUserId != chatMessage.senderId
     val backgroundColor = if (messageReceived) Color.DarkGray else MaterialTheme.colors.secondary
     val alignment = if (messageReceived) Alignment.Start else Alignment.End
+    val shape = if (messageReceived) {
+        RoundedCornerShape(topStart = 16.dp, topEnd = 8.dp, bottomStart = 8.dp, bottomEnd = 8.dp)
+    } else {
+        RoundedCornerShape(topStart = 8.dp, topEnd = 16.dp, bottomStart = 8.dp, bottomEnd = 8.dp)
+    }
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(
+        modifier =
+        modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp, horizontal = 12.dp)
+    ) {
         Text(
             text = chatMessage.message,
             color = Color.White,
@@ -219,10 +225,10 @@ private fun ChatListItem(
             modifier = Modifier
                 .background(
                     color = backgroundColor,
-                    shape = RoundedCornerShape(8.dp)
+                    shape = shape
                 )
-                .padding(8.dp)
                 .align(alignment)
+                .padding(8.dp)
         )
 
         Text(
@@ -313,7 +319,7 @@ private fun Preview() {
         MainContent(
             uiState = uiState,
             dataState = DataState.Success(),
-            loggedUserId = "123",
+            loggedUserId = "123456",
             onMessageValueChange = {},
             onSendMessage = {},
             onNavigateBack = {}

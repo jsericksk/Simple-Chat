@@ -29,12 +29,11 @@ class ChatViewModel @Inject constructor(
     init {
         getMessages()
 
-        // val ak = savedStateHandle.get<String>("kkfkf")
     }
 
     private fun getMessages() {
         viewModelScope.launch {
-            delay(2000)
+            delay(700)
             dataState = DataState.Success()
             uiState = uiState.copy(
                 chatMessageList = fakeChatMessagesList
