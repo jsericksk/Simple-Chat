@@ -16,10 +16,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val TAG = "HomeScreenViewModel"
+private const val TAG = "HomeViewModel"
 
 @HiltViewModel
-class HomeScreenViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val getPreferenceAsyncUseCase: GetPreferenceAsyncUseCase,
     private val getPreferenceSyncUseCase: GetPreferenceSyncUseCase,

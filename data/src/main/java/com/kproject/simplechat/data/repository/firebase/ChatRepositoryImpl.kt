@@ -7,7 +7,6 @@ import com.google.firebase.firestore.Query
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.data.mapper.toChatMessageEntity
 import com.kproject.simplechat.data.mapper.toChatMessageModel
-import com.kproject.simplechat.data.mapper.toUserModel
 import com.kproject.simplechat.data.model.ChatMessageEntity
 import com.kproject.simplechat.data.utils.Constants
 import com.kproject.simplechat.data.utils.Utils
@@ -35,7 +34,7 @@ class ChatRepositoryImpl(
                 val docReference = firebaseFirestore
                     .collection(Constants.FirebaseCollectionChatMessages)
                     .document(chatRoomId).collection(Constants.FirebaseCollectionMessages)
-                    .orderBy("timestamp", Query.Direction.ASCENDING)
+                    .orderBy("sendDate", Query.Direction.ASCENDING)
                 snapshotListener = docReference.addSnapshotListener { querySnapshot, e ->
                     querySnapshot?.let {
                         // Avoid submitting a duplicate list
@@ -58,7 +57,7 @@ class ChatRepositoryImpl(
                 }
             }
         } catch (e: Exception) {
-            Log.d(TAG, "Error getMessages(): ${e.message}")
+            Log.e(TAG, "Error getMessages(): ${e.message}")
             trySend(DataState.Error())
         }
 
@@ -76,7 +75,7 @@ class ChatRepositoryImpl(
                 .await()
             DataState.Success()
         } catch (e: Exception) {
-            Log.d(TAG, "Error sendMessage(): ${e.message}")
+            Log.e(TAG, "Error sendMessage(): ${e.message}")
             DataState.Error()
         }
     }

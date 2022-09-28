@@ -2,11 +2,11 @@ package com.kproject.simplechat.data.utils
 
 object Utils {
 
-    fun createChatRoomId(senderId: String, receiverId: String): String {
-        return if (senderId.compareTo(receiverId) <= -1) {
-            receiverId + senderId
+    fun createChatRoomId(userId1: String, userId2: String): String {
+        return if (userId1.compareTo(userId2) <= -1) {
+            userId2 + userId1
         } else {
-            senderId + receiverId
+            userId1 + userId2
         }
     }
 }

@@ -67,7 +67,7 @@ class AuthenticationRepositoryImpl(
 
             DataState.Success()
         } catch (e: FirebaseAuthException) {
-            Log.d(TAG, "SignUp error: ${e.errorCode}")
+            Log.e(TAG, "SignUp error: ${e.errorCode}")
             when (e.errorCode) {
                 Constants.ErrorEmailAlreadyInUse -> {
                     DataState.Error(AuthenticationException.EmailInUseException)
@@ -77,6 +77,7 @@ class AuthenticationRepositoryImpl(
                 }
             }
         } catch (e: Exception) {
+            Log.e(TAG, "SignUp error: ${e.message}")
             DataState.Error(AuthenticationException.UnknownSignUpException)
         }
     }
@@ -89,7 +90,7 @@ class AuthenticationRepositoryImpl(
                 .putFile(imageUri).await().storage.downloadUrl.await().toString()
             profilePictureUrl
         } catch (e: Exception) {
-            Log.d(TAG, "saveProfileImageInStorage() error: ${e.message}")
+            Log.e(TAG, "saveProfileImageInStorage() error: ${e.message}")
             ""
         }
     }

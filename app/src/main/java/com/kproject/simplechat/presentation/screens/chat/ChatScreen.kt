@@ -41,6 +41,7 @@ import com.kproject.simplechat.presentation.theme.TextDefaultColor
 @Composable
 fun ChatScreen(
     user: User,
+    loggedUserId: String,
     onNavigateBack: () -> Unit
 ) {
     val chatViewModel: ChatViewModel = hiltViewModel()
@@ -49,17 +50,23 @@ fun ChatScreen(
 
     LaunchedEffect(user) {
         chatViewModel.initializeUser(user)
+        chatViewModel.getMessages(fromUserId = user.userId)
     }
 
     MainContent(
         uiState = uiState,
         dataState = dataState,
-        loggedUserId = "123456",
+        loggedUserId = loggedUserId,
         onMessageValueChange = { message ->
             chatViewModel.onMessageChange(message)
         },
         onSendMessage = { message ->
-
+            val chatMessage = ChatMessage(
+                message = message,
+                senderId = loggedUserId,
+                receiverId = user.userId
+            )
+            chatViewModel.sendMessage(chatMessage)
         },
         onNavigateBack = onNavigateBack
     )

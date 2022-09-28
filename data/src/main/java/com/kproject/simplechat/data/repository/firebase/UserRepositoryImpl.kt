@@ -57,7 +57,7 @@ class UserRepositoryImpl(
                 }
             }
         } catch (e: Exception) {
-            Log.d(TAG, "Error: getLatestMessages(): ${e.message}")
+            Log.e(TAG, "Error: getLatestMessages(): ${e.message}")
             trySend(DataState.Error())
         }
         awaitClose { snapshotListener?.remove() }
@@ -65,6 +65,7 @@ class UserRepositoryImpl(
 
     override suspend fun getRegisteredUsers() = callbackFlow {
         var snapshotListener: ListenerRegistration? = null
+        val loggedUserId = getLoggedUserId()
         try {
             val userList = mutableListOf<UserEntity>()
             val docReference = firebaseFirestore
@@ -77,7 +78,6 @@ class UserRepositoryImpl(
                     }
 
                     for (document in it.documents) {
-                        val loggedUserId = getLoggedUserId()
                         document.toObject(UserEntity::class.java)?.let { user ->
                             if (user.userId != loggedUserId) {
                                 userList.add(user)
@@ -93,7 +93,7 @@ class UserRepositoryImpl(
                 }
             }
         } catch (e: Exception) {
-            Log.d(TAG, "Error getRegisteredUserList(): ${e.message}")
+            Log.e(TAG, "Error getRegisteredUserList(): ${e.message}")
             trySend(DataState.Error())
         }
 
@@ -117,7 +117,7 @@ class UserRepositoryImpl(
 
             return DataState.Error()
         } catch (e: Exception) {
-            Log.d(TAG, "Error getCurrentUser: ${e.message}")
+            Log.e(TAG, "Error getCurrentUser: ${e.message}")
             DataState.Error()
         }
     }

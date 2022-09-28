@@ -1,5 +1,6 @@
 package com.kproject.simplechat.presentation.screens.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -26,7 +27,6 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.kproject.simplechat.R
 import com.kproject.simplechat.presentation.MainViewModel
-import com.kproject.simplechat.presentation.mapper.toJson
 import com.kproject.simplechat.presentation.model.User
 import com.kproject.simplechat.presentation.screens.components.AlertDialog
 import com.kproject.simplechat.presentation.screens.components.CustomImage
@@ -44,21 +44,23 @@ private const val PageUsers = 1
 fun HomeScreen(
     mainViewModel: MainViewModel,
     onNavigateToLoginScreen: () -> Unit,
-    onNavigateToChatScreen: (User) -> Unit,
+    onNavigateToChatScreen: (User, String) -> Unit,
 ) {
-    val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
+    val homeViewModel: HomeViewModel = hiltViewModel()
+    val uiState = homeViewModel.uiState
 
     MainContent(
         isDarkMode = mainViewModel.isDarkMode,
-        uiState = homeScreenViewModel.uiState,
+        uiState = uiState,
         onChangeTheme = {
             mainViewModel.changeTheme()
         },
         onNavigateToChatScreen = { user ->
-            onNavigateToChatScreen.invoke(user)
+            val loggedUserId = uiState.user.userId
+            onNavigateToChatScreen.invoke(user, loggedUserId)
         },
         onLogout = {
-            homeScreenViewModel.logout()
+            homeViewModel.logout()
             onNavigateToLoginScreen.invoke()
         }
     )

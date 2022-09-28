@@ -6,7 +6,7 @@ object Constants {
     const val ErrorEmailAlreadyInUse = "ERROR_EMAIL_ALREADY_IN_USE"
 
     const val FirebaseCollectionUsers = "users"
-    const val FirebaseCollectionChatMessages = "chat_messages"
     const val FirebaseCollectionLatestMessages = "latest_messages"
+    const val FirebaseCollectionChatMessages = "chat_messages"
     const val FirebaseCollectionMessages = "messages"
 }

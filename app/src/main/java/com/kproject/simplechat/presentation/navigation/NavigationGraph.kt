@@ -20,6 +20,7 @@ import com.kproject.simplechat.presentation.screens.chat.ChatScreen
 import com.kproject.simplechat.presentation.screens.home.HomeScreen
 
 private const val ArgUser = "user"
+private const val ArgLoggedUserId = "loggedUserId"
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -37,9 +38,9 @@ fun NavigationGraph(mainViewModel: MainViewModel) {
                             fromRoute = Screen.HomeScreen.route
                         )
                     },
-                    onNavigateToChatScreen = { user ->
+                    onNavigateToChatScreen = { user, loggedUserId ->
                         val userJson = user.toJson()
-                        navController.navigate(Screen.ChatScreen.route + "/$userJson")
+                        navController.navigate(Screen.ChatScreen.route + "/$userJson/$loggedUserId")
                     },
                 )
             } else {
@@ -102,7 +103,7 @@ fun NavigationGraph(mainViewModel: MainViewModel) {
 
         // ChatScreen
         composable(
-            route = Screen.ChatScreen.route  + "/{$ArgUser}",
+            route = Screen.ChatScreen.route  + "/{$ArgUser}/{$ArgLoggedUserId}",
             arguments = listOf(
                 navArgument(name = ArgUser) {
                     type = NavType.StringType
@@ -121,15 +122,15 @@ fun NavigationGraph(mainViewModel: MainViewModel) {
                 )
             }
         ) { navBackStackEntry ->
-            navBackStackEntry.arguments?.getString(ArgUser)?.let { userJson ->
-                val user = userJson.fromJson(User::class.java)
-                ChatScreen(
-                    user = user,
-                    onNavigateBack = {
-                        navController.popBackStack()
-                    }
-                )
-            }
+            val userJson = navBackStackEntry.arguments?.getString(ArgUser)!!
+            val loggedUserId = navBackStackEntry.arguments?.getString(ArgLoggedUserId)!!
+            ChatScreen(
+                user = userJson.fromJson(User::class.java),
+                loggedUserId = loggedUserId,
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }
