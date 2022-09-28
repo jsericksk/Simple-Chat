@@ -53,8 +53,8 @@ class ChatViewModel @Inject constructor(
     fun sendMessage(chatMessage: ChatMessage) {
         viewModelScope.launch {
             val message = chatMessage.toChatMessageModel()
-            sendMessageUseCase(message)
             uiState = uiState.copy(message = "")
+            sendMessageUseCase(message)
         }
     }
 
