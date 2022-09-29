@@ -16,7 +16,8 @@ data class SignUpUiState(
     val repeatedPasswordError: UiText = UiText.HardcodedString(""),
     val isLoading: Boolean = false,
     val signUpError: Boolean = false,
-    val signUpErrorMessage: UiText = UiText.HardcodedString("")
+    val signUpErrorMessage: UiText = UiText.HardcodedString(""),
+    val validateFieldsWhenTyping: Boolean = false
 )
 
 fun SignUpUiState.toSignUpModel() = SignUp(profilePicture, username, email, password)

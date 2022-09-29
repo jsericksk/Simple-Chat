@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.commom.validation.ValidationState
 import com.kproject.simplechat.domain.usecase.firebase.authentication.signup.SignUpUseCase
-import com.kproject.simplechat.domain.usecase.authentication.validation.*
 import com.kproject.simplechat.domain.usecase.firebase.authentication.validation.*
 import com.kproject.simplechat.presentation.mapper.toErrorMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,18 +33,23 @@ class SignUpViewModel @Inject constructor(
         when (event) {
             is SignUpEvent.ProfilePictureChanged -> {
                 uiState = uiState.copy(profilePicture = event.profilePicture)
+                validateFieldsWhenTyping()
             }
             is SignUpEvent.EmailChanged -> {
                 uiState = uiState.copy(email = event.email)
+                validateFieldsWhenTyping()
             }
             is SignUpEvent.UsernameChanged -> {
                 uiState = uiState.copy(username = event.username)
+                validateFieldsWhenTyping()
             }
             is SignUpEvent.PasswordChanged -> {
                 uiState = uiState.copy(password = event.password)
+                validateFieldsWhenTyping()
             }
             is SignUpEvent.RepeatedPasswordChanged -> {
                 uiState = uiState.copy(repeatedPassword = event.repeatedPassword)
+                validateFieldsWhenTyping()
             }
             is SignUpEvent.OnDismissErrorDialog -> {
                 uiState = uiState.copy(signUpError = false)
@@ -54,7 +58,9 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun signUp() {
-        if (!hasValidationError()) {
+        if (hasValidationError()) {
+            uiState = uiState.copy(validateFieldsWhenTyping = true)
+        } else {
             uiState = uiState.copy(isLoading = true)
             viewModelScope.launch {
                 val signUpResult = signUpUseCase(uiState.toSignUpModel())
@@ -89,10 +95,12 @@ class SignUpViewModel @Inject constructor(
         uiState = uiState.copy(emailError = emailValidationState.toErrorMessage())
         val passwordValidationState = validatePasswordUseCase(uiState.password)
         uiState = uiState.copy(passwordError = passwordValidationState.toErrorMessage())
-        val repeatedPasswordValidationState =
-                validateRepeatedPasswordUseCase(uiState.password, uiState.repeatedPassword)
-        uiState = uiState.copy(repeatedPasswordError = repeatedPasswordValidationState.toErrorMessage())
-
+        val repeatedPasswordValidationState = validateRepeatedPasswordUseCase(
+            uiState.password, uiState.repeatedPassword
+        )
+        uiState = uiState.copy(
+            repeatedPasswordError = repeatedPasswordValidationState.toErrorMessage()
+        )
 
         val hasError = listOf(
             profilePictureValidationState,
@@ -105,5 +113,11 @@ class SignUpViewModel @Inject constructor(
         }
 
         return hasError
+    }
+
+    private fun validateFieldsWhenTyping() {
+        if (uiState.validateFieldsWhenTyping) {
+            hasValidationError()
+        }
     }
 }
