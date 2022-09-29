@@ -23,6 +23,7 @@ import com.kproject.simplechat.presentation.model.fakeRegisteredUsersList
 import com.kproject.simplechat.presentation.screens.components.CustomImage
 import com.kproject.simplechat.presentation.screens.components.EmptyListInfo
 import com.kproject.simplechat.presentation.screens.components.LoadingIndicator
+import com.kproject.simplechat.presentation.theme.CompletePreview
 import com.kproject.simplechat.presentation.theme.PreviewTheme
 import com.kproject.simplechat.presentation.theme.SimplePreview
 import com.kproject.simplechat.presentation.theme.TextDefaultColor
@@ -157,7 +158,7 @@ private fun RegisteredUsersListItem(
     }
 }
 
-@SimplePreview
+@CompletePreview
 @Composable
 private fun Preview() {
     PreviewTheme {

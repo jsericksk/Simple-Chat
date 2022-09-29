@@ -24,12 +24,14 @@ import com.kproject.simplechat.presentation.model.fakeLatestMessagesList
 import com.kproject.simplechat.presentation.screens.components.CustomImage
 import com.kproject.simplechat.presentation.screens.components.EmptyListInfo
 import com.kproject.simplechat.presentation.screens.components.LoadingIndicator
+import com.kproject.simplechat.presentation.theme.CompletePreview
 import com.kproject.simplechat.presentation.theme.PreviewTheme
 import com.kproject.simplechat.presentation.theme.SimplePreview
 import com.kproject.simplechat.presentation.theme.TextDefaultColor
 
 @Composable
 fun LatestMessagesScreen(
+    loggedUserId: String,
     onNavigateToChatScreen: (user: User) -> Unit,
 ) {
     val latestMessagesViewModel: LatestMessagesViewModel = hiltViewModel()
@@ -39,6 +41,7 @@ fun LatestMessagesScreen(
     MainContent(
         uiState = uiState,
         dataState = dataState,
+        loggedUserId = loggedUserId,
         onNavigateToChatScreen = { index ->
             val message = uiState.latestMessages[index]
             val user = User(
@@ -56,6 +59,7 @@ private fun MainContent(
     modifier: Modifier = Modifier,
     uiState: LatestMessagesUiState,
     dataState: DataState<List<LatestMessage>>,
+    loggedUserId: String,
     onNavigateToChatScreen: (index: Int) -> Unit
 ) {
     when (dataState) {
@@ -67,6 +71,7 @@ private fun MainContent(
         is DataState.Success -> {
             LatestMessagesList(
                 latestMessageList = uiState.latestMessages,
+                loggedUserId = loggedUserId,
                 onClick = { index ->
                     onNavigateToChatScreen.invoke(index)
                 },
@@ -88,6 +93,7 @@ private fun MainContent(
 private fun LatestMessagesList(
     modifier: Modifier = Modifier,
     latestMessageList: List<LatestMessage>,
+    loggedUserId: String,
     onClick: (index: Int) -> Unit
 ) {
     if (latestMessageList.isNotEmpty()) {
@@ -97,6 +103,7 @@ private fun LatestMessagesList(
             itemsIndexed(latestMessageList) { index, latestMessage ->
                 LatestMessagesListItem(
                     latestMessage = latestMessage,
+                    loggedUserId = loggedUserId,
                     onClick = {
                         onClick(index)
                     }
@@ -115,6 +122,7 @@ private fun LatestMessagesList(
 @Composable
 private fun LatestMessagesListItem(
     latestMessage: LatestMessage,
+    loggedUserId: String,
     onClick: () -> Unit
 ) {
     Column(
@@ -150,9 +158,14 @@ private fun LatestMessagesListItem(
                     fontSize = 18.sp,
                 )
                 Spacer(Modifier.height(4.dp))
+                val messageTextColor = if (latestMessage.senderId != loggedUserId) {
+                    MaterialTheme.colors.primary
+                } else {
+                    MaterialTheme.colors.TextDefaultColor
+                }
                 Text(
                     text = latestMessage.latestMessage,
-                    color = MaterialTheme.colors.TextDefaultColor,
+                    color = messageTextColor,
                     maxLines = 1,
                     fontSize = 16.sp
                 )
@@ -167,7 +180,7 @@ private fun LatestMessagesListItem(
     }
 }
 
-@SimplePreview
+@CompletePreview
 @Composable
 private fun Preview() {
     PreviewTheme {
@@ -177,6 +190,7 @@ private fun Preview() {
         MainContent(
             uiState = uiState,
             dataState = DataState.Success(),
+            loggedUserId = "",
             onNavigateToChatScreen = {}
         )
     }
