@@ -123,7 +123,6 @@ private fun MainContent(
             when (page) {
                 PageChat -> {
                     LatestMessagesScreen(
-                        loggedUserId = uiState.user.userId,
                         onNavigateToChatScreen = { user ->
                             onNavigateToChatScreen.invoke(user)
                         }

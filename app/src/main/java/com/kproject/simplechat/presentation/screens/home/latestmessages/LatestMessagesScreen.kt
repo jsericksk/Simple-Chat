@@ -31,7 +31,6 @@ import com.kproject.simplechat.presentation.theme.TextDefaultColor
 
 @Composable
 fun LatestMessagesScreen(
-    loggedUserId: String,
     onNavigateToChatScreen: (user: User) -> Unit,
 ) {
     val latestMessagesViewModel: LatestMessagesViewModel = hiltViewModel()
@@ -41,7 +40,7 @@ fun LatestMessagesScreen(
     MainContent(
         uiState = uiState,
         dataState = dataState,
-        loggedUserId = loggedUserId,
+        loggedUserId = uiState.loggedUserId,
         onNavigateToChatScreen = { index ->
             val message = uiState.latestMessages[index]
             val user = User(
