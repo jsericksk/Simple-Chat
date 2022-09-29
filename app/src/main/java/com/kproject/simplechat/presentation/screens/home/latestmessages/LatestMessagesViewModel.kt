@@ -31,6 +31,7 @@ class LatestMessagesViewModel @Inject constructor(
 
     private fun getLatestMessages() {
         viewModelScope.launch {
+            dataState = DataState.Loading
             getLatestMessagesUseCase().collect { result ->
                 when (result) {
                     is DataState.Success -> {

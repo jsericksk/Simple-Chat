@@ -31,6 +31,7 @@ class RegisteredUsersViewModel @Inject constructor(
 
     private fun getRegisteredUsers() {
         viewModelScope.launch {
+            dataState = DataState.Loading
             getRegisteredUsersUseCase().collect { result ->
                 when (result) {
                     is DataState.Success -> {
