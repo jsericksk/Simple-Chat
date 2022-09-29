@@ -31,9 +31,11 @@ class LoginViewModel @Inject constructor(
         when (event) {
             is LoginEvent.EmailChanged -> {
                 uiState = uiState.copy(email = event.email)
+                validateFieldsWhenTyping()
             }
             is LoginEvent.PasswordChanged -> {
                 uiState = uiState.copy(password = event.password)
+                validateFieldsWhenTyping()
             }
             is LoginEvent.OnDismissErrorDialog -> {
                 uiState = uiState.copy(loginError = false)
@@ -42,7 +44,9 @@ class LoginViewModel @Inject constructor(
     }
 
     fun login() {
-        if (!hasValidationError()) {
+        if (hasValidationError()) {
+            uiState = uiState.copy(validateFieldsWhenTyping = true)
+        } else {
             uiState = uiState.copy(isLoading = true)
             viewModelScope.launch {
                 val loginResult = loginUseCase(uiState.toLoginModel())
@@ -82,5 +86,11 @@ class LoginViewModel @Inject constructor(
         }
 
         return hasError
+    }
+
+    private fun validateFieldsWhenTyping() {
+        if (uiState.validateFieldsWhenTyping) {
+            hasValidationError()
+        }
     }
 }
