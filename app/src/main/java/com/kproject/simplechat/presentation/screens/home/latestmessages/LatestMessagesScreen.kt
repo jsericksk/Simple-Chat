@@ -128,7 +128,7 @@ private fun LatestMessagesListItem(
                 .fillMaxWidth()
         ) {
             CustomImage(
-                imageModel = latestMessage,
+                imageModel = latestMessage.userProfilePicture,
                 modifier = Modifier
                     .size(60.dp)
                     .clip(CircleShape)

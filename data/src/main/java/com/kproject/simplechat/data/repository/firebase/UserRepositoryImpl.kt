@@ -42,8 +42,7 @@ class UserRepositoryImpl(
                         }
 
                         for (document in it.documents) {
-                            document.toObject(LatestMessageEntity::class.java)
-                                ?.let { latestMessage ->
+                            document.toObject(LatestMessageEntity::class.java)?.let { latestMessage ->
                                     latestMessageList.add(latestMessage)
                                 }
                         }

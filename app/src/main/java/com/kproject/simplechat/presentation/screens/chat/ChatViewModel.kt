@@ -7,10 +7,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kproject.simplechat.commom.DataState
+import com.kproject.simplechat.domain.model.firebase.ChatMessageModel
+import com.kproject.simplechat.domain.model.firebase.UserModel
 import com.kproject.simplechat.domain.usecase.firebase.chat.GetMessagesUseCase
+import com.kproject.simplechat.domain.usecase.firebase.chat.SaveLatestMessageUseCase
 import com.kproject.simplechat.domain.usecase.firebase.chat.SendMessageUseCase
 import com.kproject.simplechat.presentation.mapper.toChatMessage
 import com.kproject.simplechat.presentation.mapper.toChatMessageModel
+import com.kproject.simplechat.presentation.mapper.toUserModel
 import com.kproject.simplechat.presentation.model.ChatMessage
 import com.kproject.simplechat.presentation.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,13 +24,18 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatViewModel @Inject constructor(
     private val getMessagesUseCase: GetMessagesUseCase,
-    private val sendMessageUseCase: SendMessageUseCase
+    private val sendMessageUseCase: SendMessageUseCase,
+    private val saveLatestMessageUseCase: SaveLatestMessageUseCase
 ) : ViewModel() {
     var uiState by mutableStateOf(ChatUiState())
         private set
 
     var dataState: DataState<Unit> by mutableStateOf(DataState.Loading)
         private set
+
+    fun initializeUser(user: User) {
+        uiState = uiState.copy(user = user)
+    }
 
     fun getMessages(fromUserId: String) {
         viewModelScope.launch {
@@ -50,16 +59,20 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    fun sendMessage(chatMessage: ChatMessage) {
+    fun sendMessage(user: User, chatMessage: ChatMessage) {
         viewModelScope.launch {
-            val message = chatMessage.toChatMessageModel()
+            val userModel = user.toUserModel()
+            val chatMessageModel = chatMessage.toChatMessageModel()
             uiState = uiState.copy(message = "")
-            sendMessageUseCase(message)
+            sendMessageUseCase(chatMessageModel)
+            saveLatestMessage(userModel, chatMessageModel)
         }
     }
 
-    fun initializeUser(user: User) {
-        uiState = uiState.copy(user = user)
+    private fun saveLatestMessage(userModel: UserModel, chatMessageModel: ChatMessageModel) {
+        viewModelScope.launch {
+            saveLatestMessageUseCase(userModel, chatMessageModel)
+        }
     }
 
     fun onMessageChange(message: String) {

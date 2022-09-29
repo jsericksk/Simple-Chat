@@ -66,7 +66,7 @@ fun ChatScreen(
                 senderId = loggedUserId,
                 receiverId = user.userId
             )
-            chatViewModel.sendMessage(chatMessage)
+            chatViewModel.sendMessage(user = uiState.user, chatMessage = chatMessage)
         },
         onNavigateBack = onNavigateBack
     )

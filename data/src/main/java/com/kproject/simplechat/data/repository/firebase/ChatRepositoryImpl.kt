@@ -8,10 +8,11 @@ import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.data.mapper.toChatMessageEntity
 import com.kproject.simplechat.data.mapper.toChatMessageModel
 import com.kproject.simplechat.data.model.ChatMessageEntity
+import com.kproject.simplechat.data.model.LatestMessageEntity
 import com.kproject.simplechat.data.utils.Constants
 import com.kproject.simplechat.data.utils.Utils
 import com.kproject.simplechat.domain.model.firebase.ChatMessageModel
-import com.kproject.simplechat.domain.model.firebase.LatestMessageModel
+import com.kproject.simplechat.domain.model.firebase.UserModel
 import com.kproject.simplechat.domain.repository.firebase.ChatRepository
 import com.kproject.simplechat.domain.repository.firebase.UserRepository
 import kotlinx.coroutines.channels.awaitClose
@@ -80,7 +81,65 @@ class ChatRepositoryImpl(
         }
     }
 
-    override suspend fun saveLatestMessage(latestMessageModel: LatestMessageModel): DataState<Unit> {
-        TODO("Not yet implemented")
+    override suspend fun saveLatestMessage(
+        user: UserModel,
+        chatMessage: ChatMessageModel
+    ): DataState<Unit> {
+        val result = userRepository.getCurrentUser()
+        if (result is DataState.Success) {
+            result.data?.let { currentUser ->
+                val currentLoggedUserId = currentUser.userId
+                val secondUserId = chatMessage.receiverId
+
+                val lastMessageOfCurrentUser = LatestMessageEntity(
+                    chatId = secondUserId,
+                    latestMessage = chatMessage.message,
+                    senderId = chatMessage.senderId,
+                    receiverId = chatMessage.receiverId,
+                    username = user.username,
+                    userProfilePicture = user.profilePicture
+                )
+
+                val lastMessageOfSecondUser = LatestMessageEntity(
+                    chatId = currentLoggedUserId,
+                    latestMessage = chatMessage.message,
+                    senderId = chatMessage.senderId,
+                    receiverId = chatMessage.receiverId,
+                    username = currentUser.username,
+                    userProfilePicture = currentUser.profilePicture
+                )
+
+                /**
+                 * Save both the last message in each document which is
+                 * represented by the user id.
+                 */
+                saveLatestMessageInFirestore(
+                    message = lastMessageOfCurrentUser,
+                    userId = currentLoggedUserId,
+                    chatId = secondUserId
+                )
+
+                saveLatestMessageInFirestore(
+                    message = lastMessageOfSecondUser,
+                    userId = secondUserId,
+                    chatId = currentLoggedUserId
+                )
+            }
+        }
+        return DataState.Error()
     }
-}
+
+    private suspend fun saveLatestMessageInFirestore(
+        message: LatestMessageEntity,
+        userId: String,
+        chatId: String
+    ) {
+        firebaseFirestore
+            .collection(Constants.FirebaseCollectionLatestMessages)
+            .document(userId)
+            .collection(Constants.FirebaseCollectionMessages)
+            .document(chatId)
+            .set(message)
+            .await()
+    }
+ }
