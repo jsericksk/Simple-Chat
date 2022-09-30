@@ -3,15 +3,16 @@ package com.kproject.simplechat.data.di
 import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.ktx.messaging
 import com.kproject.simplechat.data.repository.firebase.AuthenticationRepositoryImpl
 import com.kproject.simplechat.data.repository.firebase.ChatRepositoryImpl
+import com.kproject.simplechat.data.repository.firebase.PushNotificationRepositoryImpl
 import com.kproject.simplechat.data.repository.firebase.UserRepositoryImpl
+import com.kproject.simplechat.data.repository.firebase.network.PushNotificationApiService
 import com.kproject.simplechat.data.repository.preferences.DataStoreRepositoryImpl
+import com.kproject.simplechat.data.utils.Constants
 import com.kproject.simplechat.domain.repository.firebase.AuthenticationRepository
 import com.kproject.simplechat.domain.repository.firebase.ChatRepository
+import com.kproject.simplechat.domain.repository.firebase.PushNotificationRepository
 import com.kproject.simplechat.domain.repository.firebase.UserRepository
 import com.kproject.simplechat.domain.repository.preferences.DataStoreRepository
 import dagger.Module
@@ -19,6 +20,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -70,5 +73,24 @@ object DataModule {
         userRepository: UserRepository
     ): ChatRepository {
         return ChatRepositoryImpl(firebaseFirestore, userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun providePushNotificationApiService(): PushNotificationApiService {
+        val retrofit = Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(Constants.FCMBaseUrl)
+            .build()
+        return retrofit.create(PushNotificationApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePushNotificationRepository(
+        pushNotificationApiService: PushNotificationApiService,
+        dataStoreRepository: DataStoreRepository
+    ): PushNotificationRepository {
+        return PushNotificationRepositoryImpl(pushNotificationApiService, dataStoreRepository)
     }
 }

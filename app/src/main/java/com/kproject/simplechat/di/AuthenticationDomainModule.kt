@@ -4,7 +4,6 @@ import com.kproject.simplechat.domain.repository.firebase.AuthenticationReposito
 import com.kproject.simplechat.domain.usecase.firebase.authentication.LogoutUseCase
 import com.kproject.simplechat.domain.usecase.firebase.authentication.login.LoginUseCase
 import com.kproject.simplechat.domain.usecase.firebase.authentication.signup.SignUpUseCase
-import com.kproject.simplechat.domain.usecase.authentication.validation.*
 import com.kproject.simplechat.domain.usecase.firebase.authentication.validation.*
 import dagger.Module
 import dagger.Provides

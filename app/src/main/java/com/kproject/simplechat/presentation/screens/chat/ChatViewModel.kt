@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.domain.model.firebase.ChatMessageModel
+import com.kproject.simplechat.domain.model.firebase.ChatMessageNotificationModel
 import com.kproject.simplechat.domain.model.firebase.UserModel
 import com.kproject.simplechat.domain.usecase.firebase.chat.GetMessagesUseCase
+import com.kproject.simplechat.domain.usecase.firebase.chat.PostNotificationUseCase
 import com.kproject.simplechat.domain.usecase.firebase.chat.SaveLatestMessageUseCase
 import com.kproject.simplechat.domain.usecase.firebase.chat.SendMessageUseCase
 import com.kproject.simplechat.presentation.mapper.toChatMessage
@@ -23,7 +25,8 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(
     private val getMessagesUseCase: GetMessagesUseCase,
     private val sendMessageUseCase: SendMessageUseCase,
-    private val saveLatestMessageUseCase: SaveLatestMessageUseCase
+    private val saveLatestMessageUseCase: SaveLatestMessageUseCase,
+    private val postNotificationUseCase: PostNotificationUseCase
 ) : ViewModel() {
     var uiState by mutableStateOf(ChatUiState())
         private set
@@ -64,12 +67,29 @@ class ChatViewModel @Inject constructor(
             uiState = uiState.copy(message = "")
             sendMessageUseCase(chatMessageModel)
             saveLatestMessage(userModel, chatMessageModel)
+            postNotification(user = user, message = chatMessage.message)
         }
     }
 
     private fun saveLatestMessage(userModel: UserModel, chatMessageModel: ChatMessageModel) {
         viewModelScope.launch {
             saveLatestMessageUseCase(userModel, chatMessageModel)
+        }
+    }
+
+    private fun postNotification(user: User, message: String) {
+        viewModelScope.launch {
+            val chatMessageNotificationModel = ChatMessageNotificationModel(
+                title = user.username,
+                message = message,
+                fromUserId = user.userId,
+                fromUsername = user.username,
+                userProfilePicture = user.profilePicture
+            )
+            postNotificationUseCase(
+                userId = user.userId,
+                chatMessageNotificationModel = chatMessageNotificationModel
+            )
         }
     }
 
