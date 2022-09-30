@@ -1,6 +1,5 @@
 package com.kproject.simplechat.presentation.screens.chat
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,8 +12,7 @@ import com.kproject.simplechat.domain.usecase.firebase.chat.GetMessagesUseCase
 import com.kproject.simplechat.domain.usecase.firebase.chat.SaveLatestMessageUseCase
 import com.kproject.simplechat.domain.usecase.firebase.chat.SendMessageUseCase
 import com.kproject.simplechat.presentation.mapper.toChatMessage
-import com.kproject.simplechat.presentation.mapper.toChatMessageModel
-import com.kproject.simplechat.presentation.mapper.toUserModel
+import com.kproject.simplechat.presentation.mapper.toModel
 import com.kproject.simplechat.presentation.model.ChatMessage
 import com.kproject.simplechat.presentation.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -61,8 +59,8 @@ class ChatViewModel @Inject constructor(
 
     fun sendMessage(user: User, chatMessage: ChatMessage) {
         viewModelScope.launch {
-            val userModel = user.toUserModel()
-            val chatMessageModel = chatMessage.toChatMessageModel()
+            val userModel = user.toModel()
+            val chatMessageModel = chatMessage.toModel()
             uiState = uiState.copy(message = "")
             sendMessageUseCase(chatMessageModel)
             saveLatestMessage(userModel, chatMessageModel)

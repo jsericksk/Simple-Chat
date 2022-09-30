@@ -5,7 +5,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.commom.constants.PrefsConstants
-import com.kproject.simplechat.data.mapper.toChatMessageNotificationEntity
+import com.kproject.simplechat.data.mapper.toEntity
 import com.kproject.simplechat.data.repository.firebase.network.PushNotificationApiService
 import com.kproject.simplechat.data.repository.firebase.network.model.PushNotification
 import com.kproject.simplechat.domain.model.firebase.ChatMessageNotificationModel
@@ -54,7 +54,7 @@ class PushNotificationRepositoryImpl(
     ): DataState<Unit> {
         return try {
             val notification = PushNotification(
-                data = chatMessageNotificationModel.toChatMessageNotificationEntity(),
+                data = chatMessageNotificationModel.toEntity(),
                 to = userId
             )
             pushNotificationApiService.postNotification(notification)

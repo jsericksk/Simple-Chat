@@ -9,7 +9,7 @@ import com.kproject.simplechat.presentation.model.User
 
 fun UserModel.toUser() = User(userId, username, profilePicture, registrationDate)
 
-fun User.toUserModel() = UserModel(userId, username, profilePicture, registrationDate)
+fun User.toModel() = UserModel(userId, username, profilePicture, registrationDate)
 
 fun LatestMessageModel.toLatestMessage() = LatestMessage(
     chatId, latestMessage, senderId, receiverId, username, userProfilePicture, timestamp
@@ -17,4 +17,4 @@ fun LatestMessageModel.toLatestMessage() = LatestMessage(
 
 fun ChatMessageModel.toChatMessage() = ChatMessage(message, senderId, receiverId, sendDate)
 
-fun ChatMessage.toChatMessageModel() = ChatMessageModel(message, senderId, receiverId, sendDate)
+fun ChatMessage.toModel() = ChatMessageModel(message, senderId, receiverId, sendDate)

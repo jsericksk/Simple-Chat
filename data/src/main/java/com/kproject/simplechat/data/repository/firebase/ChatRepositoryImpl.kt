@@ -5,8 +5,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.kproject.simplechat.commom.DataState
-import com.kproject.simplechat.data.mapper.toChatMessageEntity
-import com.kproject.simplechat.data.mapper.toChatMessageModel
+import com.kproject.simplechat.data.mapper.toEntity
+import com.kproject.simplechat.data.mapper.toModel
 import com.kproject.simplechat.data.model.ChatMessageEntity
 import com.kproject.simplechat.data.model.LatestMessageEntity
 import com.kproject.simplechat.data.utils.Constants
@@ -50,7 +50,7 @@ class ChatRepositoryImpl(
                         }
 
                         val messages = messageList.map { chatMessageEntity ->
-                            chatMessageEntity.toChatMessageModel()
+                            chatMessageEntity.toModel()
                         }
 
                         trySend(DataState.Success(data = messages))
@@ -72,7 +72,7 @@ class ChatRepositoryImpl(
                 .collection(Constants.FirebaseCollectionChatMessages)
                 .document(chatRoomId)
                 .collection(Constants.FirebaseCollectionMessages)
-                .add(message.toChatMessageEntity())
+                .add(message.toEntity())
                 .await()
             DataState.Success()
         } catch (e: Exception) {

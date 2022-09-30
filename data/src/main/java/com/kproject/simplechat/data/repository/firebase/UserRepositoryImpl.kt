@@ -6,8 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.kproject.simplechat.commom.DataState
-import com.kproject.simplechat.data.mapper.toLatestMessageModel
-import com.kproject.simplechat.data.mapper.toUserModel
+import com.kproject.simplechat.data.mapper.toModel
 import com.kproject.simplechat.data.model.LatestMessageEntity
 import com.kproject.simplechat.data.model.UserEntity
 import com.kproject.simplechat.data.utils.Constants
@@ -48,7 +47,7 @@ class UserRepositoryImpl(
                         }
 
                         val latestMessages = latestMessageList.map { latestMessageEntity ->
-                            latestMessageEntity.toLatestMessageModel()
+                            latestMessageEntity.toModel()
                         }
 
                         trySend(DataState.Success(data = latestMessages))
@@ -85,7 +84,7 @@ class UserRepositoryImpl(
                     }
 
                     val registeredUsers = userList.map { userEntity ->
-                        userEntity.toUserModel()
+                        userEntity.toModel()
                     }
 
                     trySend(DataState.Success(data = registeredUsers))
@@ -109,7 +108,7 @@ class UserRepositoryImpl(
                 documentSnapshot?.let { document ->
                     val user = document.toObject(UserEntity::class.java)
                     user?.let { userEntity ->
-                        return DataState.Success(userEntity.toUserModel())
+                        return DataState.Success(userEntity.toModel())
                     }
                 }
             }
