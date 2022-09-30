@@ -3,6 +3,9 @@ package com.kproject.simplechat.data.di
 import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.ktx.messaging
 import com.kproject.simplechat.data.repository.firebase.AuthenticationRepositoryImpl
 import com.kproject.simplechat.data.repository.firebase.ChatRepositoryImpl
 import com.kproject.simplechat.data.repository.firebase.UserRepositoryImpl
