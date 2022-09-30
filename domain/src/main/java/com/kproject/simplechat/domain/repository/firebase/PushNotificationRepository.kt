@@ -9,5 +9,8 @@ interface PushNotificationRepository {
 
     suspend fun unsubscribeFromTopic(userId: String): DataState<Unit>
 
-    suspend fun postNotification(chatMessageNotificationModel: ChatMessageNotificationModel): DataState<Unit>
+    suspend fun postNotification(
+        userId: String,
+        chatMessageNotificationModel: ChatMessageNotificationModel
+    ): DataState<Unit>
 }

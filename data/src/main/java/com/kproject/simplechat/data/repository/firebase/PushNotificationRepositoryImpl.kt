@@ -5,17 +5,18 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.commom.constants.PrefsConstants
+import com.kproject.simplechat.data.mapper.toChatMessageNotificationEntity
+import com.kproject.simplechat.data.repository.firebase.network.PushNotificationApiService
+import com.kproject.simplechat.data.repository.firebase.network.model.PushNotification
 import com.kproject.simplechat.domain.model.firebase.ChatMessageNotificationModel
 import com.kproject.simplechat.domain.repository.firebase.PushNotificationRepository
 import com.kproject.simplechat.domain.repository.preferences.DataStoreRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 private const val TAG = "PushNotificationRepositoryImpl"
 
 class PushNotificationRepositoryImpl(
+    private val pushNotificationApiService: PushNotificationApiService,
     private val dataStoreRepository: DataStoreRepository
 ) : PushNotificationRepository {
 
@@ -33,7 +34,6 @@ class PushNotificationRepositoryImpl(
         }
     }
 
-
     override suspend fun unsubscribeFromTopic(userId: String): DataState<Unit> {
         return try {
             Firebase.messaging.unsubscribeFromTopic("/topics/$userId").await()
@@ -48,7 +48,20 @@ class PushNotificationRepositoryImpl(
         }
     }
 
-    override suspend fun postNotification(chatMessageNotificationModel: ChatMessageNotificationModel): DataState<Unit> {
-        TODO("Not yet implemented")
+    override suspend fun postNotification(
+        userId: String,
+        chatMessageNotificationModel: ChatMessageNotificationModel
+    ): DataState<Unit> {
+        return try {
+            val notification = PushNotification(
+                data = chatMessageNotificationModel.toChatMessageNotificationEntity(),
+                to = userId
+            )
+            pushNotificationApiService.postNotification(notification)
+            DataState.Success()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error postNotification(): ${e.message}")
+            DataState.Error()
+        }
     }
 }
