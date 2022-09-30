@@ -1,6 +1,6 @@
-package com.kproject.simplechat.data.repository.firebase.network.model
+package com.kproject.simplechat.data.model
 
-data class ChatMessageNotification(
+data class ChatMessageNotificationEntity(
     val title: String,
     val message: String,
     val fromUserId: String,
