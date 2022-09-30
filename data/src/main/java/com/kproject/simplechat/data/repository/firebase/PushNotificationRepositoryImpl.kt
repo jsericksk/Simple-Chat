@@ -22,12 +22,10 @@ class PushNotificationRepositoryImpl(
     override suspend fun subscribeToTopic(userId: String): DataState<Unit> {
         return try {
             Firebase.messaging.subscribeToTopic("/topics/$userId").await()
-            CoroutineScope(Dispatchers.IO).launch {
-                dataStoreRepository.savePreference(
-                    key = PrefsConstants.IsSubscribedToReceiveNotifications,
-                    value = true
-                )
-            }
+            dataStoreRepository.savePreference(
+                key = PrefsConstants.IsSubscribedToReceiveNotifications,
+                value = true
+            )
             DataState.Success()
         } catch (e: Exception) {
             Log.e(TAG, "Error subscribeToTopic(): ${e.message}")
@@ -39,12 +37,10 @@ class PushNotificationRepositoryImpl(
     override suspend fun unsubscribeFromTopic(userId: String): DataState<Unit> {
         return try {
             Firebase.messaging.unsubscribeFromTopic("/topics/$userId").await()
-            CoroutineScope(Dispatchers.IO).launch {
-                dataStoreRepository.savePreference(
-                    key = PrefsConstants.IsSubscribedToReceiveNotifications,
-                    value = false
-                )
-            }
+            dataStoreRepository.savePreference(
+                key = PrefsConstants.IsSubscribedToReceiveNotifications,
+                value = false
+            )
             DataState.Success()
         } catch (e: Exception) {
             Log.e(TAG, "Error unsubscribeFromTopic(): ${e.message}")
