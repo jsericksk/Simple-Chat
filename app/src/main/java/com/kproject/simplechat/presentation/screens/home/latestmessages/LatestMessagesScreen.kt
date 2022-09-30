@@ -158,7 +158,7 @@ private fun LatestMessagesListItem(
                 )
                 Spacer(Modifier.height(4.dp))
                 val messageTextColor = if (latestMessage.senderId != loggedUserId) {
-                    MaterialTheme.colors.primary
+                    MaterialTheme.colors.secondary
                 } else {
                     MaterialTheme.colors.TextDefaultColor
                 }

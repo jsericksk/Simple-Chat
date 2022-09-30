@@ -9,4 +9,6 @@ object Constants {
     const val FirebaseCollectionLatestMessages = "latest_messages"
     const val FirebaseCollectionChatMessages = "chat_messages"
     const val FirebaseCollectionMessages = "messages"
+
+    const val FCMBaseUrl = "https://fcm.googleapis.com"
 }
