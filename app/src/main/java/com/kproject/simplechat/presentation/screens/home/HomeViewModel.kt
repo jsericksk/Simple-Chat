@@ -9,7 +9,6 @@ import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.domain.usecase.firebase.authentication.LogoutUseCase
 import com.kproject.simplechat.domain.usecase.firebase.user.GetCurrentUserUseCase
 import com.kproject.simplechat.domain.usecase.firebase.user.GetLoggedUserIdUseCase
-import com.kproject.simplechat.domain.usecase.firebase.user.SubscribeToTopicUseCase
 import com.kproject.simplechat.domain.usecase.preferences.GetPreferenceAsyncUseCase
 import com.kproject.simplechat.domain.usecase.preferences.GetPreferenceSyncUseCase
 import com.kproject.simplechat.domain.usecase.preferences.SavePreferenceUseCase
@@ -27,17 +26,13 @@ class HomeViewModel @Inject constructor(
     private val getPreferenceAsyncUseCase: GetPreferenceAsyncUseCase,
     private val getPreferenceSyncUseCase: GetPreferenceSyncUseCase,
     private val savePreferenceUseCase: SavePreferenceUseCase,
-    private val logoutUseCase: LogoutUseCase,
-    private val subscribeToTopicUseCase: SubscribeToTopicUseCase,
+    private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
     var uiState by mutableStateOf(HomeUiState())
         private set
 
     init {
         getCurrentUser()
-        getLoggedUserIdUseCase()?.let { loggedUserId ->
-            subscribeToTopic(loggedUserId)
-        }
     }
 
     private fun getCurrentUser() {
@@ -48,12 +43,6 @@ class HomeViewModel @Inject constructor(
                     uiState = uiState.copy(user = userModel.toUser())
                 }
             }
-        }
-    }
-
-    private fun subscribeToTopic(userId: String) {
-        viewModelScope.launch {
-           subscribeToTopicUseCase(userId)
         }
     }
 

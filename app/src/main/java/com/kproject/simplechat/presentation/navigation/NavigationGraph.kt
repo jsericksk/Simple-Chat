@@ -64,7 +64,10 @@ fun NavigationGraph(mainViewModel: MainViewModel) {
         ) {
             LoginScreen(
                 onNavigateToHomeScreen = {
-                    navController.navigate(Screen.HomeScreen.route)
+                    navController.navigateWithPopUp(
+                        toRoute = Screen.HomeScreen.route,
+                        fromRoute = Screen.LoginScreen.route
+                    )
                 },
                 onNavigateToSignUpScreen = {
                     navController.navigate(Screen.SignUpScreen.route)

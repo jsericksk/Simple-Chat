@@ -1,9 +1,7 @@
 package com.kproject.simplechat.di
 
 import com.kproject.simplechat.domain.repository.firebase.ChatRepository
-import com.kproject.simplechat.domain.repository.firebase.PushNotificationRepository
 import com.kproject.simplechat.domain.usecase.firebase.chat.GetMessagesUseCase
-import com.kproject.simplechat.domain.usecase.firebase.chat.PostNotificationUseCase
 import com.kproject.simplechat.domain.usecase.firebase.chat.SaveLatestMessageUseCase
 import com.kproject.simplechat.domain.usecase.firebase.chat.SendMessageUseCase
 import dagger.Module
@@ -32,11 +30,5 @@ object ChatDomainModule {
     @Singleton
     fun provideSaveLatestMessageUseCase(chatRepository: ChatRepository): SaveLatestMessageUseCase {
         return SaveLatestMessageUseCase(chatRepository::saveLatestMessage)
-    }
-
-    @Provides
-    @Singleton
-    fun providePostNotificationUseCase(pushNotificationRepository: PushNotificationRepository): PostNotificationUseCase {
-        return PostNotificationUseCase(pushNotificationRepository::postNotification)
     }
 }

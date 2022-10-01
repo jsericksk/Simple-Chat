@@ -52,6 +52,8 @@
     <string name="logout">Logout</string>
     <string name="dialog_title_confirm_logout">Confirm Logout</string>
     <string name="dialog_message_confirm_logout">Are you sure you want to logout?</string>
+    <string name="logout_error">There was an error trying to log out of your account. Please
+        check your internet connection.</string>
 
     <string name="error_logout">There was an error trying to log out.</string>
     <string name="error_get_user_list">There was an error trying to get the user list.</string>

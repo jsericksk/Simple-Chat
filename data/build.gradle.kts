@@ -61,7 +61,6 @@ dependencies {
     implementation(Dependencies.Firebase.auth)
     implementation(Dependencies.Firebase.firestore)
     implementation(Dependencies.Firebase.storage)
-    implementation(Dependencies.Firebase.messaging)
 
     // Retrofit
     implementation(Dependencies.retrofit)
