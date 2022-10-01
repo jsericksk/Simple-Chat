@@ -33,6 +33,7 @@ object Dependencies {
         const val firestore = "com.google.firebase:firebase-firestore-ktx"
         const val storage = "com.google.firebase:firebase-storage-ktx"
         const val messaging = "com.google.firebase:firebase-messaging-ktx"
+        const val analytics = "com.google.firebase:firebase-analytics"
     }
 
     const val googleServices = "com.google.gms:google-services:${Versions.GOOGLE_SERVICES}"

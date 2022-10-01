@@ -29,7 +29,6 @@ class PushNotificationRepositoryImpl(
             )
             DataState.Success()
         } catch (e: Exception) {
-            Log.e(TAG, "Error subscribeToTopic(): ${e.message}")
             DataState.Error()
         }
     }
@@ -55,7 +54,7 @@ class PushNotificationRepositoryImpl(
         return try {
             val notification = PushNotification(
                 data = chatMessageNotificationModel.toEntity(),
-                to = userId
+                to = "/topics/$userId"
             )
             pushNotificationApiService.postNotification(notification)
             DataState.Success()

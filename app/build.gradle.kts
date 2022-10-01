@@ -94,6 +94,11 @@ dependencies {
     // Landscapist
     implementation(Dependencies.landscapist)
     implementation(Dependencies.landscapistPlaceholder)
+    
+    // Firebase Cloud Messaging
+    implementation(platform(Dependencies.Firebase.firebaseBom))
+    implementation(Dependencies.Firebase.messaging)
+    implementation(Dependencies.Firebase.analytics)
 
     // Gson
     implementation(Dependencies.gson)

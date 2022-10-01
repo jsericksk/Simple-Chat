@@ -12,10 +12,8 @@ interface PushNotificationApiService {
 
     @Headers(
         "Authorization: key=${FCMServerKey.ServerKey}",
-        "Content-Type:application/json"
+        "Content-Type: application/json"
     )
     @POST("fcm/send")
-    suspend fun postNotification(
-        @Body notification: PushNotification
-    ): Response<ResponseBody>
+    suspend fun postNotification(@Body notification: PushNotification): Response<ResponseBody>
 }

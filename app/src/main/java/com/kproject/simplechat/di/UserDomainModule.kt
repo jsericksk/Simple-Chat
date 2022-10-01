@@ -1,10 +1,8 @@
 package com.kproject.simplechat.di
 
+import com.kproject.simplechat.domain.repository.firebase.PushNotificationRepository
 import com.kproject.simplechat.domain.repository.firebase.UserRepository
-import com.kproject.simplechat.domain.usecase.firebase.user.GetCurrentUserUseCase
-import com.kproject.simplechat.domain.usecase.firebase.user.GetLatestMessagesUseCase
-import com.kproject.simplechat.domain.usecase.firebase.user.GetLoggedUserIdUseCase
-import com.kproject.simplechat.domain.usecase.firebase.user.GetRegisteredUsersUseCase
+import com.kproject.simplechat.domain.usecase.firebase.user.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,5 +35,17 @@ object UserDomainModule {
     @Singleton
     fun provideGetLoggedUserIdUseCase(userRepository: UserRepository): GetLoggedUserIdUseCase {
         return GetLoggedUserIdUseCase(userRepository::getLoggedUserId)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSubscribeToTopicUseCase(pushNotificationRepository: PushNotificationRepository): SubscribeToTopicUseCase {
+        return SubscribeToTopicUseCase(pushNotificationRepository::subscribeToTopic)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUnsubscribeFromTopicUseCase(pushNotificationRepository: PushNotificationRepository): UnsubscribeFromTopicUseCase {
+        return UnsubscribeFromTopicUseCase(pushNotificationRepository::unsubscribeFromTopic)
     }
 }

@@ -7,10 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.domain.usecase.firebase.authentication.LogoutUseCase
+import com.kproject.simplechat.domain.usecase.firebase.user.GetCurrentUserUseCase
+import com.kproject.simplechat.domain.usecase.firebase.user.GetLoggedUserIdUseCase
+import com.kproject.simplechat.domain.usecase.firebase.user.SubscribeToTopicUseCase
 import com.kproject.simplechat.domain.usecase.preferences.GetPreferenceAsyncUseCase
 import com.kproject.simplechat.domain.usecase.preferences.GetPreferenceSyncUseCase
 import com.kproject.simplechat.domain.usecase.preferences.SavePreferenceUseCase
-import com.kproject.simplechat.domain.usecase.firebase.user.GetCurrentUserUseCase
 import com.kproject.simplechat.presentation.mapper.toUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -21,16 +23,21 @@ private const val TAG = "HomeViewModel"
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
+    private val getLoggedUserIdUseCase: GetLoggedUserIdUseCase,
     private val getPreferenceAsyncUseCase: GetPreferenceAsyncUseCase,
     private val getPreferenceSyncUseCase: GetPreferenceSyncUseCase,
     private val savePreferenceUseCase: SavePreferenceUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val logoutUseCase: LogoutUseCase,
+    private val subscribeToTopicUseCase: SubscribeToTopicUseCase,
 ) : ViewModel() {
     var uiState by mutableStateOf(HomeUiState())
         private set
 
     init {
         getCurrentUser()
+        getLoggedUserIdUseCase()?.let { loggedUserId ->
+            subscribeToTopic(loggedUserId)
+        }
     }
 
     private fun getCurrentUser() {
@@ -41,6 +48,12 @@ class HomeViewModel @Inject constructor(
                     uiState = uiState.copy(user = userModel.toUser())
                 }
             }
+        }
+    }
+
+    private fun subscribeToTopic(userId: String) {
+        viewModelScope.launch {
+           subscribeToTopicUseCase(userId)
         }
     }
 
