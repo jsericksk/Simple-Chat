@@ -6,6 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -13,8 +14,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -87,30 +90,28 @@ private fun MainContent(
     onButtonLoginClick: () -> Unit,
     onNavigateToSignUpScreen: () -> Unit
 ) {
-    val spacingHeight = 20.dp
+    val spacingHeight = 16.dp
 
     Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        Box(
-            modifier = Modifier
-                .background(
-                    color = MaterialTheme.colors.secondary,
-                    shape = RoundedCornerShape(bottomStart = 34.dp, bottomEnd = 34.dp)
-                )
-                .fillMaxWidth()
-                .height(180.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.sign_in),
-                fontSize = 40.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFFDDDDDD),
-                modifier = Modifier.align(Alignment.Center)
-            )
-        }
+        Icon(
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_send),
+            contentDescription = null,
+            tint = MaterialTheme.colors.secondary,
+            modifier = Modifier.size(50.dp)
+        )
+        Spacer(Modifier.height(8.dp))
+        Text(
+            text = stringResource(id = R.string.login),
+            fontSize = 40.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colors.TextDefaultColor
+        )
 
         Spacer(Modifier.height(spacingHeight))
 
@@ -145,7 +146,7 @@ private fun MainContent(
                 errorMessage = loginUiState.passwordError.asString()
             )
 
-            Spacer(Modifier.height(spacingHeight))
+            Spacer(Modifier.height(22.dp))
 
             Button(
                 text = stringResource(id = R.string.login),

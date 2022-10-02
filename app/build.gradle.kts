@@ -75,6 +75,9 @@ dependencies {
     implementation(Dependencies.lifecycleViewModelCompose)
     implementation(Dependencies.activityCompose)
 
+    implementation(Dependencies.constraintLayoutCompose)
+
+
     // Dagger-Hilt
     implementation(Dependencies.daggerHilt)
     implementation(Dependencies.hiltNavigationCompose)

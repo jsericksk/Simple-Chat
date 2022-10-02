@@ -11,6 +11,7 @@ object Versions {
     const val LIFECYCLE_VIEWMODEL_COMPOSE = "2.5.1"
     const val ACTIVITY_COMPOSE = "1.5.1"
     const val DATASTORE_PREFERENCES = "1.0.0"
+    const val CONSTRAINT_LAYOUT_COMPOSE = "1.0.1"
 
     // Tests
     const val TEST_JUNIT = "4.13.2"

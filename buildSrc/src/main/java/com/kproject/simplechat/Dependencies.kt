@@ -27,6 +27,8 @@ object Dependencies {
     const val composeMaterial = "androidx.compose.material:material:${Versions.COMPOSE}"
     const val composeUiToolingPreview = "androidx.compose.ui:ui-tooling-preview:${Versions.COMPOSE}"
 
+    const val constraintLayoutCompose = "androidx.constraintlayout:constraintlayout-compose:${Versions.CONSTRAINT_LAYOUT_COMPOSE}"
+
     object Firebase {
         const val firebaseBom = "com.google.firebase:firebase-bom:${Versions.FIREBASE_BOM}"
         const val auth = "com.google.firebase:firebase-auth-ktx"
