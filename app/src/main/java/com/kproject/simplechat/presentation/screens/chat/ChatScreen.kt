@@ -95,25 +95,23 @@ private fun MainContent(
                 )
             }
             is DataState.Success -> {
-                Column {
-                    ChatList(
-                        chatMessagesList = uiState.chatMessageList,
-                        loggedUserId = loggedUserId,
-                        modifier = Modifier
-                            .weight(1f)
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    ChatTextField(
-                        message = uiState.message,
-                        onMessageValueChange = { message ->
-                            onMessageValueChange.invoke(message)
-                        },
-                        onSendMessage = { message ->
-                            onSendMessage.invoke(message)
-                        },
-                        modifier = Modifier.padding(12.dp)
-                    )
-                }
+                ChatList(
+                    chatMessagesList = uiState.chatMessageList,
+                    loggedUserId = loggedUserId,
+                    modifier = Modifier
+                        .weight(1f)
+                )
+                Spacer(Modifier.height(8.dp))
+                ChatTextField(
+                    message = uiState.message,
+                    onMessageValueChange = { message ->
+                        onMessageValueChange.invoke(message)
+                    },
+                    onSendMessage = { message ->
+                        onSendMessage.invoke(message)
+                    },
+                    modifier = Modifier.padding(12.dp)
+                )
             }
             is DataState.Error -> {
                 EmptyListInfo(
@@ -129,12 +127,13 @@ private fun MainContent(
 
 @Composable
 private fun TopBar(
+    modifier: Modifier = Modifier,
     uiState: ChatUiState,
     onNavigateBack: () -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.primary)
             .padding(10.dp)
