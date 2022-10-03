@@ -214,9 +214,9 @@ private fun ChatListItem(
     val backgroundColor = if (messageReceived) Color.DarkGray else MaterialTheme.colors.secondary
     val alignment = if (messageReceived) Alignment.Start else Alignment.End
     val shape = if (messageReceived) {
-        RoundedCornerShape(topStart = 16.dp, topEnd = 8.dp, bottomStart = 8.dp, bottomEnd = 8.dp)
+        RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp, bottomStart = 20.dp, bottomEnd = 10.dp)
     } else {
-        RoundedCornerShape(topStart = 8.dp, topEnd = 16.dp, bottomStart = 8.dp, bottomEnd = 8.dp)
+        RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp, bottomStart = 8.dp, bottomEnd = 20.dp)
     }
 
     Column(
@@ -321,7 +321,7 @@ private fun Preview() {
     PreviewTheme {
         val uiState = ChatUiState(
             chatMessageList = fakeChatMessagesList,
-            user = User(username = "Ericks")
+            user = User(username = "Simple Chat")
         )
         MainContent(
             uiState = uiState,

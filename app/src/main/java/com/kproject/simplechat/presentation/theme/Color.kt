@@ -24,4 +24,4 @@ val Colors.ErrorColor: Color
     @Composable get() = if (isLight) Color(0xFF9C1616) else Color(0xFF910505)
 
 val Colors.ChatTextFieldBackgroundColor: Color
-    @Composable get() = if (isLight) Color(0xFFBEBEBE) else Color(0xFF252525)
+    @Composable get() = if (isLight) Color(0xFFBEBEBE) else Color(0xFF363636)
