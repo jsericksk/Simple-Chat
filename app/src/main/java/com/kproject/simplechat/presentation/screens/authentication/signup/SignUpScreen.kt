@@ -96,7 +96,7 @@ private fun MainContent(
     onRepeatedPasswordChange: (String) -> Unit,
     onButtonSignUpClick: () -> Unit
 ) {
-    val spacingHeight = 20.dp
+    val spacingHeight = 16.dp
 
     Column(
         modifier = modifier
@@ -189,7 +189,7 @@ private fun MainContent(
                 errorMessage = uiState.repeatedPasswordError.asString()
             )
 
-            Spacer(Modifier.height(spacingHeight))
+            Spacer(Modifier.height(22.dp))
 
             Button(
                 text = stringResource(id = R.string.sign_up),

@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -218,16 +219,21 @@ private fun ProfileViewerDialog(
                     modifier = Modifier
                         .background(
                             color = MaterialTheme.colors.background,
-                            shape = RoundedCornerShape(16.dp)
+                            shape = RoundedCornerShape(18.dp)
                         )
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .height(120.dp)
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colors.secondary),
-                        contentAlignment = Alignment.Center
-                    ) {
+                    ConstraintLayout {
+                        val (box, image) = createRefs()
+                        Box(
+                            modifier = Modifier
+                                .height(120.dp)
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colors.secondary)
+                                .constrainAs(box) {
+                                    top.linkTo(parent.top)
+                                }
+                        )
+
                         CustomImage(
                             imageModel = uiState.user.profilePicture.ifEmpty { R.drawable.ic_person },
                             colorFilter = if (uiState.user.profilePicture.isEmpty())
@@ -236,6 +242,12 @@ private fun ProfileViewerDialog(
                                 .size(120.dp)
                                 .padding(14.dp)
                                 .clip(CircleShape)
+                                .constrainAs(image) {
+                                    top.linkTo(box.bottom)
+                                    bottom.linkTo(box.bottom)
+                                    start.linkTo(box.start)
+                                    end.linkTo(box.end)
+                                }
                         )
                     }
 
