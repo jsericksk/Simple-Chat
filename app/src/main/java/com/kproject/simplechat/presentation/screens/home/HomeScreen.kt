@@ -1,11 +1,17 @@
 package com.kproject.simplechat.presentation.screens.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -157,28 +163,34 @@ private fun TopBar(
             .background(MaterialTheme.colors.primary)
             .padding(12.dp)
     ) {
-        CustomImage(
-            imageModel = uiState.user.profilePicture.ifEmpty { R.drawable.ic_person },
-            colorFilter = if (uiState.user.profilePicture.isEmpty()) ColorFilter.tint(Color.White) else null,
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .size(40.dp)
                 .clip(RoundedCornerShape(12.dp))
                 .clickable {
                     showProfileViewerDialog = true
                 }
-        )
-        Spacer(Modifier.width(8.dp))
-        Text(
-            text = stringResource(id = R.string.app_name),
-            color = Color.White,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        )
+                .padding(6.dp)
+        ) {
+            CustomImage(
+                imageModel = uiState.user.profilePicture.ifEmpty { R.drawable.ic_person },
+                colorFilter = if (uiState.user.profilePicture.isEmpty()) ColorFilter.tint(Color.White) else null,
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(12.dp))
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = stringResource(id = R.string.app_name),
+                color = Color.White,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
 
-        val iconResId = if (isDarkMode) R.drawable.ic_dark_mode else R.drawable.ic_light_mode
+        Spacer(Modifier.weight(1f))
+
+        val iconResId = if (isDarkMode) R.drawable.ic_light_mode else R.drawable.ic_dark_mode
         IconButton(onClick = onChangeTheme) {
             Icon(
                 imageVector = ImageVector.vectorResource(id = iconResId),
@@ -192,7 +204,10 @@ private fun TopBar(
         showDialog = showProfileViewerDialog,
         onDismiss = { showProfileViewerDialog = false },
         uiState = uiState,
-        onLogout = { showLogoutConfirmDialog = true }
+        onLogout = {
+            showProfileViewerDialog = false
+            showLogoutConfirmDialog = true
+        }
     )
 
     AlertDialog(
@@ -204,6 +219,7 @@ private fun TopBar(
     )
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun ProfileViewerDialog(
     showDialog: Boolean,
@@ -212,6 +228,9 @@ private fun ProfileViewerDialog(
     onLogout: () -> Unit
 ) {
     if (showDialog) {
+        val shapeSize = 24.dp
+        var showProfilePicture by remember { mutableStateOf(false) }
+
         Dialog(
             onDismissRequest = { onDismiss.invoke() },
             content = {
@@ -219,16 +238,31 @@ private fun ProfileViewerDialog(
                     modifier = Modifier
                         .background(
                             color = MaterialTheme.colors.background,
-                            shape = RoundedCornerShape(18.dp)
+                            shape = RoundedCornerShape(shapeSize)
                         )
                 ) {
+                    AnimatedVisibility(
+                        visible = showProfilePicture,
+                        enter = scaleIn(),
+                        exit = scaleOut()
+                    ) {
+                        ProfilePictureViewer(
+                            profilePicture = uiState.user.profilePicture,
+                            onDismiss = { showProfilePicture = false },
+                            modifier = Modifier.clip(RoundedCornerShape(shapeSize))
+                        )
+                    }
+
                     ConstraintLayout {
                         val (box, image) = createRefs()
                         Box(
                             modifier = Modifier
-                                .height(120.dp)
                                 .fillMaxWidth()
-                                .background(MaterialTheme.colors.secondary)
+                                .height(100.dp)
+                                .background(
+                                    color = MaterialTheme.colors.secondary,
+                                    shape = RoundedCornerShape(topStart = shapeSize, topEnd = shapeSize)
+                                )
                                 .constrainAs(box) {
                                     top.linkTo(parent.top)
                                 }
@@ -239,8 +273,7 @@ private fun ProfileViewerDialog(
                             colorFilter = if (uiState.user.profilePicture.isEmpty())
                                 ColorFilter.tint(Color.White) else null,
                             modifier = Modifier
-                                .size(120.dp)
-                                .padding(14.dp)
+                                .size(100.dp)
                                 .clip(CircleShape)
                                 .constrainAs(image) {
                                     top.linkTo(box.bottom)
@@ -248,16 +281,17 @@ private fun ProfileViewerDialog(
                                     start.linkTo(box.start)
                                     end.linkTo(box.end)
                                 }
+                                .clickable { showProfilePicture = true }
                         )
                     }
 
-                    Spacer(Modifier.height(4.dp))
+                    Spacer(Modifier.height(6.dp))
 
                     Column(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
-                            .padding(start = 24.dp, end = 24.dp, top = 12.dp, bottom = 24.dp)
+                            .padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
                             .fillMaxWidth()
                     ) {
                         Text(
@@ -301,6 +335,40 @@ private fun ProfileViewerDialog(
                 }
             }
         )
+    }
+}
+
+@Composable
+private fun ProfilePictureViewer(
+    modifier: Modifier = Modifier,
+    profilePicture: String,
+    onDismiss: () -> Unit
+) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        CustomImage(
+            imageModel = profilePicture.ifEmpty { R.drawable.ic_person },
+            colorFilter = if (profilePicture.isEmpty()) ColorFilter.tint(Color.White) else null,
+            modifier = modifier
+        )
+
+        IconButton(
+            onClick = onDismiss,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(12.dp)
+                .background(
+                    color = MaterialTheme.colors.secondary,
+                    shape = CircleShape
+                )
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Close,
+                contentDescription = null,
+                tint = Color.White
+            )
+        }
     }
 }
 

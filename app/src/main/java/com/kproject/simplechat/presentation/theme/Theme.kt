@@ -6,7 +6,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.kproject.simplechat.presentation.MainViewModel
 
 private val DarkColorPalette = darkColors(
