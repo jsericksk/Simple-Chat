@@ -26,7 +26,6 @@ import com.kproject.simplechat.presentation.screens.components.EmptyListInfo
 import com.kproject.simplechat.presentation.screens.components.LoadingIndicator
 import com.kproject.simplechat.presentation.theme.CompletePreview
 import com.kproject.simplechat.presentation.theme.PreviewTheme
-import com.kproject.simplechat.presentation.theme.SimplePreview
 import com.kproject.simplechat.presentation.theme.TextDefaultColor
 
 @Composable
@@ -57,7 +56,7 @@ fun LatestMessagesScreen(
 private fun MainContent(
     modifier: Modifier = Modifier,
     uiState: LatestMessagesUiState,
-    dataState: DataState<List<LatestMessage>>,
+    dataState: DataState<Unit>,
     loggedUserId: String,
     onNavigateToChatScreen: (index: Int) -> Unit
 ) {

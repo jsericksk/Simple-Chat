@@ -9,7 +9,6 @@ import com.kproject.simplechat.commom.DataState
 import com.kproject.simplechat.domain.usecase.firebase.user.GetLatestMessagesUseCase
 import com.kproject.simplechat.domain.usecase.firebase.user.GetLoggedUserIdUseCase
 import com.kproject.simplechat.presentation.mapper.toLatestMessage
-import com.kproject.simplechat.presentation.model.LatestMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,12 +18,12 @@ private const val TAG = "LatestMessagesViewModel"
 @HiltViewModel
 class LatestMessagesViewModel @Inject constructor(
     private val getLatestMessagesUseCase: GetLatestMessagesUseCase,
-    private val getLoggedUserIdUseCase: GetLoggedUserIdUseCase
+    getLoggedUserIdUseCase: GetLoggedUserIdUseCase
 ) : ViewModel() {
     var uiState by mutableStateOf(LatestMessagesUiState())
         private set
 
-    var dataState: DataState<List<LatestMessage>> by mutableStateOf(DataState.Success())
+    var dataState: DataState<Unit> by mutableStateOf(DataState.Loading)
         private set
 
     init {

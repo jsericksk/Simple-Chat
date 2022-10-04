@@ -22,10 +22,6 @@ private const val TAG = "HomeViewModel"
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
-    private val getLoggedUserIdUseCase: GetLoggedUserIdUseCase,
-    private val getPreferenceAsyncUseCase: GetPreferenceAsyncUseCase,
-    private val getPreferenceSyncUseCase: GetPreferenceSyncUseCase,
-    private val savePreferenceUseCase: SavePreferenceUseCase,
     private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
     var uiState by mutableStateOf(HomeUiState())

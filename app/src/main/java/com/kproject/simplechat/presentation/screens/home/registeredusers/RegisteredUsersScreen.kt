@@ -25,7 +25,6 @@ import com.kproject.simplechat.presentation.screens.components.EmptyListInfo
 import com.kproject.simplechat.presentation.screens.components.LoadingIndicator
 import com.kproject.simplechat.presentation.theme.CompletePreview
 import com.kproject.simplechat.presentation.theme.PreviewTheme
-import com.kproject.simplechat.presentation.theme.SimplePreview
 import com.kproject.simplechat.presentation.theme.TextDefaultColor
 
 @Composable
@@ -50,7 +49,7 @@ fun RegisteredUsersScreen(
 private fun MainContent(
     modifier: Modifier = Modifier,
     uiState: RegisteredUsersUiState,
-    dataState: DataState<List<User>>,
+    dataState: DataState<Unit>,
     onNavigateToChatScreen: (index: Int) -> Unit
 ) {
     when (dataState) {

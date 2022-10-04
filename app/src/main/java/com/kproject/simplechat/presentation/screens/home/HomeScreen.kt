@@ -261,7 +261,10 @@ private fun ProfileViewerDialog(
                                 .height(100.dp)
                                 .background(
                                     color = MaterialTheme.colors.secondary,
-                                    shape = RoundedCornerShape(topStart = shapeSize, topEnd = shapeSize)
+                                    shape = RoundedCornerShape(
+                                        topStart = shapeSize,
+                                        topEnd = shapeSize
+                                    )
                                 )
                                 .constrainAs(box) {
                                     top.linkTo(parent.top)
@@ -344,13 +347,10 @@ private fun ProfilePictureViewer(
     profilePicture: String,
     onDismiss: () -> Unit
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    Box(modifier = modifier.fillMaxSize()) {
         CustomImage(
             imageModel = profilePicture.ifEmpty { R.drawable.ic_person },
             colorFilter = if (profilePicture.isEmpty()) ColorFilter.tint(Color.White) else null,
-            modifier = modifier
         )
 
         IconButton(
