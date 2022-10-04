@@ -6,15 +6,19 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,9 +33,7 @@ import com.kproject.simplechat.presentation.screens.authentication.components.Fi
 import com.kproject.simplechat.presentation.screens.authentication.components.TextField
 import com.kproject.simplechat.presentation.screens.components.AlertDialog
 import com.kproject.simplechat.presentation.screens.components.ProgressAlertDialog
-import com.kproject.simplechat.presentation.theme.CompletePreview
-import com.kproject.simplechat.presentation.theme.ErrorColor
-import com.kproject.simplechat.presentation.theme.PreviewTheme
+import com.kproject.simplechat.presentation.theme.*
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil.CoilImage
 
@@ -63,7 +65,8 @@ fun SignUpScreen(
         },
         onButtonSignUpClick = {
             signUpViewModel.signUp()
-        }
+        },
+        onNavigateBack = onNavigateBack
     )
 
     LaunchedEffect(key1 = signUpState) {
@@ -94,39 +97,47 @@ private fun MainContent(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onRepeatedPasswordChange: (String) -> Unit,
-    onButtonSignUpClick: () -> Unit
+    onButtonSignUpClick: () -> Unit,
+    onNavigateBack: () -> Unit
 ) {
     val spacingHeight = 16.dp
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
     ) {
-        Box(
-            modifier = Modifier
-                .background(
-                    color = MaterialTheme.colors.secondary,
-                    shape = RoundedCornerShape(bottomStart = 34.dp, bottomEnd = 34.dp)
-                )
-                .fillMaxWidth()
-                .height(180.dp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            IconButton(
+                onClick = onNavigateBack,
+                modifier = Modifier
+                    .padding(12.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.IconColor,
+                    modifier = Modifier.size(34.dp)
+                )
+            }
+            Spacer(Modifier.width(4.dp))
             Text(
                 text = stringResource(id = R.string.create_your_account),
-                fontSize = 34.sp,
+                fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFFDDDDDD),
-                modifier = Modifier.align(Alignment.Center)
+                color = MaterialTheme.colors.TextDefaultColor
             )
         }
 
-        Spacer(Modifier.height(spacingHeight))
-
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier
-                .padding(24.dp)
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp, vertical = 12.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             ProfilePicture(
                 uiState = uiState,
@@ -135,7 +146,7 @@ private fun MainContent(
                 }
             )
 
-            Spacer(Modifier.height(spacingHeight))
+            Spacer(Modifier.height(16.dp))
 
             TextField(
                 value = uiState.username,
@@ -202,7 +213,7 @@ private fun MainContent(
 @Composable
 private fun ProfilePicture(
     uiState: SignUpUiState,
-    onProfilePictureChange: (String) -> Unit,
+    onProfilePictureChange: (String) -> Unit
 ) {
     val imagePick = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -211,12 +222,7 @@ private fun ProfilePicture(
             onProfilePictureChange.invoke(selectedImageUri.toString())
         }
     }
-
-    val contentScale = if (uiState.profilePicture.isEmpty()) {
-        ContentScale.Inside
-    } else {
-        ContentScale.Crop
-    }
+    val profilePictureErrorMessage = uiState.profilePictureError.asString()
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -225,7 +231,10 @@ private fun ProfilePicture(
         CoilImage(
             imageModel = uiState.profilePicture.ifEmpty { R.drawable.ic_add_a_photo },
             previewPlaceholder = R.drawable.ic_add_a_photo,
-            imageOptions = ImageOptions(contentScale = contentScale),
+            imageOptions = ImageOptions(
+                contentScale = if (uiState.profilePicture.isEmpty()) ContentScale.Inside else ContentScale.Crop,
+                colorFilter = if (uiState.profilePicture.isEmpty()) ColorFilter.tint(Color.White) else null
+            ),
             modifier = Modifier
                 .size(100.dp)
                 .clip(CircleShape)
@@ -237,19 +246,18 @@ private fun ProfilePicture(
                 .clickable {
                     imagePick.launch("image/*")
                 }
-                .background(
-                    color = if (uiState.profilePicture.isNotEmpty())
-                        Color.Transparent else MaterialTheme.colors.secondary
-                )
+                .background(color = MaterialTheme.colors.secondary)
+                .padding(if (uiState.profilePicture.isEmpty()) 24.dp else 0.dp)
         )
 
-        Spacer(Modifier.height(12.dp))
-
-        Text(
-            text = uiState.profilePictureError.asString(),
-            color = MaterialTheme.colors.ErrorColor,
-            fontSize = 16.sp
-        )
+        if (profilePictureErrorMessage.isNotEmpty()) {
+            Spacer(Modifier.height(12.dp))
+            Text(
+                text = uiState.profilePictureError.asString(),
+                color = MaterialTheme.colors.ErrorColor,
+                fontSize = 16.sp
+            )
+        }
     }
 }
 
@@ -271,7 +279,8 @@ private fun Preview() {
             onEmailChange = {},
             onPasswordChange = {},
             onRepeatedPasswordChange = {},
-            onButtonSignUpClick = {}
+            onButtonSignUpClick = {},
+            onNavigateBack = {}
         )
     }
 }
