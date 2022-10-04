@@ -1,9 +1,7 @@
 package com.kproject.simplechat.presentation.screens.authentication.login
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
@@ -13,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -103,9 +100,9 @@ private fun MainContent(
             imageVector = ImageVector.vectorResource(id = R.drawable.ic_send),
             contentDescription = null,
             tint = MaterialTheme.colors.secondary,
-            modifier = Modifier.size(50.dp)
+            modifier = Modifier.size(45.dp)
         )
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(4.dp))
         Text(
             text = stringResource(id = R.string.login),
             fontSize = 40.sp,
