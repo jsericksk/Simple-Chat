@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -301,7 +302,8 @@ private fun ProfileViewerDialog(
                             text = uiState.user.username.ifEmpty { stringResource(id = R.string.unknown_user) },
                             color = MaterialTheme.colors.TextDefaultColor,
                             fontSize = 18.sp,
-                            fontWeight = FontWeight.SemiBold
+                            fontWeight = FontWeight.SemiBold,
+                            textAlign = TextAlign.Center
                         )
 
                         Spacer(Modifier.height(8.dp))
