@@ -16,10 +16,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.kproject.simplechat.R
-import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.ShimmerParams
 import com.skydoves.landscapist.coil.CoilImage
-import com.skydoves.landscapist.components.rememberImageComponent
-import com.skydoves.landscapist.placeholder.shimmer.ShimmerPlugin
 
 @Composable
 fun CustomImage(
@@ -28,28 +26,27 @@ fun CustomImage(
     contentScale: ContentScale = ContentScale.Crop,
     colorFilter: ColorFilter? = null
 ) {
-    val shimmerBaseColor = MaterialTheme.colors.background
-    val shimmerHighlightColor = MaterialTheme.colors.onSecondary
-
     CoilImage(
         imageModel = imageModel,
-        imageOptions = ImageOptions(
-            contentScale = contentScale,
-            colorFilter = colorFilter
-        ),
+        contentScale = contentScale,
+        colorFilter = colorFilter,
+        shimmerParams = shimmerParams(),
         failure = {
             FailureIndicator()
-        },
-        component = rememberImageComponent {
-            ShimmerPlugin(
-                baseColor = shimmerBaseColor,
-                highlightColor = shimmerHighlightColor
-            )
         },
         previewPlaceholder = R.drawable.ic_photo,
         modifier = modifier
     )
 }
+
+@Composable
+private fun shimmerParams() = ShimmerParams(
+    baseColor = MaterialTheme.colors.onSecondary,
+    highlightColor = MaterialTheme.colors.background,
+    durationMillis = 350,
+    dropOff = 0.65f,
+    tilt = 20f
+)
 
 @Composable
 fun BoxScope.FailureIndicator() {

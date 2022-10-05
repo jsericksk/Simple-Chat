@@ -32,7 +32,7 @@ object Versions {
     const val NAVIGATION_COMPOSE = "2.5.2"
     const val ACCOMPANIST = "0.25.1"
 
-    const val LANDSCAPIST = "2.0.0"
+    const val LANDSCAPIST = "1.6.1"
 
     const val RETROFIT = "2.9.0"
     const val GSON = "2.9.1"

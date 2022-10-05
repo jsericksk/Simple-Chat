@@ -60,7 +60,6 @@ object Dependencies {
 
     // Landscapist
     const val landscapist = "com.github.skydoves:landscapist-coil:${Versions.LANDSCAPIST}"
-    const val landscapistPlaceholder = "com.github.skydoves:landscapist-placeholder:${Versions.LANDSCAPIST}"
 
     // Retrofit
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.RETROFIT}"

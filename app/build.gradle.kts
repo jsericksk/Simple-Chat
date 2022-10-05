@@ -77,7 +77,6 @@ dependencies {
 
     implementation(Dependencies.constraintLayoutCompose)
 
-
     // Dagger-Hilt
     implementation(Dependencies.daggerHilt)
     implementation(Dependencies.hiltNavigationCompose)
@@ -96,7 +95,6 @@ dependencies {
 
     // Landscapist
     implementation(Dependencies.landscapist)
-    implementation(Dependencies.landscapistPlaceholder)
 
     // Gson
     implementation(Dependencies.gson)

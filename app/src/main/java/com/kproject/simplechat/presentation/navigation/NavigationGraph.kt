@@ -106,7 +106,7 @@ fun NavigationGraph(mainViewModel: MainViewModel) {
 
         // ChatScreen
         composable(
-            route = Screen.ChatScreen.route  + "/{$ArgUser}/{$ArgLoggedUserId}",
+            route = Screen.ChatScreen.route + "/{$ArgUser}/{$ArgLoggedUserId}",
             arguments = listOf(
                 navArgument(name = ArgUser) {
                     type = NavType.StringType

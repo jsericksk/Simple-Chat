@@ -32,10 +32,9 @@ import com.kproject.simplechat.presentation.screens.authentication.components.Bu
 import com.kproject.simplechat.presentation.screens.authentication.components.FieldType
 import com.kproject.simplechat.presentation.screens.authentication.components.TextField
 import com.kproject.simplechat.presentation.screens.components.AlertDialog
+import com.kproject.simplechat.presentation.screens.components.CustomImage
 import com.kproject.simplechat.presentation.screens.components.ProgressAlertDialog
 import com.kproject.simplechat.presentation.theme.*
-import com.skydoves.landscapist.ImageOptions
-import com.skydoves.landscapist.coil.CoilImage
 
 @Composable
 fun SignUpScreen(
@@ -228,13 +227,10 @@ private fun ProfilePicture(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CoilImage(
+        CustomImage(
             imageModel = uiState.profilePicture.ifEmpty { R.drawable.ic_add_a_photo },
-            previewPlaceholder = R.drawable.ic_add_a_photo,
-            imageOptions = ImageOptions(
-                contentScale = if (uiState.profilePicture.isEmpty()) ContentScale.Inside else ContentScale.Crop,
-                colorFilter = if (uiState.profilePicture.isEmpty()) ColorFilter.tint(Color.White) else null
-            ),
+            contentScale = if (uiState.profilePicture.isEmpty()) ContentScale.Inside else ContentScale.Crop,
+            colorFilter = if (uiState.profilePicture.isEmpty()) ColorFilter.tint(Color.White) else null,
             modifier = Modifier
                 .size(100.dp)
                 .clip(CircleShape)
