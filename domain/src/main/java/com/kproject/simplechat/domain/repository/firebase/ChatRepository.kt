@@ -11,8 +11,5 @@ interface ChatRepository {
 
     suspend fun sendMessage(message: ChatMessageModel): DataState<Unit>
 
-    suspend fun saveLatestMessage(
-        user: UserModel,
-        chatMessage: ChatMessageModel
-    ): DataState<Unit>
+    suspend fun saveLatestMessage(user: UserModel, chatMessage: ChatMessageModel): DataState<Unit>
 }

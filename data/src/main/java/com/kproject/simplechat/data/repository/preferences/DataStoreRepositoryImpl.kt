@@ -17,7 +17,6 @@ private val Context.dataStore by preferencesDataStore("settings")
 class DataStoreRepositoryImpl(
     private val applicationContext: Context
 ) : DataStoreRepository {
-    private val dataStore = applicationContext.dataStore
 
     override suspend fun getPreferenceAsync(key: String, defaultValue: Any): Flow<Any> {
         val keyPreferences = when (defaultValue) {
