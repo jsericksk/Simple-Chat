@@ -39,7 +39,6 @@ fun LatestMessagesScreen(
     MainContent(
         uiState = uiState,
         dataState = dataState,
-        loggedUserId = uiState.loggedUserId,
         onNavigateToChatScreen = { index ->
             val message = uiState.latestMessages[index]
             val user = User(
@@ -57,7 +56,6 @@ private fun MainContent(
     modifier: Modifier = Modifier,
     uiState: LatestMessagesUiState,
     dataState: DataState<Unit>,
-    loggedUserId: String,
     onNavigateToChatScreen: (index: Int) -> Unit
 ) {
     when (dataState) {
@@ -69,7 +67,7 @@ private fun MainContent(
         is DataState.Success -> {
             LatestMessagesList(
                 latestMessageList = uiState.latestMessages,
-                loggedUserId = loggedUserId,
+                loggedUserId = uiState.loggedUserId,
                 onClick = { index ->
                     onNavigateToChatScreen.invoke(index)
                 },
@@ -183,12 +181,12 @@ private fun LatestMessagesListItem(
 private fun Preview() {
     PreviewTheme {
         val uiState = LatestMessagesUiState(
-            latestMessages = fakeLatestMessagesList
+            latestMessages = fakeLatestMessagesList,
+            loggedUserId = "123456"
         )
         MainContent(
             uiState = uiState,
             dataState = DataState.Success(),
-            loggedUserId = "",
             onNavigateToChatScreen = {}
         )
     }
