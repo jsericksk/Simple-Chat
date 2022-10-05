@@ -11,13 +11,13 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.kproject.simplechat.presentation.MainViewModel
-import com.kproject.simplechat.presentation.mapper.fromJson
-import com.kproject.simplechat.presentation.mapper.toJson
 import com.kproject.simplechat.presentation.model.User
 import com.kproject.simplechat.presentation.screens.authentication.login.LoginScreen
 import com.kproject.simplechat.presentation.screens.authentication.signup.SignUpScreen
 import com.kproject.simplechat.presentation.screens.chat.ChatScreen
 import com.kproject.simplechat.presentation.screens.home.HomeScreen
+import com.kproject.simplechat.presentation.utils.fromJson
+import com.kproject.simplechat.presentation.utils.toJson
 
 private const val ArgUser = "user"
 private const val ArgLoggedUserId = "loggedUserId"

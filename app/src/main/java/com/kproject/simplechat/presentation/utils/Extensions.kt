@@ -1,10 +1,10 @@
-package com.kproject.simplechat.presentation.mapper
+package com.kproject.simplechat.presentation.utils
 
 import android.net.Uri
 import com.google.gson.Gson
 
 /**
- * Used to convert data class into Json and be able to transfer the data between navigation.
+ * Useful for converting data class to Json and being able to transfer data with Navigation.
  */
 fun <T> String.fromJson(type: Class<T>): T {
     return Gson().fromJson(this, type)
