@@ -2,10 +2,7 @@ package com.kproject.simplechat.presentation.screens.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,7 +27,13 @@ fun CustomImage(
         imageModel = imageModel,
         contentScale = contentScale,
         colorFilter = colorFilter,
-        shimmerParams = shimmerParams(),
+        loading = {
+            LoadingIndicator(
+                color = MaterialTheme.colors.onSecondary,
+                strokeWidth = 2.dp,
+                modifier = Modifier.wrapContentSize()
+            )
+        },
         failure = {
             FailureIndicator()
         },
