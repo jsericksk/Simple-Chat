@@ -17,6 +17,12 @@ The project was recreated in order to improve my knowledge in **modularization**
   <img src="images/project-architecture.png" />
 </p>
 
+## Structure in Firebase Firestore
+
+- ***users/***: All registered users.
+- ***chat_messages/chatId/messages/***: Messages from users, having as **chatId** an ID generated from the two userId of the conversation.
+- ***latest_messages/userId/messages/chatId/***: Latest messages from each user.
+
 ## App features
 
 - User registration with email and password;
