@@ -7,7 +7,7 @@
 
 # About the project
 
-When this project was initially created, the main objective was to improve my knowledge of Firebase and Jetpack Compose, in addition to creating a chat app with several different Firebase tools. However, in the recreation, the goal was a little more distinct from the initial idea.
+When this project was [initially created](https://github.com/jsericksk/Simple-Chat/tree/old-version), the main objective was to improve my knowledge of Firebase and Jetpack Compose, in addition to creating a chat app with several different Firebase tools. However, in the recreation, the goal was a little more distinct from the initial idea.
 
 The project was recreated in order to improve my knowledge in **modularization** and **clean architecture**, with a project divided into layers separated by different modules.
 
