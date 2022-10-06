@@ -7,7 +7,7 @@ The project was recreated in order to improve my knowledge in **modularization**
 ## Project architecture
 
 <p align="center">
-  <img src="images/project_architecture.png" />
+  <img src="images/project-architecture.png" />
 </p>
 
 ## App features
