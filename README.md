@@ -41,7 +41,7 @@ Represents the app's business rules. Contains all the use cases responsible for 
 
 Android module. Represents the app's data layer, used to get/save both remote and local data. Contains the domain layer repository implementations.
 
-- Dependency on other modules: *common and domain*.
+- Dependency with other modules: *common and domain*.
 
 ### - common
 
