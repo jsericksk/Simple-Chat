@@ -1,3 +1,10 @@
+# Simple Chat with Jetpack Compose and Firebase
+
+<p align="center">
+  <img src="images/app-demo.gif" width="300" height="600" />
+  <img src="images/validation-demo.gif" width="300" height="600" />
+</p>
+
 # About the project
 
 When this project was initially created, the main objective was to improve my knowledge of Firebase and Jetpack Compose, in addition to creating a chat app with several different Firebase tools. However, in the recreation, the goal was a little more distinct from the initial idea.
@@ -61,12 +68,12 @@ The project has some unit tests of the validation use cases, which can be access
 ## Technologies and libraries used
 
 - Firebase:
-    - [Auth](https://firebase.google.com/docs/auth): Used to authenticate users with email and password.
-    - [Firestore](https://firebase.google.com/docs/firestore): Realtime database to store user information.
-    - [Storage](https://firebase.google.com/docs/storage): Used to store users' profile pictures.
+  - [Auth](https://firebase.google.com/docs/auth): Used to authenticate users with email and password.
+  - [Firestore](https://firebase.google.com/docs/firestore): Realtime database to store user information.
+  - [Storage](https://firebase.google.com/docs/storage): Used to store users' profile pictures.
 - [Hilt](https://developer.android.com/training/dependency-injection/hilt-android): Dependency injection.
 - [DataStore](https://developer.android.com/topic/libraries/architecture/datastore): Used for storing data such as user preferences.
 - [Accompanist](https://github.com/google/accompanist):
-    - **Navigation Animation**: Used for navigation with animation with **Navigation Compose**;
-    - **Pager and Pager-Indicators**: Used for XML ViewPager-like component.
+  - **Navigation Animation**: Used for navigation with animation with **Navigation Compose**;
+  - **Pager and Pager-Indicators**: Used for XML ViewPager-like component.
 - [Landscapist](https://github.com/skydoves/landscapist): Used for image loading.
