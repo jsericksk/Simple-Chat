@@ -100,8 +100,8 @@ private fun RegisteredUsersList(
     } else {
         EmptyListInfo(
             iconResId = R.drawable.ic_message,
-            title = stringResource(id = R.string.info_title_empty_latest_messages_list),
-            description = stringResource(id = R.string.info_description_empty_latest_messages_list)
+            title = stringResource(id = R.string.info_title_empty_registered_user_list),
+            description = stringResource(id = R.string.info_description_empty_registered_user_list)
         )
     }
 }
