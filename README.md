@@ -4,6 +4,12 @@ When this project was initially created, the main objective was to improve my kn
 
 The project was recreated in order to improve my knowledge in **modularization** and **clean architecture**, with a project divided into layers separated by different modules.
 
+## Project architecture
+
+<p align="center">
+  <img src="images/project_architecture.png" />
+</p>
+
 ## App features
 
 - User registration with email and password;
