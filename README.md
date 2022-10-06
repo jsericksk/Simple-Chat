@@ -69,4 +69,4 @@ The project has some unit tests of the validation use cases, which can be access
 - [Accompanist](https://github.com/google/accompanist):
     - **Navigation Animation**: Used for navigation with animation with **Navigation Compose**;
     - **Pager and Pager-Indicators**: Used for XML ViewPager-like component.
-- [Landscapist](https://github.com/skydoves/landscapist): Loading images.
+- [Landscapist](https://github.com/skydoves/landscapist): Used for image loading.
