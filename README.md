@@ -1,8 +1,8 @@
 # Simple Chat with Jetpack Compose and Firebase
 
 <p align="center">
-  <img src="images/app-demo.gif" width="300" height="600" />
-  <img src="images/validation-demo.gif" width="300" height="600" />
+  <img src="images/app-demo.gif" width="320" height="691" />
+  <img src="images/validation-demo.gif" width="320" height="691" />
 </p>
 
 # About the project
