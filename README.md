@@ -41,7 +41,7 @@ After cloning the repository, follow the steps of [Firebase project setup](http
 
 Android module. It represents the layer popularly known as "presentation", which contains all the code and logic related to the user interface, which is made using **Jetpack Compose**.
 
-- Dependency with other modules: *common, domain and data*. (**Important note**: The inclusion of the data module in the *build.gradle.kts* is for dependency injection only, as it is not possible to access the repository implementation classes without including the data layer. *The layer data is not accessed directly by the presentation layer. For this, the use cases of the domain layer are used.*)
+- Dependency with other modules: *common, domain and data*. (**Important note**: The inclusion of the data module in the *build.gradle.kts* is for dependency injection only, as it is not possible to access the repository implementation classes without including the data layer. *The data layer is not accessed directly by the presentation layer. For this, the use cases of the domain layer are used.*)
 
 ### - domain
 
